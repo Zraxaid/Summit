@@ -1,11 +1,12 @@
 import { LegalPage } from "@/components/legal-page";
+import { siteCopy } from "@/lib/copy";
 import { termsSections } from "@/lib/site-data";
 
 export default function TermsPage() {
   return (
     <LegalPage
-      title="Terms of Use"
-      intro="These terms govern use of Summit's recruiting site, communications, and lead intake flow."
+      title={siteCopy.routes.termsOfUse.title}
+      intro={siteCopy.routes.termsOfUse.intro}
       sections={termsSections}
     />
   );

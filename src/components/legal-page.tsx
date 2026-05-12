@@ -1,4 +1,5 @@
 import type { LegalSection } from "@/lib/site-data";
+import { siteCopy } from "@/lib/copy";
 
 export function LegalPage({
   title,
@@ -12,13 +13,13 @@ export function LegalPage({
   return (
     <div className="legal-page">
       <section className="legal-hero">
-        <p className="eyebrow">Summit Legal</p>
+        <p className="eyebrow">{siteCopy.global.legal.eyebrow}</p>
         <h1>{title}</h1>
         <p>{intro}</p>
       </section>
       <section className="legal-layout">
         <aside className="legal-toc">
-          <h2>On this page</h2>
+          <h2>{siteCopy.global.legal.tocHeading}</h2>
           <nav aria-label={`${title} table of contents`}>
             {sections.map((section) => (
               <a key={section.slug} href={`#${section.slug}`}>

@@ -28,10 +28,12 @@
 }
 
 html {
+  position: relative;
   scroll-behavior: smooth;
 }
 
 body {
+  position: relative;
   margin: 0;
   background: var(--background);
   color: var(--foreground);
@@ -50,6 +52,14 @@ input,
 textarea,
 select {
   font: inherit;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 
 .skip-link {
@@ -97,6 +107,7 @@ select {
 .site-main {
   display: flex;
   flex-direction: column;
+  overflow-x: clip;
 }
 
 .brand-mark,
@@ -273,8 +284,7 @@ select {
 
 .hero-collage-card {
   position: absolute;
-  background-size: cover;
-  background-position: center;
+  overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.06);
   opacity: 0.18;
   filter: grayscale(1);
@@ -504,6 +514,10 @@ select {
   padding-bottom: var(--section-gap);
 }
 
+.mission-essay-section {
+  position: relative;
+}
+
 .cta-band {
   text-align: center;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
@@ -637,12 +651,16 @@ select {
 
 .photo-panel {
   min-height: 28rem;
-  background-size: cover;
-  background-position: center;
   border-radius: 1.8rem;
   position: relative;
   overflow: hidden;
   box-shadow: inset 0 -40px 100px rgba(9, 10, 15, 0.32);
+}
+
+.photo-panel-image,
+.hero-collage-image,
+.instagram-card-image {
+  object-fit: cover;
 }
 
 .photo-panel::after {
@@ -1041,10 +1059,10 @@ select {
 }
 
 .instagram-card-photo {
+  position: relative;
   min-height: 16rem;
   border-radius: 1.3rem;
-  background-size: cover;
-  background-position: center;
+  overflow: hidden;
   border: 1px solid var(--line);
 }
 
@@ -1319,6 +1337,7 @@ select {
   background: rgba(17, 19, 24, 0.08);
   color: #111318;
   cursor: pointer;
+  font-size: 1.4rem;
 }
 
 .lead-form {
@@ -1357,6 +1376,13 @@ select {
   border-radius: 1rem;
   border: 1px solid rgba(17, 19, 24, 0.14);
   background: white;
+}
+
+.lead-form input[aria-invalid="true"],
+.lead-form textarea[aria-invalid="true"],
+.phone-field:has(input[aria-invalid="true"]) {
+  border-color: #a63c06;
+  box-shadow: 0 0 0 1px rgba(166, 60, 6, 0.12);
 }
 
 .phone-field {
@@ -1423,6 +1449,10 @@ select {
   color: #a63c06;
 }
 
+.field-error {
+  min-height: 1rem;
+}
+
 .button-submit {
   background: #111318;
   color: white;
@@ -1448,9 +1478,14 @@ select {
     scroll-behavior: auto;
   }
 
-  .marquee-track,
   .instagram-track {
     animation: none;
+  }
+
+  .hero-backdrop,
+  .scroll-progress,
+  .scroll-progress-marker {
+    transform: none !important;
   }
 }
 
@@ -1476,6 +1511,10 @@ select {
   .closing-quote-shell,
   .carousel-frame {
     grid-template-columns: 1fr;
+  }
+
+  .photo-panel {
+    min-height: 24rem;
   }
 
   .carousel-nav-prev {
@@ -2049,6 +2088,10 @@ select {
     position: static;
   }
 
+  .instagram-track {
+    animation: none !important;
+  }
+
   .instagram-card,
   .instagram-card-0,
   .instagram-card-1,
@@ -2133,24 +2176,24 @@ select {
   .hero-collage-card-2 {
     width: 7rem;
     height: 10rem;
-    opacity: 0.11;
+    opacity: 0.09;
   }
 
   .hero-collage-card-1 {
-    left: 1%;
-    top: 18%;
+    left: 4%;
+    top: 20%;
   }
 
   .hero-collage-card-2 {
-    right: 1%;
-    top: 16%;
+    right: 4%;
+    top: 18%;
   }
 
   .hero-collage-card-3 {
     width: 8rem;
     height: 8rem;
     left: calc(50% - 4rem);
-    bottom: 22%;
+    bottom: 28%;
     opacity: 0.07;
   }
 
@@ -2201,6 +2244,7 @@ select {
   .founder-shell,
   .closing-quote-shell {
     gap: 1.35rem;
+    align-items: start;
   }
 
   .carousel-frame {
@@ -2318,6 +2362,7 @@ select {
     position: sticky;
     margin-bottom: 0.9rem;
     scroll-snap-align: start;
+    top: 5.25rem !important;
   }
 
   .process-grid-pinned article {
@@ -2342,5 +2387,14 @@ select {
 
   .button-text {
     font-size: clamp(1.7rem, 10vw, 3rem);
+  }
+
+  .footer-grid section,
+  .legal-card,
+  .performance-kpi,
+  .success-card,
+  .switcher-donut,
+  .partner-logo-link {
+    min-width: 0;
   }
 }

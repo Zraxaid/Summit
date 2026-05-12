@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+import { siteCopy } from "@/lib/copy";
+
 export async function POST(request: Request) {
   const payload = await request.json();
 
@@ -23,7 +25,6 @@ export async function POST(request: Request) {
 
   return NextResponse.json({
     ok: true,
-    message:
-      "Your application has been received. A Summit recruiter will follow up shortly.",
+    message: siteCopy.global.modal.submitSuccess,
   });
 }

@@ -13,10 +13,11 @@ import Link from "next/link";
 import { createContext, useContext, useMemo, useState } from "react";
 
 import { LeadModal } from "@/components/lead-modal";
+import { siteCopy } from "@/lib/copy";
 import { footerData } from "@/lib/site-data";
 
 type JoinTeamContextValue = {
-  open: () => void;
+  open: (trigger?: HTMLElement | null) => void;
   close: () => void;
 };
 
@@ -107,7 +108,7 @@ export function JoinTeamButton({
     <motion.button
       type="button"
       className={`${variantClassName}${className ? ` ${className}` : ""}`}
-      onClick={open}
+      onClick={(event) => open(event.currentTarget)}
       onMouseMove={(event) => {
         event.currentTarget.style.setProperty("--pointer-x", `${event.nativeEvent.offsetX}px`);
         event.currentTarget.style.setProperty("--pointer-y", `${event.nativeEvent.offsetY}px`);
@@ -138,6 +139,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isCondensed, setIsCondensed] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
+  const [lastTrigger, setLastTrigger] = useState<HTMLElement | null>(null);
   const { scrollYProgress } = useScroll();
   const progressScale = useSpring(scrollYProgress, {
     stiffness: 140,
@@ -148,7 +150,10 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
 
   const value = useMemo(
     () => ({
-      open: () => setIsOpen(true),
+      open: (trigger?: HTMLElement | null) => {
+        setLastTrigger(trigger ?? null);
+        setIsOpen(true);
+      },
       close: () => setIsOpen(false),
     }),
     [],
@@ -162,7 +167,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
   return (
     <JoinTeamContext.Provider value={value}>
       <a className="skip-link" href="#main-content">
-        Skip to content
+        {siteCopy.global.header.skipLinkLabel}
       </a>
       <div className="site-frame">
         <header
@@ -170,15 +175,15 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         >
           <motion.div className="scroll-progress" style={{ scaleX: progressScale }} />
           <motion.div className="scroll-progress-marker" style={{ left: markerLeft }} />
-          <Link href="/" className="brand-mark" aria-label="Summit home">
+          <Link href="/" className="brand-mark" aria-label={siteCopy.global.header.homeAriaLabel}>
             <span className="brand-icon" aria-hidden="true">
               <span />
               <span />
               <span />
             </span>
             <span className="brand-copy">
-              <strong>SUMMIT</strong>
-              <span>Financial Recruiting</span>
+              <strong>{siteCopy.global.header.brandLine1}</strong>
+              <span>{siteCopy.global.header.brandLine2}</span>
             </span>
           </Link>
           <JoinTeamButton className="header-cta" />
@@ -196,14 +201,14 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
               <span />
             </span>
             <div className="footer-logo-copy">
-              <strong>SUMMIT</strong>
-              <span>Financial Recruiting</span>
+              <strong>{siteCopy.global.header.brandLine1}</strong>
+              <span>{siteCopy.global.header.brandLine2}</span>
             </div>
           </div>
 
           <div className="footer-grid">
             <section>
-              <h2>Contact Info</h2>
+              <h2>{siteCopy.global.footer.contactHeading}</h2>
               <a className="footer-detail" href={`tel:${footerData.phoneRaw}`}>
                 <Phone size={18} />
                 <span>{footerData.phone}</span>
@@ -219,7 +224,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
             </section>
 
             <section>
-              <h2>Follow Us</h2>
+              <h2>{siteCopy.global.footer.followHeading}</h2>
               <div className="social-row">
                 {footerData.social.map((item) => {
                   const Icon = socialIcons[item.id as keyof typeof socialIcons];
@@ -240,7 +245,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
             </section>
 
             <section>
-              <h2>Our Partners</h2>
+              <h2>{siteCopy.global.footer.partnersHeading}</h2>
               <div className="partner-list">
                 {footerData.partners.map((partner) => (
                   <a
@@ -257,14 +262,18 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
           </div>
 
           <div className="footer-legal">
-            <span>&copy; 2026 Summit Financial Recruiting</span>
-            <Link href="/terms-of-use">Terms of Use</Link>
-            <Link href="/privacy-policy">Privacy Policy</Link>
+            <span>{siteCopy.global.footer.copyrightLine}</span>
+            <Link href="/terms-of-use">{siteCopy.global.footer.legalLinks[0]}</Link>
+            <Link href="/privacy-policy">{siteCopy.global.footer.legalLinks[1]}</Link>
           </div>
         </footer>
       </div>
 
-      <LeadModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      <LeadModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        returnFocusTarget={lastTrigger}
+      />
     </JoinTeamContext.Provider>
   );
 }

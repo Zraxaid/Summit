@@ -12,10 +12,12 @@ import {
   useTransform,
 } from "framer-motion";
 import { ChevronLeft, ChevronRight, MoveRight, Quote } from "lucide-react";
+import Image from "next/image";
 import { type CSSProperties, useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
 
 import { PartnerLogo } from "@/components/partner-logos";
 import { JoinTeamButton } from "@/components/site-shell";
+import { siteCopy } from "@/lib/copy";
 import { footerData, homeData } from "@/lib/site-data";
 
 const arrowTiles = [
@@ -82,12 +84,18 @@ function formatCurrency(value: number) {
 }
 
 function formatCompactCurrency(value: number) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    notation: "compact",
-    maximumFractionDigits: 1,
-  }).format(value);
+  if (value === 0) {
+    return "$0";
+  }
+
+  if (value >= 1_000_000) {
+    const compactValue = value / 1_000_000;
+    const rounded =
+      compactValue % 1 === 0 ? compactValue.toFixed(0) : compactValue.toFixed(1);
+    return `$${rounded}M`;
+  }
+
+  return formatCurrency(value);
 }
 
 function formatWholeNumber(value: number) {
@@ -109,12 +117,13 @@ function useAnimatedNumber(
   } = {},
 ) {
   const ref = useRef<HTMLSpanElement>(null);
+  const reduceMotion = useReducedMotion();
   const isInView = useInView(ref, { once: true, amount });
   const [value, setValue] = useState(0);
   const [done, setDone] = useState(false);
 
   useEffect(() => {
-    if (!isInView || done) {
+    if (reduceMotion || !isInView || done) {
       return;
     }
 
@@ -145,9 +154,13 @@ function useAnimatedNumber(
 
     frame = window.requestAnimationFrame(tick);
     return () => window.cancelAnimationFrame(frame);
-  }, [amount, done, duration, isInView, overshoot, target]);
+  }, [amount, done, duration, isInView, overshoot, reduceMotion, target]);
 
-  return { ref, value, done };
+  return {
+    ref,
+    value: reduceMotion ? target : value,
+    done: reduceMotion ? true : done,
+  };
 }
 
 function Reveal({
@@ -161,11 +174,13 @@ function Reveal({
   amount?: number;
   delay?: number;
 }) {
+  const reduceMotion = useReducedMotion();
+
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y: 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={reduceMotion ? false : { opacity: 0, y: 28 }}
+      whileInView={reduceMotion ? {} : { opacity: 1, y: 0 }}
       viewport={{ once: true, amount }}
       transition={{ duration: 0.8, delay, ease: [0.2, 0.8, 0.2, 1] }}
     >
@@ -178,20 +193,29 @@ function PhotoPanel({
   image,
   alt,
   className,
+  priority = false,
+  sizes = "(max-width: 750px) 100vw, 50vw",
   children,
 }: {
   image: string;
   alt: string;
   className?: string;
+  priority?: boolean;
+  sizes?: string;
   children?: React.ReactNode;
 }) {
   return (
     <div
       className={`photo-panel${className ? ` ${className}` : ""}`}
-      role="img"
-      aria-label={alt}
-      style={{ backgroundImage: `url(${image})` }}
     >
+      <Image
+        src={image}
+        alt={alt}
+        fill
+        className="photo-panel-image"
+        sizes={sizes}
+        priority={priority}
+      />
       {children}
     </div>
   );
@@ -229,7 +253,7 @@ function DirectionMarquee({
   items,
   invert = false,
 }: {
-  items: string[];
+  items: readonly string[];
   invert?: boolean;
 }) {
   const reduceMotion = useReducedMotion();
@@ -324,11 +348,18 @@ function HeroSection() {
             <motion.div
               key={image}
               className={`hero-collage-card hero-collage-card-${index + 1}`}
-              style={{ backgroundImage: `url(${image})` }}
               initial={reduceMotion ? false : { opacity: 0, y: 48, scale: 0.92 }}
               animate={reduceMotion ? {} : { opacity: 1, y: 0, scale: 1 }}
               transition={{ delay: 0.6 + index * 0.18, duration: 1 }}
-            />
+            >
+              <Image
+                src={image}
+                alt=""
+                fill
+                sizes="(max-width: 750px) 28vw, 16vw"
+                className="hero-collage-image"
+              />
+            </motion.div>
           ))}
         </div>
 
@@ -384,7 +415,7 @@ function HeroSection() {
 
         <div className="hero-copy">
           <Reveal className="hero-copy-block" amount={0.45}>
-            <p className="eyebrow">SUMMIT FINANCIAL RECRUITING</p>
+            <p className="eyebrow">{siteCopy.routes.home.sections.hero.eyebrow}</p>
             <motion.h1
               initial={reduceMotion ? false : { x: 72, opacity: 0 }}
               animate={reduceMotion ? {} : { x: [72, -14, 0], opacity: 1 }}
@@ -399,7 +430,7 @@ function HeroSection() {
           <Reveal className="hero-actions" amount={0.5} delay={0.2}>
             <JoinTeamButton />
             <a href="#performance" className="hero-ghost-link">
-              <span>SEE THE GROWTH STORY</span>
+              <span>{siteCopy.routes.home.sections.hero.secondaryCtaLabel}</span>
               <MoveRight size={18} />
             </a>
           </Reveal>
@@ -417,13 +448,13 @@ function QuarterlyChart() {
     <section className="quarterly-section">
       <Reveal className="section-intro">
         <p className="eyebrow">{homeData.quarterly.caption}</p>
-        <h2>Early proof that the system moves.</h2>
+        <h2>{siteCopy.routes.home.sections.quarterlyChart.headline}</h2>
       </Reveal>
       <Reveal className="quarterly-chart-shell" amount={0.4}>
         <div className="quarterly-axis-header">
           <div className="quarterly-axis-label">{homeData.quarterly.axisLabel}</div>
           <div className="quarterly-y-values" aria-hidden="true">
-            {["$0", "$25K", "$50K", "$75K", "$100K"].map((label) => (
+            {siteCopy.routes.home.sections.quarterlyChart.yAxisValues.map((label) => (
               <span key={label}>{label}</span>
             ))}
           </div>
@@ -661,7 +692,7 @@ function TestimonialCarousel({
                     <span>{current.role}</span>
                   </div>
                   <a href={current.videoUrl} target="_blank" rel="noopener noreferrer">
-                    WATCH THE VIDEO &gt;
+                    {siteCopy.routes.home.sections.testimonialsPrimary.watchLabel}
                   </a>
                 </div>
               </div>
@@ -721,8 +752,8 @@ function FastFiveSection() {
         <div className="fast-five-shell fast-five-sticky">
           <div className="fast-five-arrow" aria-hidden="true" />
           <div className="section-intro centered">
-            <p className="eyebrow">OUR SYSTEM: THE FAST FIVE</p>
-            <h2>Five ways we accelerate new writers.</h2>
+            <p className="eyebrow">{siteCopy.routes.home.sections.fastFive.eyebrow}</p>
+            <h2>{siteCopy.routes.home.sections.fastFive.headline}</h2>
           </div>
 
           <div className="process-timeline" aria-hidden="true">
@@ -757,7 +788,9 @@ function FastFiveSection() {
           </div>
 
           <div className="process-cta">
-            <JoinTeamButton variant="outline">JOIN THE TEAM</JoinTeamButton>
+            <JoinTeamButton variant="outline">
+              {siteCopy.routes.home.sections.fastFive.ctaLabel}
+            </JoinTeamButton>
           </div>
         </div>
       </div>
@@ -895,24 +928,34 @@ function PerformanceDashboard() {
       </Reveal>
 
       <Reveal className="outline-band">
-        <p>JOIN ONE OF THE FASTEST GROWING AGENCIES IN THE NATION.</p>
-        <JoinTeamButton variant="outline">JOIN THE TEAM</JoinTeamButton>
+        <p>{siteCopy.routes.home.sections.performance.outlineLabel}</p>
+        <JoinTeamButton variant="outline">
+          {siteCopy.routes.home.sections.performance.ctaLabel}
+        </JoinTeamButton>
       </Reveal>
     </section>
   );
 }
 
 function InstagramRail() {
+  const reduceMotion = useReducedMotion();
+
   return (
     <section className="instagram-section">
       <Reveal className="section-intro">
-        <p className="eyebrow">FOLLOW JAY</p>
-        <h2>Culture, wins, and recruiting momentum in real time.</h2>
+        <p className="eyebrow">{siteCopy.routes.home.sections.instagram.eyebrow}</p>
+        <h2>{siteCopy.routes.home.sections.instagram.headline}</h2>
       </Reveal>
 
       <div className="instagram-rail">
-        <div className="instagram-track">
-          {[...homeData.instagram, ...homeData.instagram].map((card, index) => (
+        <div
+          className="instagram-track"
+          style={reduceMotion ? { animation: "none" } : undefined}
+        >
+          {[
+            ...homeData.instagram,
+            ...(reduceMotion ? [] : homeData.instagram),
+          ].map((card, index) => (
             <a
               key={`${card.url}-${index}`}
               className={`instagram-card instagram-card-${index % 5}`}
@@ -920,14 +963,17 @@ function InstagramRail() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <div
-                className="instagram-card-photo"
-                role="img"
-                aria-label={card.title}
-                style={{ backgroundImage: `url(${card.image})` }}
-              />
+              <div className="instagram-card-photo">
+                <Image
+                  src={card.image}
+                  alt={card.title}
+                  fill
+                  sizes="(max-width: 750px) 70vw, (max-width: 1100px) 40vw, 18rem"
+                  className="instagram-card-image"
+                />
+              </div>
               <div className="instagram-card-copy">
-                <span>INSTAGRAM</span>
+                <span>{siteCopy.routes.home.sections.instagram.platformLabel}</span>
                 <strong>{card.title}</strong>
               </div>
             </a>
@@ -961,7 +1007,7 @@ function PartnershipSection() {
             alt="Summit team in a dimly lit office celebrating a strong recruiting week."
           />
           <div className="partner-diamond-content">
-            <p className="eyebrow">PARTNERSHIP</p>
+            <p className="eyebrow">{siteCopy.routes.home.sections.partnership.eyebrow}</p>
             <h2>{homeData.partnership.headline}</h2>
             <div className="partner-logo-grid">
               {footerData.partners.map((partner, index) => (
@@ -996,7 +1042,7 @@ function PartnershipSection() {
               rel="noopener noreferrer"
               className="text-link-cta"
             >
-              WATCH VIDEOS &gt;
+              {siteCopy.routes.home.sections.partnership.ctaLabel}
             </a>
           </div>
         </motion.div>
@@ -1030,7 +1076,9 @@ export function HomePage() {
 
       <section className="cta-band cta-band-dark">
         <p>{homeData.quarterly.caption}</p>
-        <JoinTeamButton className="wide-cta">JOIN THE TEAM</JoinTeamButton>
+        <JoinTeamButton className="wide-cta">
+          {siteCopy.routes.home.sections.firstCtaBand.ctaLabel}
+        </JoinTeamButton>
       </section>
 
       <QuarterlyChart />
@@ -1054,7 +1102,7 @@ export function HomePage() {
           </motion.div>
 
           <div className="mission-split-copy">
-            <p className="eyebrow">TAKE YOUR FINANCIAL LIFE</p>
+            <p className="eyebrow">{siteCopy.routes.home.sections.missionSplit.eyebrow}</p>
             <motion.h2
               initial={reduceMotion ? false : { x: 110, opacity: 0 }}
               whileInView={reduceMotion ? {} : { x: [110, -18, 0], opacity: 1 }}
@@ -1066,12 +1114,17 @@ export function HomePage() {
               {homeData.missionSplit.titleSuffix}
             </motion.h2>
             <p>{homeData.missionSplit.body}</p>
-            <JoinTeamButton variant="text">JOIN TODAY.</JoinTeamButton>
+            <JoinTeamButton variant="text">
+              {siteCopy.routes.home.sections.missionSplit.ctaLabel}
+            </JoinTeamButton>
           </div>
         </Reveal>
       </section>
 
-      <TestimonialCarousel items={homeData.testimonials} eyebrow="WHY I CHOSE SUMMIT" />
+      <TestimonialCarousel
+        items={homeData.testimonials}
+        eyebrow={siteCopy.routes.home.sections.testimonialsPrimary.eyebrow}
+      />
 
       <section className="switcher-section">
         <Reveal className="switcher-shell">
@@ -1140,7 +1193,9 @@ export function HomePage() {
       <DirectionMarquee items={homeData.valueMarquee} invert />
 
       <section className="cta-band">
-        <JoinTeamButton className="wide-cta">JOIN THE TEAM</JoinTeamButton>
+        <JoinTeamButton className="wide-cta">
+          {siteCopy.routes.home.sections.middleCtaBand.ctaLabel}
+        </JoinTeamButton>
       </section>
 
       <FastFiveSection />
@@ -1173,7 +1228,7 @@ export function HomePage() {
             </motion.h2>
             <p>{homeData.founder.body}</p>
             <a href={homeData.founder.followUrl} target="_blank" rel="noopener noreferrer">
-              FOLLOW JAY
+              {siteCopy.routes.home.sections.founder.ctaLabel}
             </a>
           </div>
         </Reveal>
@@ -1191,7 +1246,10 @@ export function HomePage() {
         ))}
       </section>
 
-      <TestimonialCarousel items={homeData.secondaryTestimonials} eyebrow="WHY I STAYED" />
+      <TestimonialCarousel
+        items={homeData.secondaryTestimonials}
+        eyebrow={siteCopy.routes.home.sections.testimonialsSecondary.eyebrow}
+      />
 
       <InstagramRail />
 
@@ -1206,9 +1264,9 @@ export function HomePage() {
           >
             <div className="final-cta-overlay">
               <p className="eyebrow">{homeData.finalCta.eyebrow}</p>
-              <h2>JOIN THE TEAM</h2>
-              <JoinTeamButton>JOIN THE TEAM</JoinTeamButton>
-              <small>Takes about 90 seconds.</small>
+              <h2>{siteCopy.routes.home.sections.finalCta.headline}</h2>
+              <JoinTeamButton>{siteCopy.routes.home.sections.finalCta.ctaLabel}</JoinTeamButton>
+              <small>{siteCopy.routes.home.sections.finalCta.helper}</small>
             </div>
           </PhotoPanel>
         </Reveal>

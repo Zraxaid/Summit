@@ -1,12 +1,14 @@
+import { siteCopy } from "@/lib/copy";
+
 export type LegalSection = {
   slug: string;
   title: string;
   body: string[];
 };
 
-const summitEmail = "hello@summitfinancialrecruiting.com";
-const summitAddress = "Scottsdale, AZ and remote nationwide";
-const summitPhone = "+1 (480) 550-8556";
+const summitEmail = siteCopy.global.footer.emailLabel;
+const summitAddress = siteCopy.global.footer.address;
+const summitPhone = siteCopy.global.footer.phoneLabel;
 const summitPhoneRaw = "+14805508556";
 
 export const footerData = {
@@ -39,9 +41,8 @@ export const footerData = {
 
 export const homeData = {
   hero: {
-    headline: "BUILD AN INSURANCE CAREER WITH REAL MOMENTUM",
-    subhead:
-      "Join a recruiting system built around mentorship, leads, accountability, and a faster path to meaningful income growth.",
+    headline: siteCopy.routes.home.sections.hero.headline,
+    subhead: siteCopy.routes.home.sections.hero.subhead,
     heroPhotos: [
       "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80",
@@ -52,34 +53,32 @@ export const homeData = {
     {
       value: 59,
       unit: "%",
-      body: "OF AMERICANS HAVE LESS THAN $10K IN SAVINGS",
+      body: siteCopy.routes.home.sections.statTriad.stats[0].caption,
     },
     {
       value: 25,
       unit: "%",
-      body: "LESS FULL-TIME EMPLOYMENT FOR YOUNG ADULTS THAN PRIOR GENERATIONS",
+      body: siteCopy.routes.home.sections.statTriad.stats[1].caption,
     },
     {
       value: 37,
       unit: "%",
-      body: "OF YOUNG PEOPLE LIVE IN LOW-INCOME HOUSEHOLDS",
+      body: siteCopy.routes.home.sections.statTriad.stats[2].caption,
     },
   ],
-  breakMarquee: ["BREAK THE CYCLE", "BREAK THE CYCLE", "BREAK THE CYCLE", "BREAK THE CYCLE"],
+  breakMarquee: siteCopy.routes.home.sections.breakMarquee.phrases,
   quarterly: {
-    caption: "AVERAGE EARNINGS IN 1ST 3 MONTHS",
-    axisLabel: "PRODUCTION ($)",
-    labels: ["JAN-MARCH", "APRIL-JUNE", "JULY-SEPT", "OCT-DEC"],
+    caption: siteCopy.routes.home.sections.quarterlyChart.eyebrow,
+    axisLabel: siteCopy.routes.home.sections.quarterlyChart.axisLabel,
+    labels: siteCopy.routes.home.sections.quarterlyChart.xAxisLabels,
     values: [9, 24, 51, 91],
   },
-  missionStatement:
-    "We are here to level the playing field for hungry people who want a faster path into wealth-building work. Summit is built for momentum, not waiting.",
+  missionStatement: siteCopy.routes.home.sections.missionEssay.body.replace(/\[|\]/g, ""),
   missionSplit: {
     titlePrefix: "TAKE YOUR FINANCIAL LIFE",
-    highlight: "OFF PAUSE",
+    highlight: siteCopy.routes.home.sections.missionSplit.emphasizedPhrase,
     titleSuffix: "AND START GROWING YOUR INCOME AND CAREER IMMEDIATELY.",
-    body:
-      "A better system should feel visible: better coaching, real accountability, faster reps, and a room full of people who are already moving in the direction you want.",
+    body: siteCopy.routes.home.sections.missionSplit.body,
     image:
       "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1600&q=80",
     imageAlt: "Summit team collaborating around a laptop during a strategy session.",
@@ -117,41 +116,25 @@ export const homeData = {
     },
   ],
   switcher: {
-    eyebrow: "MAKE THE SWITCH",
-    title: "Agents with experience still come here for a better system.",
-    body:
-      "A huge share of the current team came from another agency because they wanted stronger support, cleaner operations, and more upside.",
+    eyebrow: siteCopy.routes.home.sections.switcher.eyebrow,
+    title: siteCopy.routes.home.sections.switcher.headline,
+    body: siteCopy.routes.home.sections.switcher.body,
     value: "43%",
-    statLabel: "OF OUR CURRENT TEAM CAME TO SUMMIT WITH PRIOR AGENCY EXPERIENCE",
+    statLabel: siteCopy.routes.home.sections.switcher.statCaption,
     image:
       "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1600&q=80",
     imageAlt: "A small team sharing ideas in a bright conference room.",
   },
   benefits: {
-    eyebrow: "JUMP START YOUR CAREER",
-    title: "What growth looks like when nothing stands in your way.",
-    body:
-      "Less friction, more rhythm, and a culture that keeps the work moving in the right direction.",
+    eyebrow: siteCopy.routes.home.sections.benefits.eyebrow,
+    title: siteCopy.routes.home.sections.benefits.headline,
+    body: siteCopy.routes.home.sections.benefits.body,
     image:
       "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1600&q=80",
     imageAlt: "Team members reviewing goals together on a couch.",
-    items: [
-      "CLOSE MORE DEALS EFFORTLESSLY",
-      "WORK-LIFE BALANCE",
-      "SET AND HIT YOUR OWN GOALS",
-      "CHOOSE YOUR OWN HOURS",
-      "MINIMAL PAPERWORK",
-      "TEAM-DRIVEN INSPIRATION",
-    ],
+    items: [...siteCopy.routes.home.sections.benefits.items],
   },
-  valueMarquee: [
-    "TOP COMMISSIONS",
-    "EXPERT TRAINING AND MENTORSHIP",
-    "EARN MORE",
-    "STOP CHASING OVER-CONTACTED PROSPECTS",
-    "SYSTEMS AND OFFICE SUPPORT",
-    "HIGH-CONVERTING PROSPECTS",
-  ],
+  valueMarquee: [...siteCopy.routes.home.sections.valueMarquee.phrases],
   fastFive: [
     {
       number: 1,
@@ -180,10 +163,9 @@ export const homeData = {
     },
   ],
   performance: {
-    eyebrow: "PERFORMANCE WITH PURPOSE AND VELOCITY",
-    title: "Proof that the system scales.",
-    body:
-      "The model is built to help new writers ramp fast while still producing real year-over-year growth.",
+    eyebrow: siteCopy.routes.home.sections.performance.eyebrow,
+    title: siteCopy.routes.home.sections.performance.headline,
+    body: siteCopy.routes.home.sections.performance.body,
     kpis: [
       { label: "2025 TOTAL PRODUCTION", value: "$84,022,378" },
       { label: "2025 NEW WRITERS", value: "1,987" },
@@ -194,24 +176,18 @@ export const homeData = {
     production: [8, 22.8, 84],
   },
   founder: {
-    eyebrow: "MEET JAY MASKA",
-    headline: "WEALTH GROWTH EXPERTISE AT THE SPEED OF REAL LIFE",
-    body:
-      "Jay built Summit with one objective: make it easier for driven people to find a real system, real mentorship, and real momentum. The standard is speed with structure, not speed without support.",
+    eyebrow: siteCopy.routes.home.sections.founder.eyebrow,
+    headline: siteCopy.routes.home.sections.founder.headline,
+    body: siteCopy.routes.home.sections.founder.body,
     followUrl: "https://www.instagram.com/nonstopfinancial/",
     image:
       "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=1400&q=80",
     imageAlt: "Black and white founder portrait looking toward the camera.",
   },
-  successKpis: [
-    { value: "300+", label: "GRADUATES OF OUR TRAINING PROGRAM" },
-    { value: "$5,000,000", label: "FFL BONUSES PAID OUT EVERY MONTH" },
-    { value: "$84 MILLION", label: "OF ISSUED PREMIUM IN 2025" },
-    {
-      value: "FASTEST GROWING",
-      label: "WEALTH-GENERATING SOLUTION FOR 18-28 YEAR OLDS",
-    },
-  ],
+  successKpis: [...siteCopy.routes.home.sections.successStrip.items].map((item) => ({
+    value: item.value,
+    label: item.caption,
+  })),
   secondaryTestimonials: [
     {
       quote:
@@ -291,12 +267,12 @@ export const homeData = {
     },
   ],
   partnership: {
-    headline: "RAISING LIFESTYLES AND INCOMES WITH THE HELP OF OUR PARTNERS",
+    headline: siteCopy.routes.home.sections.partnership.headline,
     background:
       "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1600&q=80",
   },
   finalCta: {
-    eyebrow: "READY TO MOVE?",
+    eyebrow: siteCopy.routes.home.sections.finalCta.eyebrow,
     image:
       "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1600&q=80",
   },
@@ -304,7 +280,7 @@ export const homeData = {
     opening: "DON'T LET ANYONE TELL YOU THAT WAITING IS THE WHOLE STRATEGY.",
     middle: "BUILD MOMENTUM, LEARN QUICKLY,",
     closing: "AND KEEP MOVING.",
-    attribution: "JAY MASKA, 2026",
+    attribution: siteCopy.routes.home.sections.closingQuote.attribution,
     image:
       "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1200&q=80",
     imageAlt: "Monochrome founder-style portrait beside the final quote.",
