@@ -12,7 +12,7 @@ import {
   useTransform,
 } from "framer-motion";
 import { ChevronLeft, ChevronRight, MoveRight, Quote } from "lucide-react";
-import { useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
+import { type CSSProperties, useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
 
 import { PartnerLogo } from "@/components/partner-logos";
 import { JoinTeamButton } from "@/components/site-shell";
@@ -385,7 +385,13 @@ function HeroSection() {
         <div className="hero-copy">
           <Reveal className="hero-copy-block" amount={0.45}>
             <p className="eyebrow">SUMMIT FINANCIAL RECRUITING</p>
-            <h1>{homeData.hero.headline}</h1>
+            <motion.h1
+              initial={reduceMotion ? false : { x: 72, opacity: 0 }}
+              animate={reduceMotion ? {} : { x: [72, -14, 0], opacity: 1 }}
+              transition={{ duration: 0.88, times: [0, 0.72, 1], ease: [0.22, 1, 0.36, 1] }}
+            >
+              {homeData.hero.headline}
+            </motion.h1>
           </Reveal>
           <Reveal className="hero-subhead" amount={0.5} delay={0.12}>
             <p>{homeData.hero.subhead}</p>
@@ -732,6 +738,8 @@ function FastFiveSection() {
               return (
                 <motion.article
                   key={step.number}
+                  className="process-stack-card"
+                  style={{ top: `${6.5 + index * 0.7}rem`, zIndex: 20 + index } as CSSProperties}
                   initial={false}
                   animate={{
                     opacity: index < visibleSteps ? 1 : 0.16,
@@ -998,6 +1006,8 @@ function PartnershipSection() {
 }
 
 export function HomePage() {
+  const reduceMotion = useReducedMotion();
+
   return (
     <div className="home-page">
       <HeroSection />
@@ -1045,11 +1055,16 @@ export function HomePage() {
 
           <div className="mission-split-copy">
             <p className="eyebrow">TAKE YOUR FINANCIAL LIFE</p>
-            <h2>
+            <motion.h2
+              initial={reduceMotion ? false : { x: 110, opacity: 0 }}
+              whileInView={reduceMotion ? {} : { x: [110, -18, 0], opacity: 1 }}
+              viewport={{ once: true, amount: 0.45 }}
+              transition={{ duration: 0.9, times: [0, 0.75, 1], ease: [0.22, 1, 0.36, 1] }}
+            >
               {homeData.missionSplit.titlePrefix}{" "}
               <span>{homeData.missionSplit.highlight}</span>{" "}
               {homeData.missionSplit.titleSuffix}
-            </h2>
+            </motion.h2>
             <p>{homeData.missionSplit.body}</p>
             <JoinTeamButton variant="text">JOIN TODAY.</JoinTeamButton>
           </div>
@@ -1068,7 +1083,14 @@ export function HomePage() {
 
           <div className="switcher-copy">
             <p className="eyebrow">{homeData.switcher.eyebrow}</p>
-            <h2>{homeData.switcher.title}</h2>
+            <motion.h2
+              initial={reduceMotion ? false : { x: -42, opacity: 0 }}
+              whileInView={reduceMotion ? {} : { x: 0, opacity: 1 }}
+              viewport={{ once: true, amount: 0.4 }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            >
+              {homeData.switcher.title}
+            </motion.h2>
             <p>{homeData.switcher.body}</p>
             <SwitcherStat />
           </div>
@@ -1084,14 +1106,25 @@ export function HomePage() {
           />
           <div className="benefits-copy">
             <p className="eyebrow">{homeData.benefits.eyebrow}</p>
-            <h2>{homeData.benefits.title}</h2>
+            <motion.h2
+              initial={reduceMotion ? false : { x: 36, opacity: 0 }}
+              whileInView={reduceMotion ? {} : { x: 0, opacity: 1 }}
+              viewport={{ once: true, amount: 0.35 }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            >
+              {homeData.benefits.title}
+            </motion.h2>
             <p>{homeData.benefits.body}</p>
             <div className="benefit-grid">
               {homeData.benefits.items.map((benefit, index) => (
                 <motion.article
                   key={benefit}
-                  initial={{ opacity: 0, y: 34 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={
+                    reduceMotion
+                      ? false
+                      : { opacity: 0, x: index % 2 === 0 ? -28 : 28, y: 18 }
+                  }
+                  whileInView={reduceMotion ? {} : { opacity: 1, x: 0, y: 0 }}
                   viewport={{ once: true, amount: 0.35 }}
                   transition={{ duration: 0.5, delay: index * 0.06 }}
                 >
@@ -1130,7 +1163,14 @@ export function HomePage() {
           </motion.div>
           <div className="founder-copy">
             <p className="eyebrow">{homeData.founder.eyebrow}</p>
-            <h2>{homeData.founder.headline}</h2>
+            <motion.h2
+              initial={reduceMotion ? false : { x: 110, opacity: 0 }}
+              whileInView={reduceMotion ? {} : { x: [110, -18, 0], opacity: 1 }}
+              viewport={{ once: true, amount: 0.35 }}
+              transition={{ duration: 0.9, times: [0, 0.75, 1], ease: [0.22, 1, 0.36, 1] }}
+            >
+              {homeData.founder.headline}
+            </motion.h2>
             <p>{homeData.founder.body}</p>
             <a href={homeData.founder.followUrl} target="_blank" rel="noopener noreferrer">
               FOLLOW JAY
@@ -1182,11 +1222,16 @@ export function HomePage() {
             alt={homeData.closingQuote.imageAlt}
           />
           <div className="closing-quote-copy">
-            <blockquote>
+            <motion.blockquote
+              initial={reduceMotion ? false : { x: -34, opacity: 0 }}
+              whileInView={reduceMotion ? {} : { x: 0, opacity: 1 }}
+              viewport={{ once: true, amount: 0.35 }}
+              transition={{ duration: 0.72, ease: [0.22, 1, 0.36, 1] }}
+            >
               <span>{homeData.closingQuote.opening}</span>{" "}
               <em>{homeData.closingQuote.middle}</em>{" "}
               <span>{homeData.closingQuote.closing}</span>
-            </blockquote>
+            </motion.blockquote>
             <p>{homeData.closingQuote.attribution}</p>
           </div>
         </Reveal>

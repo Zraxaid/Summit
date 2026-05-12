@@ -37,6 +37,7 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
   text-rendering: optimizeLegibility;
+  overscroll-behavior: none;
 }
 
 a {
@@ -1691,6 +1692,7 @@ select {
   line-height: 0.92;
   letter-spacing: -0.05em;
   text-transform: uppercase;
+  text-wrap: balance;
 }
 
 .hero-subhead p {
@@ -1717,6 +1719,11 @@ select {
   top: 0.45rem;
   right: -0.2rem;
   color: var(--accent);
+  font-size: 0;
+}
+
+.stat-snap-arrow::before {
+  content: "↗";
   font-size: 1rem;
 }
 
@@ -2020,6 +2027,10 @@ select {
   background: linear-gradient(90deg, var(--accent), transparent);
 }
 
+.process-stack-card {
+  will-change: transform, opacity;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .scroll-progress-marker {
     display: none;
@@ -2064,6 +2075,10 @@ select {
 }
 
 @media (max-width: 750px) {
+  :root {
+    --section-gap: clamp(4rem, 12vh, 6rem);
+  }
+
   .hero-section {
     padding-top: 4.25rem;
     padding-bottom: 3.5rem;
@@ -2083,9 +2098,11 @@ select {
   }
 
   .hero-copy-block h1 {
-    font-size: clamp(2.5rem, 12vw, 3.9rem);
+    font-size: clamp(2.25rem, 9.5vw, 3.7rem);
     line-height: 0.96;
     letter-spacing: -0.04em;
+    max-width: 11ch;
+    margin-inline: auto;
   }
 
   .hero-subhead p {
@@ -2109,17 +2126,32 @@ select {
   }
 
   .hero-collage {
-    inset: 6rem 0 0;
+    inset: 5.5rem 0 0;
+  }
+
+  .hero-collage-card-1,
+  .hero-collage-card-2 {
+    width: 7rem;
+    height: 10rem;
+    opacity: 0.11;
+  }
+
+  .hero-collage-card-1 {
+    left: 1%;
+    top: 18%;
   }
 
   .hero-collage-card-2 {
-    right: 4%;
-    opacity: 0.12;
+    right: 1%;
+    top: 16%;
   }
 
   .hero-collage-card-3 {
-    bottom: 18%;
-    opacity: 0.1;
+    width: 8rem;
+    height: 8rem;
+    left: calc(50% - 4rem);
+    bottom: 22%;
+    opacity: 0.07;
   }
 
   .hero-arrow {
@@ -2128,6 +2160,58 @@ select {
 
   .stat-card {
     padding: 1.3rem;
+  }
+
+  .section-intro h2,
+  .mission-split-copy h2,
+  .switcher-copy h2,
+  .benefits-copy h2,
+  .founder-copy h2,
+  .partner-diamond-content h2,
+  .final-cta-overlay h2,
+  .closing-quote-copy blockquote {
+    font-size: clamp(2.25rem, 9.5vw, 3.7rem);
+    line-height: 0.96;
+    letter-spacing: -0.04em;
+    max-width: 11ch;
+    overflow-wrap: anywhere;
+    text-wrap: balance;
+  }
+
+  .mission-split-copy,
+  .switcher-copy,
+  .benefits-copy,
+  .founder-copy,
+  .closing-quote-copy,
+  .section-intro {
+    max-width: 100%;
+  }
+
+  .photo-panel,
+  .carousel-portrait,
+  .founder-photo,
+  .final-cta-photo,
+  .closing-quote-photo {
+    min-height: 20rem;
+  }
+
+  .mission-split,
+  .switcher-shell,
+  .benefits-shell,
+  .founder-shell,
+  .closing-quote-shell {
+    gap: 1.35rem;
+  }
+
+  .carousel-frame {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 1.25rem 1.25rem 4.8rem;
+  }
+
+  .carousel-portrait {
+    order: -1;
+    min-height: 18rem;
   }
 
   .carousel-copy blockquote {
@@ -2144,8 +2228,36 @@ select {
     gap: 0.85rem;
   }
 
+  .switcher-donut {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .switcher-donut-copy {
+    justify-items: center;
+  }
+
+  .switcher-donut-copy strong {
+    font-size: clamp(3rem, 16vw, 4.4rem);
+  }
+
+  .benefit-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .process-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
   .process-cta {
     margin-top: 1.5rem;
+  }
+
+  .performance-kpis {
+    grid-template-columns: 1fr;
   }
 
   .performance-chart {
@@ -2155,6 +2267,19 @@ select {
 
   .instagram-rail {
     mask-image: none;
+  }
+
+  .instagram-track {
+    gap: 0.8rem;
+  }
+
+  .instagram-card,
+  .instagram-card-0,
+  .instagram-card-1,
+  .instagram-card-2,
+  .instagram-card-3,
+  .instagram-card-4 {
+    transform: none;
   }
 
   .marquee-group span,
@@ -2174,11 +2299,48 @@ select {
   }
 
   .fast-five-sticky {
-    position: static;
+    position: relative;
+    top: auto;
+    padding-top: 0;
+  }
+
+  .fast-five-arrow,
+  .process-timeline {
+    display: none;
+  }
+
+  .process-grid-pinned {
+    display: block;
+    scroll-snap-type: y proximity;
+  }
+
+  .process-stack-card {
+    position: sticky;
+    margin-bottom: 0.9rem;
+    scroll-snap-align: start;
   }
 
   .process-grid-pinned article {
     opacity: 1 !important;
     transform: none !important;
+  }
+
+  .founder-shell > :first-child,
+  .closing-quote-shell > :first-child {
+    order: -1;
+  }
+
+  .founder-copy,
+  .closing-quote-copy {
+    gap: 0.85rem;
+  }
+
+  .partner-diamond-content,
+  .final-cta-overlay {
+    padding: 1.4rem;
+  }
+
+  .button-text {
+    font-size: clamp(1.7rem, 10vw, 3rem);
   }
 }
