@@ -3,21 +3,24 @@
 import {
   AnimatePresence,
   motion,
+  useAnimationFrame,
+  useInView,
+  useMotionValue,
+  useMotionValueEvent,
   useReducedMotion,
   useScroll,
+  useSpring,
   useTransform,
+  type MotionValue,
 } from "framer-motion";
-import {
-  ChevronLeft,
-  ChevronRight,
-  MoveRight,
-  Quote,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, MoveRight, Quote } from "lucide-react";
 import { useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
 
 import { PartnerLogo } from "@/components/partner-logos";
 import { JoinTeamButton } from "@/components/site-shell";
 import { footerData, homeData } from "@/lib/site-data";
+
+const heroHeadlineLines = ["NOW EVERYONE CAN ACCESS", "A WORLD OF WEALTH"];
 
 const arrowTiles = [
   { top: "6%", left: "8%", width: 260, delay: 0.1, rotate: -22 },
@@ -30,18 +33,32 @@ const arrowTiles = [
   { top: "66%", left: "38%", width: 180, delay: 1.15, rotate: -12 },
 ];
 
-const heroParticles = [
-  { x: -110, y: -65, delay: 0.4 },
-  { x: -84, y: 28, delay: 0.5 },
-  { x: -34, y: -34, delay: 0.6 },
-  { x: -22, y: 42, delay: 0.72 },
-  { x: 18, y: -54, delay: 0.84 },
-  { x: 46, y: 50, delay: 0.96 },
-  { x: 86, y: -26, delay: 1.08 },
-  { x: 110, y: 18, delay: 1.2 },
-  { x: 76, y: 66, delay: 1.32 },
-  { x: -72, y: 74, delay: 1.44 },
-];
+const successRatios = [1, 0.84, 0.93, 0.72];
+
+function clamp(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max);
+}
+
+function wrap(value: number, min: number, max: number) {
+  const range = max - min;
+
+  if (range === 0) {
+    return min;
+  }
+
+  return ((((value - min) % range) + range) % range) + min;
+}
+
+function easeOutCubic(value: number) {
+  return 1 - (1 - value) ** 3;
+}
+
+function easeOutBack(value: number) {
+  const c1 = 1.70158;
+  const c3 = c1 + 1;
+
+  return 1 + c3 * (value - 1) ** 3 + c1 * (value - 1) ** 2;
+}
 
 function linePath(values: number[], width: number, height: number, padding = 28) {
   const max = Math.max(...values);
@@ -60,64 +77,101 @@ function linePath(values: number[], width: number, height: number, padding = 28)
     .join(" ");
 }
 
-function useCountUp(target: number) {
+function formatCurrency(value: number) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
+function formatCompactCurrency(value: number) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    notation: "compact",
+    maximumFractionDigits: 1,
+  }).format(value);
+}
+
+function formatWholeNumber(value: number) {
+  return new Intl.NumberFormat("en-US", {
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
+function useAnimatedNumber(
+  target: number,
+  {
+    duration = 1400,
+    overshoot = 0,
+    amount = 0.55,
+  }: {
+    duration?: number;
+    overshoot?: number;
+    amount?: number;
+  } = {},
+) {
   const ref = useRef<HTMLSpanElement>(null);
+  const isInView = useInView(ref, { once: true, amount });
   const [value, setValue] = useState(0);
+  const [done, setDone] = useState(false);
 
   useEffect(() => {
-    const node = ref.current;
-
-    if (!node) {
+    if (!isInView || done) {
       return;
     }
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) {
-          return;
-        }
+    let frame = 0;
+    const overshootTarget = target * (1 + overshoot);
+    const start = performance.now();
 
-        const startTime = performance.now();
-        const duration = 1200;
+    const tick = (currentTime: number) => {
+      const progress = clamp((currentTime - start) / duration, 0, 1);
+      const nextValue =
+        progress < 0.82
+          ? overshoot > 0
+            ? overshootTarget * easeOutCubic(progress / 0.82)
+            : target * easeOutCubic(progress)
+          : overshoot > 0
+            ? overshootTarget - (overshootTarget - target) * easeOutBack((progress - 0.82) / 0.18)
+            : target;
 
-        const tick = (currentTime: number) => {
-          const progress = Math.min((currentTime - startTime) / duration, 1);
-          setValue(Math.round(target * progress));
+      setValue(nextValue);
 
-          if (progress < 1) {
-            window.requestAnimationFrame(tick);
-          }
-        };
+      if (progress < 1) {
+        frame = window.requestAnimationFrame(tick);
+      } else {
+        setValue(target);
+        setDone(true);
+      }
+    };
 
-        window.requestAnimationFrame(tick);
-        observer.disconnect();
-      },
-      { threshold: 0.45 },
-    );
+    frame = window.requestAnimationFrame(tick);
+    return () => window.cancelAnimationFrame(frame);
+  }, [amount, done, duration, isInView, overshoot, target]);
 
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, [target]);
-
-  return { ref, value };
+  return { ref, value, done };
 }
 
 function Reveal({
   children,
   className,
-  amount = 0.2,
+  amount = 0.25,
+  delay = 0,
 }: {
   children: React.ReactNode;
   className?: string;
   amount?: number;
+  delay?: number;
 }) {
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount }}
-      transition={{ duration: 0.7, ease: [0.2, 0.8, 0.2, 1] }}
+      transition={{ duration: 0.8, delay, ease: [0.2, 0.8, 0.2, 1] }}
     >
       {children}
     </motion.div>
@@ -147,34 +201,320 @@ function PhotoPanel({
   );
 }
 
+function ArrowTrail() {
+  const reduceMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll();
+  const trail = useSpring(scrollYProgress, {
+    stiffness: 90,
+    damping: 22,
+    mass: 0.4,
+  });
+  const headX = useTransform(trail, [0, 1], ["7%", "92%"]);
+  const headY = useTransform(trail, [0, 1], ["92%", "8%"]);
+
+  return (
+    <div className="page-arrow-trail" aria-hidden="true">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+        <path
+          d="M7 92 L24 74 L43 79 L60 51 L77 56 L92 8"
+          className="page-arrow-trail-base"
+        />
+        <motion.path
+          d="M7 92 L24 74 L43 79 L60 51 L77 56 L92 8"
+          className="page-arrow-trail-progress"
+          style={reduceMotion ? undefined : { pathLength: trail }}
+          initial={reduceMotion ? false : { pathLength: 0.02 }}
+        />
+      </svg>
+      {!reduceMotion ? (
+        <motion.div className="page-arrow-head" style={{ left: headX, top: headY }} />
+      ) : null}
+    </div>
+  );
+}
+
+function ParticleHeadline({
+  lines,
+  scrollProgress,
+}: {
+  lines: string[];
+  scrollProgress: MotionValue<number>;
+}) {
+  const reduceMotion = useReducedMotion();
+  const shellRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const exitProgressRef = useRef(0);
+  const [size, setSize] = useState({ width: 0, height: 0 });
+
+  useMotionValueEvent(scrollProgress, "change", (value) => {
+    exitProgressRef.current = clamp(value, 0, 1);
+  });
+
+  useEffect(() => {
+    const node = shellRef.current;
+
+    if (!node) {
+      return;
+    }
+
+    const observer = new ResizeObserver((entries) => {
+      const next = entries[0];
+
+      if (!next) {
+        return;
+      }
+
+      setSize({
+        width: Math.round(next.contentRect.width),
+        height: Math.round(next.contentRect.height),
+      });
+    });
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (reduceMotion || !size.width || !size.height) {
+      return;
+    }
+
+    const canvas = canvasRef.current;
+
+    if (!canvas) {
+      return;
+    }
+
+    const ctx = canvas.getContext("2d");
+
+    if (!ctx) {
+      return;
+    }
+
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = size.width * dpr;
+    canvas.height = size.height * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const offscreen = document.createElement("canvas");
+    offscreen.width = size.width;
+    offscreen.height = size.height;
+    const offscreenContext = offscreen.getContext("2d");
+
+    if (!offscreenContext) {
+      return;
+    }
+
+    const fontSize = clamp(size.width * 0.095, 34, 126);
+    const lineHeight = fontSize * 0.88;
+    const startY = size.height / 2 - ((lines.length - 1) * lineHeight) / 2 + fontSize * 0.08;
+
+    offscreenContext.clearRect(0, 0, size.width, size.height);
+    offscreenContext.fillStyle = "#ffffff";
+    offscreenContext.textAlign = "center";
+    offscreenContext.textBaseline = "middle";
+    offscreenContext.font = `800 ${fontSize}px Arial`;
+
+    lines.forEach((line, index) => {
+      offscreenContext.fillText(line, size.width / 2, startY + index * lineHeight);
+    });
+
+    const sample = Math.max(5, Math.floor(fontSize / 11));
+    const pixels = offscreenContext.getImageData(0, 0, size.width, size.height).data;
+    const particles: Array<{
+      startX: number;
+      startY: number;
+      targetX: number;
+      targetY: number;
+      driftX: number;
+      driftY: number;
+      radius: number;
+      delay: number;
+      hue: "accent" | "cream";
+    }> = [];
+
+    for (let y = 0; y < size.height; y += sample) {
+      for (let x = 0; x < size.width; x += sample) {
+        const alpha = pixels[(y * size.width + x) * 4 + 3];
+
+        if (alpha > 90) {
+          particles.push({
+            startX: Math.random() * size.width,
+            startY: Math.random() * size.height,
+            targetX: x,
+            targetY: y,
+            driftX: (Math.random() - 0.1) * 220,
+            driftY: (Math.random() - 0.8) * 160,
+            radius: 1.5 + Math.random() * 2.2,
+            delay: Math.random() * 0.24,
+            hue: Math.random() > 0.78 ? "accent" : "cream",
+          });
+        }
+      }
+    }
+
+    let frame = 0;
+    const start = performance.now();
+
+    const render = (currentTime: number) => {
+      const intro = clamp((currentTime - start) / 1400, 0, 1);
+      const introEase = easeOutCubic(intro);
+      const exit = clamp(exitProgressRef.current * 1.45, 0, 1);
+
+      ctx.clearRect(0, 0, size.width, size.height);
+
+      particles.forEach((particle) => {
+        const delayedIntro = clamp((introEase - particle.delay) / (1 - particle.delay), 0, 1);
+        const build = easeOutCubic(delayedIntro);
+        const settledX = particle.startX + (particle.targetX - particle.startX) * build;
+        const settledY = particle.startY + (particle.targetY - particle.startY) * build;
+        const releaseX = settledX + particle.driftX * exit;
+        const releaseY = settledY + particle.driftY * exit;
+        const opacity = clamp(build * (1 - exit * 0.82), 0, 1);
+
+        ctx.beginPath();
+        ctx.fillStyle = particle.hue === "accent" ? "#ff7b1c" : "#f5f1e8";
+        ctx.globalAlpha = opacity;
+        ctx.arc(releaseX, releaseY, particle.radius * (1 - exit * 0.35), 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      ctx.globalAlpha = 1;
+
+      if (intro < 1 || exit < 1) {
+        frame = window.requestAnimationFrame(render);
+      }
+    };
+
+    frame = window.requestAnimationFrame(render);
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [lines, reduceMotion, size.height, size.width]);
+
+  return (
+    <div ref={shellRef} className="hero-headline-shell">
+      {reduceMotion ? (
+        <h1 className="hero-headline-text">
+          {lines.map((line) => (
+            <span key={line}>{line}</span>
+          ))}
+        </h1>
+      ) : (
+        <>
+          <h1 className="sr-only">{lines.join(" ")}</h1>
+          <canvas ref={canvasRef} className="hero-headline-canvas" aria-hidden="true" />
+        </>
+      )}
+    </div>
+  );
+}
+
 function AnimatedStat({ value, unit, body }: (typeof homeData.stats)[number]) {
-  const { ref, value: current } = useCountUp(value);
+  const { ref, value: current, done } = useAnimatedNumber(value, {
+    duration: 1500,
+    overshoot: 0.18,
+  });
 
   return (
     <Reveal className="stat-card">
       <p className="stat-value">
-        <span ref={ref}>{current}</span>
+        <span ref={ref} aria-live="polite" aria-label={`${value}${unit}`}>
+          {Math.round(current)}
+        </span>
         <span>{unit}</span>
+        <motion.span
+          className="stat-snap-arrow"
+          initial={false}
+          animate={done ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.7, y: 8 }}
+          transition={{ duration: 0.28 }}
+          aria-hidden="true"
+        >
+          ↗
+        </motion.span>
       </p>
       <p>{body}</p>
     </Reveal>
   );
 }
 
-function MarqueeBand({
+function DirectionMarquee({
   items,
   invert = false,
 }: {
   items: string[];
   invert?: boolean;
 }) {
+  const reduceMotion = useReducedMotion();
+  const rowRef = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const lastScrollRef = useRef(0);
+  const boostRef = useRef(0);
+  const directionRef = useRef(1);
+  const [rowWidth, setRowWidth] = useState(0);
+
+  useEffect(() => {
+    const node = rowRef.current;
+
+    if (!node) {
+      return;
+    }
+
+    const measure = () => {
+      const nextWidth = node.getBoundingClientRect().width;
+      setRowWidth(nextWidth);
+      x.set(-nextWidth);
+    };
+
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [x]);
+
+  useAnimationFrame((_, delta) => {
+    if (reduceMotion || !rowWidth) {
+      return;
+    }
+
+    const currentScroll = window.scrollY;
+    const deltaScroll = currentScroll - lastScrollRef.current;
+    lastScrollRef.current = currentScroll;
+    boostRef.current = boostRef.current * 0.88 + clamp(deltaScroll, -38, 38) * 0.12;
+
+    if (Math.abs(deltaScroll) > 0.1) {
+      directionRef.current = deltaScroll > 0 ? 1 : -1;
+    }
+
+    const speed = 32 + Math.min(Math.abs(boostRef.current) * 2.6, 76);
+    const next = wrap(x.get() + directionRef.current * speed * (delta / 1000), -rowWidth * 2, 0);
+    x.set(next);
+  });
+
   return (
     <div className={`marquee-band${invert ? " invert" : ""}`}>
-      <div className="marquee-track">
-        {[...items, ...items].map((item, index) => (
-          <span key={`${item}-${index}`}>{item}</span>
-        ))}
-      </div>
+      {reduceMotion ? (
+        <div className="marquee-static">
+          {items.map((item, index) => (
+            <span key={`${item}-${index}`}>
+              <b>{item}</b>
+              <i aria-hidden="true" />
+            </span>
+          ))}
+        </div>
+      ) : (
+        <motion.div className="marquee-track-live" style={{ x }}>
+          {[0, 1, 2].map((copy) => (
+            <div key={copy} className="marquee-group" ref={copy === 1 ? rowRef : undefined}>
+              {items.map((item, index) => (
+                <span key={`${copy}-${item}-${index}`}>
+                  <b>{item}</b>
+                  <i aria-hidden="true" />
+                </span>
+              ))}
+            </div>
+          ))}
+        </motion.div>
+      )}
     </div>
   );
 }
@@ -186,7 +526,7 @@ function HeroSection() {
     target: heroRef,
     offset: ["start start", "end start"],
   });
-  const backdropY = useTransform(scrollYProgress, [0, 1], [0, 96]);
+  const backdropY = useTransform(scrollYProgress, [0, 1], [0, 120]);
 
   return (
     <section ref={heroRef} className="hero-section">
@@ -197,9 +537,9 @@ function HeroSection() {
               key={image}
               className={`hero-collage-card hero-collage-card-${index + 1}`}
               style={{ backgroundImage: `url(${image})` }}
-              initial={reduceMotion ? false : { opacity: 0, y: 36 }}
-              animate={reduceMotion ? {} : { opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 + index * 0.18, duration: 0.85 }}
+              initial={reduceMotion ? false : { opacity: 0, y: 48, scale: 0.92 }}
+              animate={reduceMotion ? {} : { opacity: 1, y: 0, scale: 1 }}
+              transition={{ delay: 0.6 + index * 0.18, duration: 1 }}
             />
           ))}
         </div>
@@ -215,9 +555,9 @@ function HeroSection() {
               width: arrow.width,
               rotate: `${arrow.rotate}deg`,
             }}
-            initial={reduceMotion ? false : { opacity: 0, scale: 0.72, x: -20 }}
-            animate={reduceMotion ? {} : { opacity: 1, scale: 1, x: 0 }}
-            transition={{ duration: 0.9, delay: arrow.delay }}
+            initial={reduceMotion ? false : { opacity: 0, scale: 0.68, x: -28, y: 18 }}
+            animate={reduceMotion ? {} : { opacity: 1, scale: 1, x: 0, y: 0 }}
+            transition={{ duration: 1.05, delay: arrow.delay, ease: [0.2, 0.8, 0.2, 1] }}
           />
         ))}
       </motion.div>
@@ -227,7 +567,7 @@ function HeroSection() {
           className="hero-mark"
           initial={reduceMotion ? false : { opacity: 0, scale: 0.9 }}
           animate={reduceMotion ? {} : { opacity: 1, scale: 1 }}
-          transition={{ duration: 1.05, ease: [0.2, 0.8, 0.2, 1] }}
+          transition={{ duration: 0.7, ease: [0.2, 0.8, 0.2, 1] }}
         >
           <svg viewBox="0 0 240 160" aria-hidden="true">
             <motion.path
@@ -239,7 +579,7 @@ function HeroSection() {
               strokeLinejoin="round"
               initial={reduceMotion ? false : { pathLength: 0, opacity: 0 }}
               animate={reduceMotion ? {} : { pathLength: 1, opacity: 1 }}
-              transition={{ duration: 1.2, delay: 0.35 }}
+              transition={{ duration: 1, delay: 0.25 }}
             />
             <motion.path
               d="M76 116h52"
@@ -249,37 +589,24 @@ function HeroSection() {
               strokeLinecap="round"
               initial={reduceMotion ? false : { pathLength: 0, opacity: 0 }}
               animate={reduceMotion ? {} : { pathLength: 1, opacity: 1 }}
-              transition={{ duration: 0.9, delay: 0.78 }}
+              transition={{ duration: 0.9, delay: 0.58 }}
             />
-            {heroParticles.map((particle, index) => (
-              <motion.circle
-                key={`${particle.x}-${index}`}
-                cx="66"
-                cy="80"
-                r="4"
-                initial={
-                  reduceMotion
-                    ? false
-                    : { opacity: 0, x: particle.x, y: particle.y, scale: 0.3 }
-                }
-                animate={reduceMotion ? {} : { opacity: [0, 0.9, 0], x: 0, y: 0, scale: 1 }}
-                transition={{ duration: 1.3, delay: particle.delay }}
-              />
-            ))}
           </svg>
         </motion.div>
 
-        <Reveal className="hero-copy" amount={0.35}>
-          <h1>{homeData.hero.headline}</h1>
-          <p>{homeData.hero.subhead}</p>
-          <div className="hero-actions">
+        <div className="hero-copy">
+          <ParticleHeadline lines={heroHeadlineLines} scrollProgress={scrollYProgress} />
+          <Reveal className="hero-subhead" amount={0.5} delay={0.18}>
+            <p>{homeData.hero.subhead}</p>
+          </Reveal>
+          <Reveal className="hero-actions" amount={0.5} delay={0.32}>
             <JoinTeamButton />
             <a href="#performance" className="hero-ghost-link">
               <span>SEE THE GROWTH STORY</span>
               <MoveRight size={18} />
             </a>
-          </div>
-        </Reveal>
+          </Reveal>
+        </div>
       </div>
     </section>
   );
@@ -287,10 +614,7 @@ function HeroSection() {
 
 function QuarterlyChart() {
   const reduceMotion = useReducedMotion();
-  const path = useMemo(
-    () => linePath(homeData.quarterly.values, 560, 280, 32),
-    [],
-  );
+  const path = useMemo(() => linePath(homeData.quarterly.values, 560, 280, 32), []);
 
   return (
     <section className="quarterly-section">
@@ -299,16 +623,23 @@ function QuarterlyChart() {
         <h2>Early proof that the system moves.</h2>
       </Reveal>
       <Reveal className="quarterly-chart-shell" amount={0.4}>
-        <div className="quarterly-axis-label">{homeData.quarterly.axisLabel}</div>
+        <div className="quarterly-axis-header">
+          <div className="quarterly-axis-label">{homeData.quarterly.axisLabel}</div>
+          <div className="quarterly-y-values" aria-hidden="true">
+            {["$0", "$25K", "$50K", "$75K", "$100K"].map((label) => (
+              <span key={label}>{label}</span>
+            ))}
+          </div>
+        </div>
         <svg viewBox="0 0 560 280" className="quarterly-chart" aria-label="Quarterly growth chart">
           <line x1="32" y1="240" x2="528" y2="240" />
           <line x1="32" y1="24" x2="32" y2="240" />
           <motion.path
             d={path}
-            initial={reduceMotion ? false : { pathLength: 0, opacity: 0.3 }}
+            initial={reduceMotion ? false : { pathLength: 0, opacity: 0.2 }}
             whileInView={reduceMotion ? {} : { pathLength: 1, opacity: 1 }}
             viewport={{ once: true, amount: 0.55 }}
-            transition={{ duration: 1.4, ease: "easeOut" }}
+            transition={{ duration: 1.55, ease: "easeOut" }}
           />
           {homeData.quarterly.values.map((value, index) => {
             const x = 32 + ((560 - 64) / (homeData.quarterly.values.length - 1)) * index;
@@ -316,7 +647,15 @@ function QuarterlyChart() {
 
             return (
               <g key={homeData.quarterly.labels[index]}>
-                <circle cx={x} cy={y} r="5" />
+                <motion.circle
+                  cx={x}
+                  cy={y}
+                  r="5"
+                  initial={reduceMotion ? false : { scale: 0 }}
+                  whileInView={reduceMotion ? {} : { scale: 1 }}
+                  viewport={{ once: true, amount: 0.55 }}
+                  transition={{ delay: 0.25 + index * 0.12, duration: 0.3 }}
+                />
                 <text x={x} y="266" textAnchor="middle">
                   {homeData.quarterly.labels[index]}
                 </text>
@@ -329,6 +668,122 @@ function QuarterlyChart() {
         </svg>
       </Reveal>
     </section>
+  );
+}
+
+function MissionEssay() {
+  const essayRef = useRef<HTMLElement>(null);
+  const words = useMemo(() => homeData.missionStatement.split(" "), []);
+  const { scrollYProgress } = useScroll({
+    target: essayRef,
+    offset: ["start 80%", "end 20%"],
+  });
+  const [progress, setProgress] = useState(0);
+
+  useMotionValueEvent(scrollYProgress, "change", (value) => {
+    setProgress(value);
+  });
+
+  return (
+    <section ref={essayRef} className="mission-essay-section">
+      <div className="mission-essay">
+        <p>
+          {words.map((word, index) => {
+            const threshold = index / words.length;
+            const opacity = clamp((progress - threshold + 0.14) * 7.5, 0.18, 1);
+            const emphasis = word.toUpperCase().includes("MOMENTUM");
+
+            return (
+              <span
+                key={`${word}-${index}`}
+                style={{
+                  opacity,
+                  color: emphasis
+                    ? `rgba(255, 123, 28, ${0.4 + opacity * 0.6})`
+                    : undefined,
+                }}
+              >
+                {word}{" "}
+              </span>
+            );
+          })}
+        </p>
+      </div>
+    </section>
+  );
+}
+
+function DonutKpi({
+  value,
+  label,
+  ratio,
+  accent = false,
+}: {
+  value: string;
+  label: string;
+  ratio: number;
+  accent?: boolean;
+}) {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <Reveal className="success-card" amount={0.3}>
+      <div className={`donut-kpi${accent ? " accent" : ""}`}>
+        <svg viewBox="0 0 120 120" aria-hidden="true">
+          <circle cx="60" cy="60" r="46" className="donut-track" />
+          <motion.circle
+            cx="60"
+            cy="60"
+            r="46"
+            className="donut-progress"
+            pathLength={ratio}
+            initial={reduceMotion ? false : { pathLength: 0 }}
+            whileInView={reduceMotion ? {} : { pathLength: ratio }}
+            viewport={{ once: true, amount: 0.45 }}
+            transition={{ duration: 1.15, ease: "easeOut" }}
+          />
+        </svg>
+        <div>
+          <strong>{value}</strong>
+          <span>{label}</span>
+        </div>
+      </div>
+    </Reveal>
+  );
+}
+
+function SwitcherStat() {
+  const target = 43;
+  const ratio = target / 100;
+  const reduceMotion = useReducedMotion();
+  const { ref, value } = useAnimatedNumber(target, {
+    duration: 1500,
+    overshoot: 0.12,
+  });
+
+  return (
+    <div className="switcher-stat">
+      <div className="switcher-donut">
+        <svg viewBox="0 0 160 160" aria-hidden="true">
+          <circle cx="80" cy="80" r="58" className="donut-track" />
+          <motion.circle
+            cx="80"
+            cy="80"
+            r="58"
+            className="donut-progress"
+            pathLength={ratio}
+            initial={reduceMotion ? false : { pathLength: 0 }}
+            whileInView={reduceMotion ? {} : { pathLength: ratio }}
+            viewport={{ once: true, amount: 0.55 }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
+          />
+        </svg>
+        <div className="switcher-donut-copy">
+          <strong ref={ref}>{Math.round(value)}%</strong>
+          <span>{homeData.switcher.statLabel}</span>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -356,6 +811,8 @@ function TestimonialCarousel({
   }, [isPaused, reduceMotion]);
 
   const current = items[index];
+  const next = items[(index + 1) % items.length];
+  const afterNext = items[(index + 2) % items.length];
 
   return (
     <section
@@ -367,52 +824,67 @@ function TestimonialCarousel({
       onBlurCapture={() => setIsPaused(false)}
     >
       <Reveal className="carousel-shell">
-        <AnimatePresence mode="wait">
-          <motion.article
-            key={current.name}
-            className="carousel-frame"
-            initial={reduceMotion ? false : { opacity: 0, y: 18 }}
-            animate={reduceMotion ? {} : { opacity: 1, y: 0 }}
-            exit={reduceMotion ? {} : { opacity: 0, y: -18 }}
-            transition={{ duration: 0.5 }}
-          >
-            <motion.div
-              key={`swoosh-${current.name}`}
-              className="carousel-swoosh"
-              initial={reduceMotion ? false : { x: "-110%", opacity: 0 }}
-              animate={reduceMotion ? {} : { x: "110%", opacity: [0, 0.32, 0] }}
-              transition={{ duration: 0.8, ease: "easeInOut" }}
-              aria-hidden="true"
-            />
+        <div className="carousel-stack">
+          <div
+            className="carousel-stack-ghost carousel-stack-ghost-far"
+            style={{ backgroundImage: `url(${afterNext.image})` }}
+            aria-hidden="true"
+          />
+          <div
+            className="carousel-stack-ghost carousel-stack-ghost-near"
+            style={{ backgroundImage: `url(${next.image})` }}
+            aria-hidden="true"
+          />
 
-            <div className="carousel-copy">
-              <p className="eyebrow">{eyebrow}</p>
-              <Quote size={28} />
-              <blockquote>{current.quote}</blockquote>
-              <div className="carousel-meta">
-                <div>
-                  <strong>{current.name}</strong>
-                  <span>{current.role}</span>
+          <AnimatePresence mode="wait">
+            <motion.article
+              key={current.name}
+              className="carousel-frame"
+              initial={reduceMotion ? false : { opacity: 0, rotateY: -20, rotateZ: -2, x: 48, scale: 0.96 }}
+              animate={reduceMotion ? {} : { opacity: 1, rotateY: 0, rotateZ: 0, x: 0, scale: 1 }}
+              exit={reduceMotion ? {} : { opacity: 0, rotateY: 20, rotateZ: 2, x: -48, scale: 0.94 }}
+              transition={{ duration: 0.58, ease: [0.2, 0.8, 0.2, 1] }}
+            >
+              <motion.div
+                key={`swoosh-${current.name}`}
+                className="carousel-swoosh"
+                initial={reduceMotion ? false : { x: "-118%", opacity: 0 }}
+                animate={reduceMotion ? {} : { x: "130%", opacity: [0, 0.45, 0] }}
+                transition={{ duration: 0.82, ease: "easeInOut" }}
+                aria-hidden="true"
+              />
+
+              <div className="carousel-copy">
+                <p className="eyebrow">{eyebrow}</p>
+                <Quote size={28} />
+                <blockquote>{current.quote}</blockquote>
+                <div className="carousel-meta">
+                  <div>
+                    <strong>{current.name}</strong>
+                    <span>{current.role}</span>
+                  </div>
+                  <a href={current.videoUrl} target="_blank" rel="noopener noreferrer">
+                    WATCH THE VIDEO &gt;
+                  </a>
                 </div>
-                <a href={current.videoUrl} target="_blank" rel="noopener noreferrer">
-                  WATCH THE VIDEO &gt;
-                </a>
               </div>
-            </div>
 
-            <PhotoPanel
-              className="carousel-portrait"
-              image={current.image}
-              alt={current.imageAlt}
-            />
-          </motion.article>
-        </AnimatePresence>
+              <PhotoPanel
+                className="carousel-portrait"
+                image={current.image}
+                alt={current.imageAlt}
+              />
+            </motion.article>
+          </AnimatePresence>
+        </div>
 
         <button
           type="button"
           className="carousel-nav carousel-nav-prev"
           aria-label="Previous slide"
-          onClick={() => setIndex((currentIndex) => (currentIndex - 1 + items.length) % items.length)}
+          onClick={() =>
+            setIndex((currentIndex) => (currentIndex - 1 + items.length) % items.length)
+          }
         >
           <ChevronLeft size={22} />
         </button>
@@ -429,6 +901,95 @@ function TestimonialCarousel({
   );
 }
 
+function FastFiveSection() {
+  const reduceMotion = useReducedMotion();
+  const shellRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: shellRef,
+    offset: ["start start", "end end"],
+  });
+  const [progress, setProgress] = useState(0);
+
+  useMotionValueEvent(scrollYProgress, "change", (value) => {
+    setProgress(value);
+  });
+
+  const visibleSteps = reduceMotion
+    ? homeData.fastFive.length
+    : Math.max(1, Math.ceil(progress * homeData.fastFive.length));
+
+  return (
+    <section ref={shellRef} className="fast-five-section fast-five-pinned">
+      <div className="fast-five-scroll-space">
+        <div className="fast-five-shell fast-five-sticky">
+          <div className="fast-five-arrow" aria-hidden="true" />
+          <div className="section-intro centered">
+            <p className="eyebrow">OUR SYSTEM: THE FAST FIVE</p>
+            <h2>Five ways we accelerate new writers.</h2>
+          </div>
+
+          <div className="process-timeline" aria-hidden="true">
+            <span style={{ transform: `scaleY(${reduceMotion ? 1 : progress})` }} />
+          </div>
+
+          <div className="process-grid process-grid-pinned">
+            {homeData.fastFive.map((step, index) => {
+              const stepProgress = reduceMotion
+                ? 1
+                : clamp(progress * homeData.fastFive.length - index + 0.28, 0, 1);
+
+              return (
+                <motion.article
+                  key={step.number}
+                  initial={false}
+                  animate={{
+                    opacity: index < visibleSteps ? 1 : 0.16,
+                    y: reduceMotion ? 0 : (1 - stepProgress) * 36,
+                    scale: index < visibleSteps ? 1 : 0.96,
+                  }}
+                  transition={{ duration: 0.42, ease: [0.2, 0.8, 0.2, 1] }}
+                >
+                  <span>{step.number}</span>
+                  <h3>{step.title}</h3>
+                  <p>{step.body}</p>
+                </motion.article>
+              );
+            })}
+          </div>
+
+          <div className="process-cta">
+            <JoinTeamButton variant="outline">JOIN THE TEAM</JoinTeamButton>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function AnimatedPerformanceKpi({
+  label,
+  target,
+  formatter,
+  accent = false,
+}: {
+  label: string;
+  target: number;
+  formatter: (value: number) => string;
+  accent?: boolean;
+}) {
+  const { ref, value } = useAnimatedNumber(target, {
+    duration: 2200,
+    amount: 0.45,
+  });
+
+  return (
+    <article className={`performance-kpi${accent ? " accent" : ""}`}>
+      <span>{label}</span>
+      <strong ref={ref}>{formatter(value)}</strong>
+    </article>
+  );
+}
+
 function PerformanceDashboard() {
   const reduceMotion = useReducedMotion();
   const writersPath = useMemo(() => linePath(homeData.performance.writers, 620, 320, 48), []);
@@ -436,6 +997,7 @@ function PerformanceDashboard() {
     () => linePath(homeData.performance.production, 620, 320, 48),
     [],
   );
+  const pointTimings = [0.55, 0.9, 1.2];
 
   return (
     <section id="performance" className="performance-section">
@@ -447,12 +1009,27 @@ function PerformanceDashboard() {
 
       <Reveal className="performance-shell" amount={0.35}>
         <div className="performance-kpis">
-          {homeData.performance.kpis.map((kpi) => (
-            <article key={kpi.label} className="performance-kpi">
-              <span>{kpi.label}</span>
-              <strong>{kpi.value}</strong>
-            </article>
-          ))}
+          <AnimatedPerformanceKpi
+            label="2025 TOTAL PRODUCTION"
+            target={84022378}
+            formatter={formatCurrency}
+            accent
+          />
+          <AnimatedPerformanceKpi
+            label="2025 NEW WRITERS"
+            target={1987}
+            formatter={formatWholeNumber}
+          />
+          <AnimatedPerformanceKpi
+            label="2024 TOTAL PRODUCTION"
+            target={22800000}
+            formatter={formatCompactCurrency}
+          />
+          <AnimatedPerformanceKpi
+            label="2023 NEW WRITERS"
+            target={165}
+            formatter={formatWholeNumber}
+          />
         </div>
 
         <svg viewBox="0 0 620 320" className="performance-chart" aria-label="Performance dashboard chart">
@@ -462,18 +1039,18 @@ function PerformanceDashboard() {
           <motion.path
             d={productionPath}
             className="performance-line performance-line-production"
-            initial={reduceMotion ? false : { pathLength: 0, opacity: 0.3 }}
+            initial={reduceMotion ? false : { pathLength: 0, opacity: 0.24 }}
             whileInView={reduceMotion ? {} : { pathLength: 1, opacity: 1 }}
             viewport={{ once: true, amount: 0.55 }}
-            transition={{ duration: 1.4, ease: "easeOut" }}
+            transition={{ duration: 2.2, ease: "easeOut" }}
           />
           <motion.path
             d={writersPath}
             className="performance-line performance-line-writers"
-            initial={reduceMotion ? false : { pathLength: 0, opacity: 0.3 }}
+            initial={reduceMotion ? false : { pathLength: 0, opacity: 0.24 }}
             whileInView={reduceMotion ? {} : { pathLength: 1, opacity: 1 }}
             viewport={{ once: true, amount: 0.55 }}
-            transition={{ duration: 1.15, ease: "easeOut", delay: 0.15 }}
+            transition={{ duration: 2.05, ease: "easeOut", delay: 0.05 }}
           />
 
           {["2023", "2024", "2025"].map((label, index) => {
@@ -489,8 +1066,26 @@ function PerformanceDashboard() {
 
             return (
               <g key={label}>
-                <circle cx={x} cy={yProduction} r="5" className="performance-point performance-point-production" />
-                <circle cx={x} cy={yWriters} r="5" className="performance-point performance-point-writers" />
+                <motion.circle
+                  cx={x}
+                  cy={yProduction}
+                  r="5"
+                  className="performance-point performance-point-production"
+                  initial={reduceMotion ? false : { scale: 0 }}
+                  whileInView={reduceMotion ? {} : { scale: 1 }}
+                  viewport={{ once: true, amount: 0.55 }}
+                  transition={{ delay: pointTimings[index], duration: 0.3 }}
+                />
+                <motion.circle
+                  cx={x}
+                  cy={yWriters}
+                  r="5"
+                  className="performance-point performance-point-writers"
+                  initial={reduceMotion ? false : { scale: 0 }}
+                  whileInView={reduceMotion ? {} : { scale: 1 }}
+                  viewport={{ once: true, amount: 0.55 }}
+                  transition={{ delay: pointTimings[index] + 0.08, duration: 0.3 }}
+                />
                 <text x={x} y="292" textAnchor="middle">
                   {label}
                 </text>
@@ -521,7 +1116,7 @@ function InstagramRail() {
           {[...homeData.instagram, ...homeData.instagram].map((card, index) => (
             <a
               key={`${card.url}-${index}`}
-              className="instagram-card"
+              className={`instagram-card instagram-card-${index % 5}`}
               href={card.url}
               target="_blank"
               rel="noopener noreferrer"
@@ -545,10 +1140,22 @@ function InstagramRail() {
 }
 
 function PartnershipSection() {
+  const reduceMotion = useReducedMotion();
+
   return (
     <section className="partner-section">
       <Reveal className="partner-shell">
-        <div className="partner-diamond">
+        <motion.div
+          className="partner-diamond"
+          initial={reduceMotion ? false : { clipPath: "polygon(50% 0%, 60% 10%, 60% 100%, 40% 100%, 40% 10%)" }}
+          whileInView={
+            reduceMotion
+              ? {}
+              : { clipPath: "polygon(50% 0%, 100% 22%, 100% 100%, 0% 100%, 0% 22%)" }
+          }
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 1.1, ease: [0.2, 0.8, 0.2, 1] }}
+        >
           <PhotoPanel
             className="partner-diamond-photo"
             image={homeData.partnership.background}
@@ -558,13 +1165,17 @@ function PartnershipSection() {
             <p className="eyebrow">PARTNERSHIP</p>
             <h2>{homeData.partnership.headline}</h2>
             <div className="partner-logo-grid">
-              {footerData.partners.map((partner) => (
-                <a
+              {footerData.partners.map((partner, index) => (
+                <motion.a
                   key={partner.id}
                   className="partner-logo-link"
                   href={partner.url}
                   target="_blank"
                   rel="noopener noreferrer"
+                  initial={reduceMotion ? false : { opacity: 0, y: 24, scale: 0.95 }}
+                  whileInView={reduceMotion ? {} : { opacity: 1, y: 0, scale: 1 }}
+                  viewport={{ once: true, amount: 0.4 }}
+                  transition={{ delay: 0.12 + index * 0.08, duration: 0.5 }}
                 >
                   <PartnerLogo
                     id={
@@ -577,7 +1188,7 @@ function PartnershipSection() {
                         | "ethos"
                     }
                   />
-                </a>
+                </motion.a>
               ))}
             </div>
             <a
@@ -589,7 +1200,7 @@ function PartnershipSection() {
               WATCH VIDEOS &gt;
             </a>
           </div>
-        </div>
+        </motion.div>
       </Reveal>
     </section>
   );
@@ -598,6 +1209,7 @@ function PartnershipSection() {
 export function HomePage() {
   return (
     <div className="home-page">
+      <ArrowTrail />
       <HeroSection />
 
       <section className="stat-section">
@@ -614,7 +1226,7 @@ export function HomePage() {
         </Reveal>
       </section>
 
-      <MarqueeBand items={homeData.breakMarquee} />
+      <DirectionMarquee items={homeData.breakMarquee} />
 
       <section className="cta-band cta-band-dark">
         <p>{homeData.quarterly.caption}</p>
@@ -623,19 +1235,23 @@ export function HomePage() {
 
       <QuarterlyChart />
 
-      <section className="mission-essay-section">
-        <Reveal className="mission-essay">
-          <p>{homeData.missionStatement}</p>
-        </Reveal>
-      </section>
+      <MissionEssay />
 
       <section className="mission-split-section">
         <Reveal className="mission-split" amount={0.3}>
-          <PhotoPanel
-            className="mission-split-photo"
-            image={homeData.missionSplit.image}
-            alt={homeData.missionSplit.imageAlt}
-          />
+          <motion.div
+            className="mission-split-photo-shell"
+            initial={{ clipPath: "polygon(18% 14%, 58% 0%, 86% 34%, 68% 100%, 0% 84%, 0% 32%)" }}
+            whileInView={{ clipPath: "polygon(7% 0%, 100% 0%, 100% 100%, 26% 100%, 0% 76%, 0% 17%)" }}
+            viewport={{ once: true, amount: 0.45 }}
+            transition={{ duration: 1.1, ease: [0.2, 0.8, 0.2, 1] }}
+          >
+            <PhotoPanel
+              className="mission-split-photo"
+              image={homeData.missionSplit.image}
+              alt={homeData.missionSplit.imageAlt}
+            />
+          </motion.div>
 
           <div className="mission-split-copy">
             <p className="eyebrow">TAKE YOUR FINANCIAL LIFE</p>
@@ -650,10 +1266,7 @@ export function HomePage() {
         </Reveal>
       </section>
 
-      <TestimonialCarousel
-        items={homeData.testimonials}
-        eyebrow="WHY I CHOSE SUMMIT"
-      />
+      <TestimonialCarousel items={homeData.testimonials} eyebrow="WHY I CHOSE SUMMIT" />
 
       <section className="switcher-section">
         <Reveal className="switcher-shell">
@@ -667,10 +1280,7 @@ export function HomePage() {
             <p className="eyebrow">{homeData.switcher.eyebrow}</p>
             <h2>{homeData.switcher.title}</h2>
             <p>{homeData.switcher.body}</p>
-            <div className="switcher-stat">
-              <strong>{homeData.switcher.value}</strong>
-              <span>{homeData.switcher.statLabel}</span>
-            </div>
+            <SwitcherStat />
           </div>
         </Reveal>
       </section>
@@ -687,56 +1297,47 @@ export function HomePage() {
             <h2>{homeData.benefits.title}</h2>
             <p>{homeData.benefits.body}</p>
             <div className="benefit-grid">
-              {homeData.benefits.items.map((benefit) => (
-                <article key={benefit}>
+              {homeData.benefits.items.map((benefit, index) => (
+                <motion.article
+                  key={benefit}
+                  initial={{ opacity: 0, y: 34 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.35 }}
+                  transition={{ duration: 0.5, delay: index * 0.06 }}
+                >
                   <span aria-hidden="true" />
                   <h3>{benefit}</h3>
-                </article>
+                </motion.article>
               ))}
             </div>
           </div>
         </Reveal>
       </section>
 
-      <MarqueeBand items={homeData.valueMarquee} invert />
+      <DirectionMarquee items={homeData.valueMarquee} invert />
 
       <section className="cta-band">
         <JoinTeamButton className="wide-cta">JOIN THE TEAM</JoinTeamButton>
       </section>
 
-      <section className="fast-five-section">
-        <Reveal className="fast-five-shell">
-          <div className="fast-five-arrow" aria-hidden="true" />
-          <div className="section-intro centered">
-            <p className="eyebrow">OUR SYSTEM: THE FAST FIVE</p>
-            <h2>Five ways we accelerate new writers.</h2>
-          </div>
-
-          <div className="process-grid">
-            {homeData.fastFive.map((step) => (
-              <article key={step.number}>
-                <span>{step.number}</span>
-                <h3>{step.title}</h3>
-                <p>{step.body}</p>
-              </article>
-            ))}
-          </div>
-
-          <div className="process-cta">
-            <JoinTeamButton variant="outline">JOIN THE TEAM</JoinTeamButton>
-          </div>
-        </Reveal>
-      </section>
+      <FastFiveSection />
 
       <PerformanceDashboard />
 
       <section className="founder-section">
         <Reveal className="founder-shell">
-          <PhotoPanel
-            className="founder-photo"
-            image={homeData.founder.image}
-            alt={homeData.founder.imageAlt}
-          />
+          <motion.div
+            initial={{ opacity: 0, scale: 1.08 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, amount: 0.35 }}
+            transition={{ duration: 1.1, ease: [0.2, 0.8, 0.2, 1] }}
+          >
+            <PhotoPanel
+              className="founder-photo"
+              image={homeData.founder.image}
+              alt={homeData.founder.imageAlt}
+            />
+          </motion.div>
           <div className="founder-copy">
             <p className="eyebrow">{homeData.founder.eyebrow}</p>
             <h2>{homeData.founder.headline}</h2>
@@ -749,18 +1350,18 @@ export function HomePage() {
       </section>
 
       <section className="success-strip">
-        {homeData.successKpis.map((item) => (
-          <Reveal key={item.label} className="success-card" amount={0.3}>
-            <strong>{item.value}</strong>
-            <span>{item.label}</span>
-          </Reveal>
+        {homeData.successKpis.map((item, index) => (
+          <DonutKpi
+            key={item.label}
+            value={item.value}
+            label={item.label}
+            ratio={successRatios[index] ?? 0.8}
+            accent={index === 1}
+          />
         ))}
       </section>
 
-      <TestimonialCarousel
-        items={homeData.secondaryTestimonials}
-        eyebrow="WHY I STAYED"
-      />
+      <TestimonialCarousel items={homeData.secondaryTestimonials} eyebrow="WHY I STAYED" />
 
       <InstagramRail />
 
@@ -777,6 +1378,7 @@ export function HomePage() {
               <p className="eyebrow">{homeData.finalCta.eyebrow}</p>
               <h2>JOIN THE TEAM</h2>
               <JoinTeamButton>JOIN THE TEAM</JoinTeamButton>
+              <small>Takes about 90 seconds.</small>
             </div>
           </PhotoPanel>
         </Reveal>

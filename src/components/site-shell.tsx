@@ -1,6 +1,13 @@
 "use client";
 
-import { motion, useMotionValue, useScroll, useSpring } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useMotionValueEvent,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 import { Mail, MapPin, Phone } from "lucide-react";
 import Link from "next/link";
 import { createContext, useContext, useMemo, useState } from "react";
@@ -102,6 +109,9 @@ export function JoinTeamButton({
       className={`${variantClassName}${className ? ` ${className}` : ""}`}
       onClick={open}
       onMouseMove={(event) => {
+        event.currentTarget.style.setProperty("--pointer-x", `${event.nativeEvent.offsetX}px`);
+        event.currentTarget.style.setProperty("--pointer-y", `${event.nativeEvent.offsetY}px`);
+
         if (variant !== "solid") {
           return;
         }
@@ -126,12 +136,15 @@ export function JoinTeamButton({
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isCondensed, setIsCondensed] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
   const { scrollYProgress } = useScroll();
   const progressScale = useSpring(scrollYProgress, {
     stiffness: 140,
     damping: 28,
     mass: 0.2,
   });
+  const markerLeft = useTransform(scrollYProgress, (value) => `${value * 100}%`);
 
   const value = useMemo(
     () => ({
@@ -141,14 +154,22 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
     [],
   );
 
+  useMotionValueEvent(scrollYProgress, "change", (value) => {
+    setIsCondensed(window.scrollY > 80);
+    setIsComplete(value > 0.985);
+  });
+
   return (
     <JoinTeamContext.Provider value={value}>
       <a className="skip-link" href="#main-content">
         Skip to content
       </a>
       <div className="site-frame">
-        <header className="site-header">
+        <header
+          className={`site-header${isCondensed ? " is-condensed" : ""}${isComplete ? " is-complete" : ""}`}
+        >
           <motion.div className="scroll-progress" style={{ scaleX: progressScale }} />
+          <motion.div className="scroll-progress-marker" style={{ left: markerLeft }} />
           <Link href="/" className="brand-mark" aria-label="Summit home">
             <span className="brand-icon" aria-hidden="true">
               <span />
@@ -236,7 +257,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
           </div>
 
           <div className="footer-legal">
-            <span>© 2026 Summit Financial Recruiting</span>
+            <span>&copy; 2026 Summit Financial Recruiting</span>
             <Link href="/terms-of-use">Terms of Use</Link>
             <Link href="/privacy-policy">Privacy Policy</Link>
           </div>
