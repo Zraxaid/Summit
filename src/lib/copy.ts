@@ -46,6 +46,7 @@ export const siteCopy = {
         "Something went wrong while sending your application. Please try again.",
       formErrorSummary: "Please fix the highlighted fields and try again.",
       statusSubmitting: "Sending your application...",
+      submitHelper: "Fill the required fields and accept the terms to submit.",
     },
     legal: {
       eyebrow: "Summit Legal",
@@ -56,7 +57,7 @@ export const siteCopy = {
     home: {
       sections: {
         hero: {
-          eyebrow: "SUMMIT FINANCIAL RECRUITING",
+          eyebrow: "RECRUITING THAT MOVES",
           headline: "BUILD AN INSURANCE CAREER WITH REAL MOMENTUM",
           subhead:
             "Join a recruiting system built around mentorship, leads, accountability, and a faster path to meaningful income growth.",
@@ -84,7 +85,7 @@ export const siteCopy = {
           phrases: ["BREAK THE CYCLE", "BREAK THE CYCLE", "BREAK THE CYCLE", "BREAK THE CYCLE"],
         },
         firstCtaBand: {
-          caption: "AVERAGE EARNINGS IN 1ST 3 MONTHS",
+          caption: "SEE WHAT THE FIRST QUARTER CAN LOOK LIKE",
           ctaLabel: "JOIN THE TEAM",
         },
         quarterlyChart: {

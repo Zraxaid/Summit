@@ -10,7 +10,7 @@ import {
 } from "framer-motion";
 import { Mail, MapPin, Phone } from "lucide-react";
 import Link from "next/link";
-import { createContext, useContext, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 import { LeadModal } from "@/components/lead-modal";
 import { siteCopy } from "@/lib/copy";
@@ -160,9 +160,21 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
   );
 
   useMotionValueEvent(scrollYProgress, "change", (value) => {
-    setIsCondensed(window.scrollY > 80);
     setIsComplete(value > 0.985);
   });
+
+  useEffect(() => {
+    const updateCondensed = () => {
+      setIsCondensed(window.scrollY > 80);
+    };
+
+    updateCondensed();
+    window.addEventListener("scroll", updateCondensed, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", updateCondensed);
+    };
+  }, []);
 
   return (
     <JoinTeamContext.Provider value={value}>

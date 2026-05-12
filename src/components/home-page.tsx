@@ -567,7 +567,7 @@ function DonutKpi({
             pathLength={ratio}
             initial={reduceMotion ? false : { pathLength: 0 }}
             whileInView={reduceMotion ? {} : { pathLength: ratio }}
-            viewport={{ once: true, amount: 0.45 }}
+            viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 1.15, ease: "easeOut" }}
           />
         </svg>
@@ -602,7 +602,7 @@ function SwitcherStat() {
             pathLength={ratio}
             initial={reduceMotion ? false : { pathLength: 0 }}
             whileInView={reduceMotion ? {} : { pathLength: ratio }}
-            viewport={{ once: true, amount: 0.55 }}
+            viewport={{ once: true, amount: 0.25 }}
             transition={{ duration: 1.2, ease: "easeOut" }}
           />
         </svg>
@@ -1075,7 +1075,7 @@ export function HomePage() {
       <DirectionMarquee items={homeData.breakMarquee} />
 
       <section className="cta-band cta-band-dark">
-        <p>{homeData.quarterly.caption}</p>
+        <p>{siteCopy.routes.home.sections.firstCtaBand.caption}</p>
         <JoinTeamButton className="wide-cta">
           {siteCopy.routes.home.sections.firstCtaBand.ctaLabel}
         </JoinTeamButton>

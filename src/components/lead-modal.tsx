@@ -487,6 +487,10 @@ export function LeadModal({
             {status.message}
           </div>
 
+          {!canSubmit && status.type === "idle" ? (
+            <p className="form-helper">{siteCopy.global.modal.submitHelper}</p>
+          ) : null}
+
           <button type="submit" className="button-submit" disabled={!canSubmit}>
             {status.type === "submitting"
               ? siteCopy.global.modal.submittingLabel
