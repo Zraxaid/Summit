@@ -39,9 +39,9 @@ export const footerData = {
 
 export const homeData = {
   hero: {
-    headline: "NOW EVERYONE CAN ACCESS A WORLD OF WEALTH",
+    headline: "BUILD AN INSURANCE CAREER WITH REAL MOMENTUM",
     subhead:
-      "A sharper recruiting system for ambitious agents who want better leads, stronger mentorship, and faster income growth.",
+      "Join a recruiting system built around mentorship, leads, accountability, and a faster path to meaningful income growth.",
     heroPhotos: [
       "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80",

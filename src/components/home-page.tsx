@@ -9,9 +9,7 @@ import {
   useMotionValueEvent,
   useReducedMotion,
   useScroll,
-  useSpring,
   useTransform,
-  type MotionValue,
 } from "framer-motion";
 import { ChevronLeft, ChevronRight, MoveRight, Quote } from "lucide-react";
 import { useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
@@ -19,8 +17,6 @@ import { useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
 import { PartnerLogo } from "@/components/partner-logos";
 import { JoinTeamButton } from "@/components/site-shell";
 import { footerData, homeData } from "@/lib/site-data";
-
-const heroHeadlineLines = ["NOW EVERYONE CAN ACCESS", "A WORLD OF WEALTH"];
 
 const arrowTiles = [
   { top: "6%", left: "8%", width: 260, delay: 0.1, rotate: -22 },
@@ -197,214 +193,6 @@ function PhotoPanel({
       style={{ backgroundImage: `url(${image})` }}
     >
       {children}
-    </div>
-  );
-}
-
-function ArrowTrail() {
-  const reduceMotion = useReducedMotion();
-  const { scrollYProgress } = useScroll();
-  const trail = useSpring(scrollYProgress, {
-    stiffness: 90,
-    damping: 22,
-    mass: 0.4,
-  });
-  const headX = useTransform(trail, [0, 1], ["7%", "92%"]);
-  const headY = useTransform(trail, [0, 1], ["92%", "8%"]);
-
-  return (
-    <div className="page-arrow-trail" aria-hidden="true">
-      <svg viewBox="0 0 100 100" preserveAspectRatio="none">
-        <path
-          d="M7 92 L24 74 L43 79 L60 51 L77 56 L92 8"
-          className="page-arrow-trail-base"
-        />
-        <motion.path
-          d="M7 92 L24 74 L43 79 L60 51 L77 56 L92 8"
-          className="page-arrow-trail-progress"
-          style={reduceMotion ? undefined : { pathLength: trail }}
-          initial={reduceMotion ? false : { pathLength: 0.02 }}
-        />
-      </svg>
-      {!reduceMotion ? (
-        <motion.div className="page-arrow-head" style={{ left: headX, top: headY }} />
-      ) : null}
-    </div>
-  );
-}
-
-function ParticleHeadline({
-  lines,
-  scrollProgress,
-}: {
-  lines: string[];
-  scrollProgress: MotionValue<number>;
-}) {
-  const reduceMotion = useReducedMotion();
-  const shellRef = useRef<HTMLDivElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const exitProgressRef = useRef(0);
-  const [size, setSize] = useState({ width: 0, height: 0 });
-
-  useMotionValueEvent(scrollProgress, "change", (value) => {
-    exitProgressRef.current = clamp(value, 0, 1);
-  });
-
-  useEffect(() => {
-    const node = shellRef.current;
-
-    if (!node) {
-      return;
-    }
-
-    const observer = new ResizeObserver((entries) => {
-      const next = entries[0];
-
-      if (!next) {
-        return;
-      }
-
-      setSize({
-        width: Math.round(next.contentRect.width),
-        height: Math.round(next.contentRect.height),
-      });
-    });
-
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (reduceMotion || !size.width || !size.height) {
-      return;
-    }
-
-    const canvas = canvasRef.current;
-
-    if (!canvas) {
-      return;
-    }
-
-    const ctx = canvas.getContext("2d");
-
-    if (!ctx) {
-      return;
-    }
-
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width = size.width * dpr;
-    canvas.height = size.height * dpr;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-    const offscreen = document.createElement("canvas");
-    offscreen.width = size.width;
-    offscreen.height = size.height;
-    const offscreenContext = offscreen.getContext("2d");
-
-    if (!offscreenContext) {
-      return;
-    }
-
-    const fontSize = clamp(size.width * 0.095, 34, 126);
-    const lineHeight = fontSize * 0.88;
-    const startY = size.height / 2 - ((lines.length - 1) * lineHeight) / 2 + fontSize * 0.08;
-
-    offscreenContext.clearRect(0, 0, size.width, size.height);
-    offscreenContext.fillStyle = "#ffffff";
-    offscreenContext.textAlign = "center";
-    offscreenContext.textBaseline = "middle";
-    offscreenContext.font = `800 ${fontSize}px Arial`;
-
-    lines.forEach((line, index) => {
-      offscreenContext.fillText(line, size.width / 2, startY + index * lineHeight);
-    });
-
-    const sample = Math.max(5, Math.floor(fontSize / 11));
-    const pixels = offscreenContext.getImageData(0, 0, size.width, size.height).data;
-    const particles: Array<{
-      startX: number;
-      startY: number;
-      targetX: number;
-      targetY: number;
-      driftX: number;
-      driftY: number;
-      radius: number;
-      delay: number;
-      hue: "accent" | "cream";
-    }> = [];
-
-    for (let y = 0; y < size.height; y += sample) {
-      for (let x = 0; x < size.width; x += sample) {
-        const alpha = pixels[(y * size.width + x) * 4 + 3];
-
-        if (alpha > 90) {
-          particles.push({
-            startX: Math.random() * size.width,
-            startY: Math.random() * size.height,
-            targetX: x,
-            targetY: y,
-            driftX: (Math.random() - 0.1) * 220,
-            driftY: (Math.random() - 0.8) * 160,
-            radius: 1.5 + Math.random() * 2.2,
-            delay: Math.random() * 0.24,
-            hue: Math.random() > 0.78 ? "accent" : "cream",
-          });
-        }
-      }
-    }
-
-    let frame = 0;
-    const start = performance.now();
-
-    const render = (currentTime: number) => {
-      const intro = clamp((currentTime - start) / 1400, 0, 1);
-      const introEase = easeOutCubic(intro);
-      const exit = clamp(exitProgressRef.current * 1.45, 0, 1);
-
-      ctx.clearRect(0, 0, size.width, size.height);
-
-      particles.forEach((particle) => {
-        const delayedIntro = clamp((introEase - particle.delay) / (1 - particle.delay), 0, 1);
-        const build = easeOutCubic(delayedIntro);
-        const settledX = particle.startX + (particle.targetX - particle.startX) * build;
-        const settledY = particle.startY + (particle.targetY - particle.startY) * build;
-        const releaseX = settledX + particle.driftX * exit;
-        const releaseY = settledY + particle.driftY * exit;
-        const opacity = clamp(build * (1 - exit * 0.82), 0, 1);
-
-        ctx.beginPath();
-        ctx.fillStyle = particle.hue === "accent" ? "#ff7b1c" : "#f5f1e8";
-        ctx.globalAlpha = opacity;
-        ctx.arc(releaseX, releaseY, particle.radius * (1 - exit * 0.35), 0, Math.PI * 2);
-        ctx.fill();
-      });
-
-      ctx.globalAlpha = 1;
-
-      if (intro < 1 || exit < 1) {
-        frame = window.requestAnimationFrame(render);
-      }
-    };
-
-    frame = window.requestAnimationFrame(render);
-
-    return () => window.cancelAnimationFrame(frame);
-  }, [lines, reduceMotion, size.height, size.width]);
-
-  return (
-    <div ref={shellRef} className="hero-headline-shell">
-      {reduceMotion ? (
-        <h1 className="hero-headline-text">
-          {lines.map((line) => (
-            <span key={line}>{line}</span>
-          ))}
-        </h1>
-      ) : (
-        <>
-          <h1 className="sr-only">{lines.join(" ")}</h1>
-          <canvas ref={canvasRef} className="hero-headline-canvas" aria-hidden="true" />
-        </>
-      )}
     </div>
   );
 }
@@ -595,11 +383,14 @@ function HeroSection() {
         </motion.div>
 
         <div className="hero-copy">
-          <ParticleHeadline lines={heroHeadlineLines} scrollProgress={scrollYProgress} />
-          <Reveal className="hero-subhead" amount={0.5} delay={0.18}>
+          <Reveal className="hero-copy-block" amount={0.45}>
+            <p className="eyebrow">SUMMIT FINANCIAL RECRUITING</p>
+            <h1>{homeData.hero.headline}</h1>
+          </Reveal>
+          <Reveal className="hero-subhead" amount={0.5} delay={0.12}>
             <p>{homeData.hero.subhead}</p>
           </Reveal>
-          <Reveal className="hero-actions" amount={0.5} delay={0.32}>
+          <Reveal className="hero-actions" amount={0.5} delay={0.2}>
             <JoinTeamButton />
             <a href="#performance" className="hero-ghost-link">
               <span>SEE THE GROWTH STORY</span>
@@ -1209,7 +1000,6 @@ function PartnershipSection() {
 export function HomePage() {
   return (
     <div className="home-page">
-      <ArrowTrail />
       <HeroSection />
 
       <section className="stat-section">
