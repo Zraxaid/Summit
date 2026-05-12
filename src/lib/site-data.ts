@@ -4,144 +4,310 @@ export type LegalSection = {
   body: string[];
 };
 
+const summitEmail = "hello@summitfinancialrecruiting.com";
+const summitAddress = "Scottsdale, AZ and remote nationwide";
+const summitPhone = "+1 (480) 550-8556";
+const summitPhoneRaw = "+14805508556";
+
 export const footerData = {
-  address: "7720 North Dobson Rd, Scottsdale, AZ 85256",
-  email: "team@nonstopfinancial.com",
-  phone: "+1 (480) 550-8556",
-  phoneRaw: "+14805508556",
+  address: summitAddress,
+  email: summitEmail,
+  phone: summitPhone,
+  phoneRaw: summitPhoneRaw,
   social: [
-    { label: "Instagram", short: "IG", url: "https://www.instagram.com/nonstopfinancial/" },
-    { label: "TikTok", short: "TT", url: "https://www.tiktok.com/@nonstopfinancial" },
-    { label: "LinkedIn", short: "IN", url: "https://www.linkedin.com/company/nonstop-financial/" },
+    { id: "instagram", label: "Instagram", url: "https://www.instagram.com/nonstopfinancial/" },
+    { id: "tiktok", label: "TikTok", url: "https://www.tiktok.com/@nonstopfinancial" },
+    { id: "linkedin", label: "LinkedIn", url: "https://www.linkedin.com/company/nonstop-financial/" },
   ],
   partners: [
-    { name: "AMERICO", url: "https://www.americo.com/" },
-    { name: "NATIONAL LIFE GROUP", url: "https://www.nationallife.com/" },
-    { name: "F&G", url: "https://www.fglife.com/" },
-    { name: "TRANSAMERICA", url: "https://www.transamerica.com/" },
-    { name: "MUTUAL OF OMAHA", url: "https://www.lifeinsurance-mutualofomaha.com/" },
-    { name: "ETHOS", url: "https://www.ethos.com/" },
+    { id: "americo", name: "AMERICO", url: "https://www.americo.com/" },
+    {
+      id: "national-life-group",
+      name: "NATIONAL LIFE GROUP",
+      url: "https://www.nationallife.com/",
+    },
+    { id: "fg", name: "F&G", url: "https://www.fglife.com/" },
+    { id: "transamerica", name: "TRANSAMERICA", url: "https://www.transamerica.com/" },
+    {
+      id: "mutual-of-omaha",
+      name: "MUTUAL OF OMAHA",
+      url: "https://www.lifeinsurance-mutualofomaha.com/",
+    },
+    { id: "ethos", name: "ETHOS", url: "https://www.ethos.com/" },
   ],
 };
 
 export const homeData = {
   hero: {
-    headline: "Now everyone can access a world of wealth.",
+    headline: "NOW EVERYONE CAN ACCESS A WORLD OF WEALTH",
+    subhead:
+      "A sharper recruiting system for ambitious agents who want better leads, stronger mentorship, and faster income growth.",
+    heroPhotos: [
+      "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80",
+    ],
   },
   stats: [
-    { value: 59, unit: "%", body: "of Americans have less than $10K in savings." },
-    { value: 25, unit: "%", body: "fewer full-time jobs are available to young adults than in prior generations." },
-    { value: 37, unit: "%", body: "of young people live in low-income households." },
+    {
+      value: 59,
+      unit: "%",
+      body: "OF AMERICANS HAVE LESS THAN $10K IN SAVINGS",
+    },
+    {
+      value: 25,
+      unit: "%",
+      body: "LESS FULL-TIME EMPLOYMENT FOR YOUNG ADULTS THAN PRIOR GENERATIONS",
+    },
+    {
+      value: 37,
+      unit: "%",
+      body: "OF YOUNG PEOPLE LIVE IN LOW-INCOME HOUSEHOLDS",
+    },
   ],
-  breakMarquee: ["BREAK THE CYCLE", "START BUILDING MOMENTUM", "ACCESS BETTER LEADS", "JOIN THE TEAM"],
-  valueMarquee: [
-    "TOP COMMISSIONS",
-    "EXPERT TRAINING",
-    "BETTER LEADS",
-    "OFFICE SUPPORT",
-    "HIGH-CONVERTING PROSPECTS",
-  ],
+  breakMarquee: ["BREAK THE CYCLE", "BREAK THE CYCLE", "BREAK THE CYCLE", "BREAK THE CYCLE"],
+  quarterly: {
+    caption: "AVERAGE EARNINGS IN 1ST 3 MONTHS",
+    axisLabel: "PRODUCTION ($)",
+    labels: ["JAN-MARCH", "APRIL-JUNE", "JULY-SEPT", "OCT-DEC"],
+    values: [9, 24, 51, 91],
+  },
+  missionStatement:
+    "We are here to level the playing field for hungry people who want a faster path into wealth-building work. Summit is built for momentum, not waiting.",
+  missionSplit: {
+    titlePrefix: "TAKE YOUR FINANCIAL LIFE",
+    highlight: "OFF PAUSE",
+    titleSuffix: "AND START GROWING YOUR INCOME AND CAREER IMMEDIATELY.",
+    body:
+      "A better system should feel visible: better coaching, real accountability, faster reps, and a room full of people who are already moving in the direction you want.",
+    image:
+      "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1600&q=80",
+    imageAlt: "Summit team collaborating around a laptop during a strategy session.",
+  },
   testimonials: [
     {
-      quote: "The environment, coaching, and accountability pushed me from uncertainty into real ownership.",
+      quote:
+        "The mentor, the environment, and the accountability changed how quickly I started believing I could really build something here.",
       name: "DAYETHAN NELSON",
       role: "Agent",
+      image:
+        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80",
+      imageAlt: "Portrait of an ambitious young insurance agent in a dark jacket.",
+      videoUrl: "https://www.instagram.com/nonstopfinancial/",
     },
     {
-      quote: "Summit made me feel like I was finally building something that belonged to me.",
+      quote:
+        "Now I feel like an actual business owner. The system keeps me focused on momentum instead of guesswork.",
       name: "KEVIN OLIVERO",
       role: "Senior Producer",
+      image:
+        "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=900&q=80",
+      imageAlt: "Portrait of a producer standing in a modern office hallway.",
+      videoUrl: "https://www.instagram.com/nonstopfinancial/",
     },
     {
-      quote: "The daily energy around me keeps my standards high and my results moving.",
+      quote:
+        "The energy I am around every single day raises my standards. You can feel the pace the moment you walk into the room.",
       name: "ALEX RUIZ",
       role: "Recruiting Partner",
-    },
-  ],
-  secondaryTestimonials: [
-    {
-      quote: "When the culture, training, and systems all line up, performance stops feeling accidental.",
-      name: "MIA CARTER",
-      role: "Field Leader",
-    },
-    {
-      quote: "This is what a real ramp for hungry people looks like: speed, clarity, and support.",
-      name: "JORDAN VALE",
-      role: "Agency Builder",
+      image:
+        "https://images.unsplash.com/photo-1504593811423-6dd665756598?auto=format&fit=crop&w=900&q=80",
+      imageAlt: "Portrait of a recruiting partner smiling confidently.",
+      videoUrl: "https://www.instagram.com/nonstopfinancial/",
     },
   ],
   switcher: {
+    eyebrow: "MAKE THE SWITCH",
+    title: "Agents with experience still come here for a better system.",
+    body:
+      "A huge share of the current team came from another agency because they wanted stronger support, cleaner operations, and more upside.",
     value: "43%",
-    body: "A large share of the current team came from other agencies because they wanted cleaner systems, stronger support, and more upside.",
+    statLabel: "OF OUR CURRENT TEAM CAME TO SUMMIT WITH PRIOR AGENCY EXPERIENCE",
+    image:
+      "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1600&q=80",
+    imageAlt: "A small team sharing ideas in a bright conference room.",
   },
-  benefits: [
-    "Close more deals with less friction",
-    "Build your own work-life rhythm",
-    "Set and hit your own income goals",
-    "Choose your own hours",
-    "Spend less time on paperwork",
-    "Grow inside a team-driven culture",
+  benefits: {
+    eyebrow: "JUMP START YOUR CAREER",
+    title: "What growth looks like when nothing stands in your way.",
+    body:
+      "Less friction, more rhythm, and a culture that keeps the work moving in the right direction.",
+    image:
+      "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1600&q=80",
+    imageAlt: "Team members reviewing goals together on a couch.",
+    items: [
+      "CLOSE MORE DEALS EFFORTLESSLY",
+      "WORK-LIFE BALANCE",
+      "SET AND HIT YOUR OWN GOALS",
+      "CHOOSE YOUR OWN HOURS",
+      "MINIMAL PAPERWORK",
+      "TEAM-DRIVEN INSPIRATION",
+    ],
+  },
+  valueMarquee: [
+    "TOP COMMISSIONS",
+    "EXPERT TRAINING AND MENTORSHIP",
+    "EARN MORE",
+    "STOP CHASING OVER-CONTACTED PROSPECTS",
+    "SYSTEMS AND OFFICE SUPPORT",
+    "HIGH-CONVERTING PROSPECTS",
   ],
   fastFive: [
     {
       number: 1,
-      title: "Exclusive Leads",
-      body: "Pre-qualified prospects get agents into real conversations without wasting their early momentum.",
+      title: "EXCLUSIVE LEADS",
+      body: "Pre-qualified prospects provided directly to our agents so your early momentum starts strong.",
     },
     {
       number: 2,
-      title: "Effective Training",
-      body: "Structured coaching helps new recruits learn the playbook quickly and confidently.",
+      title: "EFFECTIVE TRAINING",
+      body: "Personalized guidance from top performers who know how to compress your learning curve.",
     },
     {
       number: 3,
-      title: "One-on-One Mentorship",
-      body: "Leadership stays close to the work with practical reviews, feedback, and field insight.",
+      title: "ONE-ON-ONE MENTORSHIP",
+      body: "Weekly reviews and honest coaching from leadership that stays close to the work.",
     },
     {
       number: 4,
-      title: "Automated Tools",
-      body: "Simple workflows reduce administrative drag so producers can focus on activity that matters.",
+      title: "AUTOMATED TOOLS",
+      body: "Simple automation saves time so you can focus on conversations, follow-up, and closing.",
     },
     {
       number: 5,
-      title: "Ongoing Support",
-      body: "A high-accountability team keeps standards high and makes consistency easier to sustain.",
+      title: "ONGOING SUPPORT",
+      body: "A team full of go-getters keeps the standards high and the momentum visible.",
     },
   ],
   performance: {
+    eyebrow: "PERFORMANCE WITH PURPOSE AND VELOCITY",
+    title: "Proof that the system scales.",
+    body:
+      "The model is built to help new writers ramp fast while still producing real year-over-year growth.",
     kpis: [
-      { label: "2025 Total Production", value: "$84,022,378" },
-      { label: "2025 New Writers", value: "1,987" },
+      { label: "2025 TOTAL PRODUCTION", value: "$84,022,378" },
+      { label: "2025 NEW WRITERS", value: "1,987" },
+      { label: "2024 TOTAL PRODUCTION", value: "$22.8M" },
+      { label: "2023 NEW WRITERS", value: "165" },
     ],
+    writers: [165, 854, 1987],
+    production: [8, 22.8, 84],
   },
   founder: {
-    headline: "Wealth growth expertise at the speed of real life.",
-    body: "Jay Maska built this model to help ambitious people move faster. The goal is not more noise. The goal is more traction, stronger training, and a career path that rewards action.",
+    eyebrow: "MEET JAY MASKA",
+    headline: "WEALTH GROWTH EXPERTISE AT THE SPEED OF REAL LIFE",
+    body:
+      "Jay built Summit with one objective: make it easier for driven people to find a real system, real mentorship, and real momentum. The standard is speed with structure, not speed without support.",
     followUrl: "https://www.instagram.com/nonstopfinancial/",
+    image:
+      "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=1400&q=80",
+    imageAlt: "Black and white founder portrait looking toward the camera.",
   },
   successKpis: [
-    { value: "300+", label: "graduates of the training program" },
-    { value: "$5M", label: "bonuses paid every month across the network" },
-    { value: "$84M", label: "issued premium in 2025" },
-    { value: "Fastest Growing", label: "wealth-building path for 18-28 year olds" },
+    { value: "300+", label: "GRADUATES OF OUR TRAINING PROGRAM" },
+    { value: "$5,000,000", label: "FFL BONUSES PAID OUT EVERY MONTH" },
+    { value: "$84 MILLION", label: "OF ISSUED PREMIUM IN 2025" },
+    {
+      value: "FASTEST GROWING",
+      label: "WEALTH-GENERATING SOLUTION FOR 18-28 YEAR OLDS",
+    },
+  ],
+  secondaryTestimonials: [
+    {
+      quote:
+        "When the culture, training, and systems all line up, performance stops feeling accidental. That is the difference here.",
+      name: "MIA CARTER",
+      role: "Field Leader",
+      image:
+        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=900&q=80",
+      imageAlt: "Portrait of a field leader smiling in a studio setting.",
+      videoUrl: "https://www.instagram.com/nonstopfinancial/",
+    },
+    {
+      quote:
+        "This is what a real ramp looks like for hungry people: speed, clarity, support, and a room that expects more from you.",
+      name: "JORDAN VALE",
+      role: "Agency Builder",
+      image:
+        "https://images.unsplash.com/photo-1504257432389-52343af06ae3?auto=format&fit=crop&w=900&q=80",
+      imageAlt: "Portrait of an agency builder seated by a window.",
+      videoUrl: "https://www.instagram.com/nonstopfinancial/",
+    },
   ],
   instagram: [
-    "https://www.instagram.com/p/DH_Xv3SxEsU/",
-    "https://www.instagram.com/p/DT8hQuhEgan/",
-    "https://www.instagram.com/p/DTlWpHjEgME/",
-    "https://www.instagram.com/p/DTLI5qviGqm/",
-    "https://www.instagram.com/p/DSiqeoIkmpv/",
-    "https://www.instagram.com/p/DSD6fCWEjnk/",
-    "https://www.instagram.com/p/DQ5SeL6khy_/",
-    "https://www.instagram.com/p/DQhyn0xkvA6/",
-    "https://www.instagram.com/p/DQUsgQBkjk9/",
+    {
+      title: "Forbes-style momentum moment",
+      image:
+        "https://images.unsplash.com/photo-1516321165247-4aa89a48be28?auto=format&fit=crop&w=900&q=80",
+      url: "https://www.instagram.com/p/DH_Xv3SxEsU/",
+    },
+    {
+      title: "Conference hallway energy",
+      image:
+        "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=900&q=80",
+      url: "https://www.instagram.com/p/DT8hQuhEgan/",
+    },
+    {
+      title: "Stage and audience",
+      image:
+        "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=900&q=80",
+      url: "https://www.instagram.com/p/DTlWpHjEgME/",
+    },
+    {
+      title: "24/7 building access energy",
+      image:
+        "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=900&q=80",
+      url: "https://www.instagram.com/p/DTLI5qviGqm/",
+    },
+    {
+      title: "Fast-moving team huddle",
+      image:
+        "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=900&q=80",
+      url: "https://www.instagram.com/p/DSiqeoIkmpv/",
+    },
+    {
+      title: "Leadership conversation",
+      image:
+        "https://images.unsplash.com/photo-1515169067868-5387ec356754?auto=format&fit=crop&w=900&q=80",
+      url: "https://www.instagram.com/p/DSD6fCWEjnk/",
+    },
+    {
+      title: "Field training and support",
+      image:
+        "https://images.unsplash.com/photo-1522204523234-8729aa6e3d5f?auto=format&fit=crop&w=900&q=80",
+      url: "https://www.instagram.com/p/DQ5SeL6khy_/",
+    },
+    {
+      title: "After-hours celebration",
+      image:
+        "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=900&q=80",
+      url: "https://www.instagram.com/p/DQhyn0xkvA6/",
+    },
+    {
+      title: "Conference floor victory lap",
+      image:
+        "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=900&q=80",
+      url: "https://www.instagram.com/p/DQUsgQBkjk9/",
+    },
   ],
-  partnerNames: ["AMERICO", "NATIONAL LIFE GROUP", "F&G", "TRANSAMERICA", "MUTUAL OF OMAHA", "ETHOS"],
-  partnershipHeadline: "Raising lifestyles and incomes with the help of our partners.",
+  partnership: {
+    headline: "RAISING LIFESTYLES AND INCOMES WITH THE HELP OF OUR PARTNERS",
+    background:
+      "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1600&q=80",
+  },
+  finalCta: {
+    eyebrow: "READY TO MOVE?",
+    image:
+      "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1600&q=80",
+  },
   closingQuote: {
-    body: "Don't let anyone convince you that waiting is the whole strategy. Build momentum, learn quickly, and keep moving.",
-    attribution: "- Jay Maska, 2026",
+    opening: "DON'T LET ANYONE TELL YOU THAT WAITING IS THE WHOLE STRATEGY.",
+    middle: "BUILD MOMENTUM, LEARN QUICKLY,",
+    closing: "AND KEEP MOVING.",
+    attribution: "JAY MASKA, 2026",
+    image:
+      "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1200&q=80",
+    imageAlt: "Monochrome founder-style portrait beside the final quote.",
   },
 };
 
@@ -229,7 +395,7 @@ export const termsSections: LegalSection[] = [
     "These terms are governed by applicable Arizona law, without regard to conflict of law principles.",
   ]),
   makeSection("Contact Us", [
-    "Questions about these terms can be sent to team@nonstopfinancial.com or mailed to the Scottsdale office listed on this site.",
+    `Questions about these terms can be sent to ${summitEmail} or mailed to Summit's recruiting office in Scottsdale, Arizona.`,
   ]),
 ];
 
@@ -290,6 +456,6 @@ export const privacySections: LegalSection[] = [
     "This policy is interpreted under applicable Arizona law except where another privacy regime requires a different treatment.",
   ]),
   makeSection("Contact Us", [
-    "For privacy requests or questions, contact team@nonstopfinancial.com or write to the Scottsdale office listed in the footer.",
+    `For privacy requests or questions, contact ${summitEmail} or write to Summit's recruiting office in Scottsdale, Arizona.`,
   ]),
 ];

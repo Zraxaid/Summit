@@ -120,6 +120,7 @@ export function LeadModal({
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
     const nextErrors = getErrors(form);
     setErrors(nextErrors);
 
@@ -177,12 +178,14 @@ export function LeadModal({
         >
           ×
         </button>
+
         <p className="eyebrow">Join the Team</p>
         <h2 id={titleId}>Tell us where you are headed.</h2>
         <p id={descriptionId}>
           Complete the application and a Summit recruiter will reach out with
           next steps.
         </p>
+
         <form className="lead-form" onSubmit={handleSubmit} noValidate>
           <div className="form-grid">
             <label>
@@ -194,6 +197,7 @@ export function LeadModal({
               />
               {errors.firstName ? <small>{errors.firstName}</small> : null}
             </label>
+
             <label>
               <span>Last Name</span>
               <input
@@ -203,6 +207,7 @@ export function LeadModal({
               />
               {errors.lastName ? <small>{errors.lastName}</small> : null}
             </label>
+
             <label>
               <span>Email</span>
               <input
@@ -213,6 +218,7 @@ export function LeadModal({
               />
               {errors.email ? <small>{errors.email}</small> : null}
             </label>
+
             <label>
               <span>Phone</span>
               <div className="phone-field">
@@ -226,6 +232,7 @@ export function LeadModal({
               </div>
               {errors.phone ? <small>{errors.phone}</small> : null}
             </label>
+
             <label>
               <span>Location</span>
               <input
@@ -235,6 +242,7 @@ export function LeadModal({
               />
               {errors.location ? <small>{errors.location}</small> : null}
             </label>
+
             <label>
               <span>Birthday</span>
               <input
@@ -246,6 +254,7 @@ export function LeadModal({
               {errors.birthday ? <small>{errors.birthday}</small> : null}
             </label>
           </div>
+
           <fieldset>
             <legend>Are you currently licensed to sell insurance?</legend>
             <div className="radio-row">
@@ -263,6 +272,7 @@ export function LeadModal({
             </div>
             {errors.licensed ? <small>{errors.licensed}</small> : null}
           </fieldset>
+
           <fieldset>
             <legend>Are you willing to relocate for this position?</legend>
             <div className="radio-row">
@@ -280,6 +290,7 @@ export function LeadModal({
             </div>
             {errors.relocate ? <small>{errors.relocate}</small> : null}
           </fieldset>
+
           <label>
             <span>Anything else we should know?</span>
             <textarea
@@ -288,6 +299,7 @@ export function LeadModal({
               onChange={(event) => updateField("notes", event.target.value)}
             />
           </label>
+
           <label className="consent-row">
             <input
               type="checkbox"
@@ -299,10 +311,13 @@ export function LeadModal({
               <Link href="/privacy-policy">Privacy Policy</Link>.
             </span>
           </label>
+
           {errors.consent ? <small>{errors.consent}</small> : null}
-          <div className="form-status" aria-live="polite">
+
+          <div className="form-status" role="status" aria-live="polite">
             {status.message}
           </div>
+
           <button type="submit" className="button-submit" disabled={!canSubmit}>
             {status.type === "submitting" ? "SENDING..." : "JOIN THE TEAM"}
           </button>
