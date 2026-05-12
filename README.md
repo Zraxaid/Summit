@@ -30,3 +30,9 @@ Open [http://localhost:3000](http://localhost:3000).
 npm run lint
 npm run build
 ```
+
+## Copy Source
+
+The canonical copy source for the app lives in `src/lib/copy.ts`.
+
+`COPY.md` is the product-owner-facing inventory of visible strings, and `AUDIT-REPORT.md` captures the latest mobile-first audit findings and verification notes.
