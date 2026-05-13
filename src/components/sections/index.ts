@@ -1,0 +1,16 @@
+export { BenefitsSection } from "./benefits";
+export { ClosingQuoteSection } from "./closing-quote";
+export { FastFiveSection } from "./fast-five";
+export { FinalCtaSection } from "./final-cta";
+export { FounderSection } from "./founder";
+export { HeroSection } from "./hero";
+export { InstagramRailSection } from "./instagram-rail";
+export { MissionEssaySection } from "./mission-essay";
+export { MissionSplitSection } from "./mission-split";
+export { PartnershipSection } from "./partnership";
+export { PerformanceDashboardSection } from "./performance";
+export { QuarterlyChartSection } from "./quarterly-chart";
+export { StatTriadSection } from "./stat-triad";
+export { SuccessStripSection } from "./success-strip";
+export { SwitcherSection } from "./switcher";
+export { TestimonialCarousel } from "./testimonial-carousel";

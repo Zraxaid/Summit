@@ -1,11 +1,13 @@
+export type PartnerLogoId =
+  | "americo"
+  | "national-life-group"
+  | "fg"
+  | "transamerica"
+  | "mutual-of-omaha"
+  | "ethos";
+
 type PartnerLogoProps = {
-  id:
-    | "americo"
-    | "national-life-group"
-    | "fg"
-    | "transamerica"
-    | "mutual-of-omaha"
-    | "ethos";
+  id: PartnerLogoId;
   className?: string;
 };
 
