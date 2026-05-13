@@ -47,7 +47,7 @@ export function PartnershipSection() {
           <PhotoPanel
             className="partner-diamond-photo"
             image={homeData.partnership.background}
-            alt="Summit team in a dimly lit office celebrating a strong recruiting week."
+            alt={homeData.partnership.imageAlt}
           />
           <div className="partner-diamond-content">
             <p className="eyebrow">{siteCopy.routes.home.sections.partnership.eyebrow}</p>

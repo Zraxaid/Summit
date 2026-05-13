@@ -97,14 +97,14 @@ export const siteCopy = {
         },
         missionEssay: {
           body:
-            "We are here to level the playing field for hungry people who want a faster path into wealth-building work. Summit is built for [momentum], not waiting.",
+            "We are here to level the playing field for hungry people who want a faster path into wealth-building work. Summit is built for momentum, not waiting.",
           emphasizedPhrases: ["momentum"],
         },
         missionSplit: {
           eyebrow: "TAKE YOUR FINANCIAL LIFE",
-          headline:
-            "TAKE YOUR FINANCIAL LIFE [OFF PAUSE] AND START GROWING YOUR INCOME AND CAREER IMMEDIATELY.",
-          emphasizedPhrase: "OFF PAUSE",
+          titlePrefix: "TAKE YOUR FINANCIAL LIFE",
+          highlight: "OFF PAUSE",
+          titleSuffix: "AND START GROWING YOUR INCOME AND CAREER IMMEDIATELY.",
           body:
             "A better system should feel visible: better coaching, real accountability, faster reps, and a room full of people who are already moving in the direction you want.",
           ctaLabel: "JOIN TODAY.",
@@ -112,6 +112,32 @@ export const siteCopy = {
         testimonialsPrimary: {
           eyebrow: "WHY I CHOSE SUMMIT",
           watchLabel: "WATCH THE VIDEO >",
+          items: [
+            {
+              id: "dayethan",
+              quote:
+                "The mentor, the environment, and the accountability changed how quickly I started believing I could really build something here.",
+              name: "DAYETHAN NELSON",
+              role: "Agent",
+              imageAlt: "Portrait of an ambitious young insurance agent in a dark jacket.",
+            },
+            {
+              id: "kevin",
+              quote:
+                "Now I feel like an actual business owner. The system keeps me focused on momentum instead of guesswork.",
+              name: "KEVIN OLIVERO",
+              role: "Senior Producer",
+              imageAlt: "Portrait of a producer standing in a modern office hallway.",
+            },
+            {
+              id: "alex",
+              quote:
+                "The energy I am around every single day raises my standards. You can feel the pace the moment you walk into the room.",
+              name: "ALEX RUIZ",
+              role: "Recruiting Partner",
+              imageAlt: "Portrait of a recruiting partner smiling confidently.",
+            },
+          ],
         },
         switcher: {
           eyebrow: "MAKE THE SWITCH",
@@ -121,12 +147,14 @@ export const siteCopy = {
           statValue: "43%",
           statCaption:
             "OF OUR CURRENT TEAM CAME TO SUMMIT WITH PRIOR AGENCY EXPERIENCE",
+          imageAlt: "A small team sharing ideas in a bright conference room.",
         },
         benefits: {
           eyebrow: "JUMP START YOUR CAREER",
           headline: "What growth looks like when nothing stands in your way.",
           body:
             "Less friction, more rhythm, and a culture that keeps the work moving in the right direction.",
+          imageAlt: "Team members reviewing goals together on a couch.",
           items: [
             "CLOSE MORE DEALS EFFORTLESSLY",
             "WORK-LIFE BALANCE",
@@ -153,6 +181,33 @@ export const siteCopy = {
           eyebrow: "OUR SYSTEM: THE FAST FIVE",
           headline: "Five ways we accelerate new writers.",
           ctaLabel: "JOIN THE TEAM",
+          steps: [
+            {
+              number: 1,
+              title: "EXCLUSIVE LEADS",
+              body: "Pre-qualified prospects provided directly to our agents so your early momentum starts strong.",
+            },
+            {
+              number: 2,
+              title: "EFFECTIVE TRAINING",
+              body: "Personalized guidance from top performers who know how to compress your learning curve.",
+            },
+            {
+              number: 3,
+              title: "ONE-ON-ONE MENTORSHIP",
+              body: "Weekly reviews and honest coaching from leadership that stays close to the work.",
+            },
+            {
+              number: 4,
+              title: "AUTOMATED TOOLS",
+              body: "Simple automation saves time so you can focus on conversations, follow-up, and closing.",
+            },
+            {
+              number: 5,
+              title: "ONGOING SUPPORT",
+              body: "A team full of go-getters keeps the standards high and the momentum visible.",
+            },
+          ],
         },
         performance: {
           eyebrow: "PERFORMANCE WITH PURPOSE AND VELOCITY",
@@ -174,6 +229,7 @@ export const siteCopy = {
           body:
             "Jay built Summit with one objective: make it easier for driven people to find a real system, real mentorship, and real momentum. The standard is speed with structure, not speed without support.",
           ctaLabel: "FOLLOW JAY",
+          imageAlt: "Black and white founder portrait looking toward the camera.",
         },
         successStrip: {
           items: [
@@ -189,31 +245,60 @@ export const siteCopy = {
         testimonialsSecondary: {
           eyebrow: "WHY I STAYED",
           watchLabel: "WATCH THE VIDEO >",
+          items: [
+            {
+              id: "mia",
+              quote:
+                "When the culture, training, and systems all line up, performance stops feeling accidental. That is the difference here.",
+              name: "MIA CARTER",
+              role: "Field Leader",
+              imageAlt: "Portrait of a field leader smiling in a studio setting.",
+            },
+            {
+              id: "jordan",
+              quote:
+                "This is what a real ramp looks like for hungry people: speed, clarity, support, and a room that expects more from you.",
+              name: "JORDAN VALE",
+              role: "Agency Builder",
+              imageAlt: "Portrait of an agency builder seated by a window.",
+            },
+          ],
         },
         instagram: {
           eyebrow: "FOLLOW JAY",
           headline: "Culture, wins, and recruiting momentum in real time.",
           platformLabel: "INSTAGRAM",
+          cards: [
+            "Forbes-style momentum moment",
+            "Conference hallway energy",
+            "Stage and audience",
+            "24/7 building access energy",
+            "Fast-moving team huddle",
+            "Leadership conversation",
+            "Field training and support",
+            "After-hours celebration",
+            "Conference floor victory lap",
+          ],
         },
         partnership: {
           eyebrow: "PARTNERSHIP",
           headline: "RAISING LIFESTYLES AND INCOMES WITH THE HELP OF OUR PARTNERS",
           ctaLabel: "WATCH VIDEOS >",
+          imageAlt: "Summit team in a dimly lit office celebrating a strong recruiting week.",
         },
         finalCta: {
           eyebrow: "READY TO MOVE?",
           headline: "JOIN THE TEAM",
           ctaLabel: "JOIN THE TEAM",
           helper: "Takes about 90 seconds.",
+          imageAlt: "Summit team gathered around a table preparing for a recruiting event.",
         },
         closingQuote: {
-          quote:
-            "[DON'T LET ANYONE TELL YOU THAT WAITING IS THE WHOLE STRATEGY.] BUILD MOMENTUM, LEARN QUICKLY, [AND KEEP MOVING.]",
-          emphasizedPhrases: [
-            "DON'T LET ANYONE TELL YOU THAT WAITING IS THE WHOLE STRATEGY.",
-            "AND KEEP MOVING.",
-          ],
+          opening: "DON'T LET ANYONE TELL YOU THAT WAITING IS THE WHOLE STRATEGY.",
+          middle: "BUILD MOMENTUM, LEARN QUICKLY,",
+          closing: "AND KEEP MOVING.",
           attribution: "JAY MASKA, 2026",
+          imageAlt: "Monochrome founder-style portrait beside the final quote.",
         },
       },
     },

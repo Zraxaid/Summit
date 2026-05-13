@@ -57,251 +57,174 @@ export const footerData = {
   ],
 };
 
+const homeSections = siteCopy.routes.home.sections;
+
+// --------------------------------------------------------------------------
+// Image asset URLs. These remote placeholders are Unsplash stand-ins and
+// should be replaced with licensed Summit-owned photography during the next
+// content pass. Each surface lists its sole asset here so swapping is a
+// one-line edit.
+// --------------------------------------------------------------------------
+const photos = {
+  hero: [
+    "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80",
+  ],
+  missionSplit:
+    "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1600&q=80",
+  switcher:
+    "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1600&q=80",
+  benefits:
+    "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1600&q=80",
+  founder:
+    "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=1400&q=80",
+  partnership:
+    "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1600&q=80",
+  finalCta:
+    "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1600&q=80",
+  closingQuote:
+    "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1200&q=80",
+  testimonials: {
+    dayethan:
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80",
+    kevin:
+      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=900&q=80",
+    alex:
+      "https://images.unsplash.com/photo-1504593811423-6dd665756598?auto=format&fit=crop&w=900&q=80",
+    mia:
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=900&q=80",
+    jordan:
+      "https://images.unsplash.com/photo-1504257432389-52343af06ae3?auto=format&fit=crop&w=900&q=80",
+  },
+  instagramCards: [
+    "https://images.unsplash.com/photo-1516321165247-4aa89a48be28?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1515169067868-5387ec356754?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1522204523234-8729aa6e3d5f?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=900&q=80",
+    "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=900&q=80",
+  ],
+} as const;
+
+const testimonialImageById = photos.testimonials;
+type TestimonialImageId = keyof typeof testimonialImageById;
+
+type TestimonialCopy = {
+  id: string;
+  quote: string;
+  name: string;
+  role: string;
+  imageAlt: string;
+};
+
+export type Testimonial = TestimonialCopy & {
+  image: string;
+  videoUrl: string;
+};
+
+function joinTestimonials(items: readonly TestimonialCopy[]): Testimonial[] {
+  return items.map((item) => ({
+    ...item,
+    image: testimonialImageById[item.id as TestimonialImageId],
+    videoUrl: summitLinks.testimonialVideo,
+  }));
+}
+
 export const homeData = {
   hero: {
-    headline: siteCopy.routes.home.sections.hero.headline,
-    subhead: siteCopy.routes.home.sections.hero.subhead,
-    heroPhotos: [
-      "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80",
-    ],
+    headline: homeSections.hero.headline,
+    subhead: homeSections.hero.subhead,
+    heroPhotos: photos.hero,
   },
-  stats: [
-    {
-      value: 59,
-      unit: "%",
-      body: siteCopy.routes.home.sections.statTriad.stats[0].caption,
-    },
-    {
-      value: 25,
-      unit: "%",
-      body: siteCopy.routes.home.sections.statTriad.stats[1].caption,
-    },
-    {
-      value: 37,
-      unit: "%",
-      body: siteCopy.routes.home.sections.statTriad.stats[2].caption,
-    },
-  ],
-  breakMarquee: siteCopy.routes.home.sections.breakMarquee.phrases,
+  stats: homeSections.statTriad.stats.map((stat) => ({
+    value: Number.parseInt(stat.value, 10),
+    unit: stat.value.replace(/[0-9.]/g, ""),
+    body: stat.caption,
+  })),
+  breakMarquee: homeSections.breakMarquee.phrases,
   quarterly: {
-    caption: siteCopy.routes.home.sections.quarterlyChart.eyebrow,
-    axisLabel: siteCopy.routes.home.sections.quarterlyChart.axisLabel,
-    labels: siteCopy.routes.home.sections.quarterlyChart.xAxisLabels,
+    caption: homeSections.quarterlyChart.eyebrow,
+    axisLabel: homeSections.quarterlyChart.axisLabel,
+    labels: homeSections.quarterlyChart.xAxisLabels,
     values: [9, 24, 51, 91],
   },
-  missionStatement: siteCopy.routes.home.sections.missionEssay.body.replace(/\[|\]/g, ""),
+  missionStatement: homeSections.missionEssay.body,
+  missionEmphasized: homeSections.missionEssay.emphasizedPhrases,
   missionSplit: {
-    titlePrefix: "TAKE YOUR FINANCIAL LIFE",
-    highlight: siteCopy.routes.home.sections.missionSplit.emphasizedPhrase,
-    titleSuffix: "AND START GROWING YOUR INCOME AND CAREER IMMEDIATELY.",
-    body: siteCopy.routes.home.sections.missionSplit.body,
-    image:
-      "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1600&q=80",
+    titlePrefix: homeSections.missionSplit.titlePrefix,
+    highlight: homeSections.missionSplit.highlight,
+    titleSuffix: homeSections.missionSplit.titleSuffix,
+    body: homeSections.missionSplit.body,
+    image: photos.missionSplit,
     imageAlt: "Summit team collaborating around a laptop during a strategy session.",
   },
-  testimonials: [
-    {
-      quote:
-        "The mentor, the environment, and the accountability changed how quickly I started believing I could really build something here.",
-      name: "DAYETHAN NELSON",
-      role: "Agent",
-      image:
-        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80",
-      imageAlt: "Portrait of an ambitious young insurance agent in a dark jacket.",
-      videoUrl: summitLinks.testimonialVideo,
-    },
-    {
-      quote:
-        "Now I feel like an actual business owner. The system keeps me focused on momentum instead of guesswork.",
-      name: "KEVIN OLIVERO",
-      role: "Senior Producer",
-      image:
-        "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=900&q=80",
-      imageAlt: "Portrait of a producer standing in a modern office hallway.",
-      videoUrl: summitLinks.testimonialVideo,
-    },
-    {
-      quote:
-        "The energy I am around every single day raises my standards. You can feel the pace the moment you walk into the room.",
-      name: "ALEX RUIZ",
-      role: "Recruiting Partner",
-      image:
-        "https://images.unsplash.com/photo-1504593811423-6dd665756598?auto=format&fit=crop&w=900&q=80",
-      imageAlt: "Portrait of a recruiting partner smiling confidently.",
-      videoUrl: summitLinks.testimonialVideo,
-    },
-  ],
+  testimonials: joinTestimonials(homeSections.testimonialsPrimary.items),
   switcher: {
-    eyebrow: siteCopy.routes.home.sections.switcher.eyebrow,
-    title: siteCopy.routes.home.sections.switcher.headline,
-    body: siteCopy.routes.home.sections.switcher.body,
-    value: "43%",
-    statLabel: siteCopy.routes.home.sections.switcher.statCaption,
-    image:
-      "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1600&q=80",
-    imageAlt: "A small team sharing ideas in a bright conference room.",
+    eyebrow: homeSections.switcher.eyebrow,
+    title: homeSections.switcher.headline,
+    body: homeSections.switcher.body,
+    value: homeSections.switcher.statValue,
+    statLabel: homeSections.switcher.statCaption,
+    image: photos.switcher,
+    imageAlt: homeSections.switcher.imageAlt,
   },
   benefits: {
-    eyebrow: siteCopy.routes.home.sections.benefits.eyebrow,
-    title: siteCopy.routes.home.sections.benefits.headline,
-    body: siteCopy.routes.home.sections.benefits.body,
-    image:
-      "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1600&q=80",
-    imageAlt: "Team members reviewing goals together on a couch.",
-    items: [...siteCopy.routes.home.sections.benefits.items],
+    eyebrow: homeSections.benefits.eyebrow,
+    title: homeSections.benefits.headline,
+    body: homeSections.benefits.body,
+    image: photos.benefits,
+    imageAlt: homeSections.benefits.imageAlt,
+    items: [...homeSections.benefits.items],
   },
-  valueMarquee: [...siteCopy.routes.home.sections.valueMarquee.phrases],
-  fastFive: [
-    {
-      number: 1,
-      title: "EXCLUSIVE LEADS",
-      body: "Pre-qualified prospects provided directly to our agents so your early momentum starts strong.",
-    },
-    {
-      number: 2,
-      title: "EFFECTIVE TRAINING",
-      body: "Personalized guidance from top performers who know how to compress your learning curve.",
-    },
-    {
-      number: 3,
-      title: "ONE-ON-ONE MENTORSHIP",
-      body: "Weekly reviews and honest coaching from leadership that stays close to the work.",
-    },
-    {
-      number: 4,
-      title: "AUTOMATED TOOLS",
-      body: "Simple automation saves time so you can focus on conversations, follow-up, and closing.",
-    },
-    {
-      number: 5,
-      title: "ONGOING SUPPORT",
-      body: "A team full of go-getters keeps the standards high and the momentum visible.",
-    },
-  ],
+  valueMarquee: [...homeSections.valueMarquee.phrases],
+  fastFive: homeSections.fastFive.steps,
   performance: {
-    eyebrow: siteCopy.routes.home.sections.performance.eyebrow,
-    title: siteCopy.routes.home.sections.performance.headline,
-    body: siteCopy.routes.home.sections.performance.body,
-    kpis: [
-      { label: "2025 TOTAL PRODUCTION", value: "$84,022,378" },
-      { label: "2025 NEW WRITERS", value: "1,987" },
-      { label: "2024 TOTAL PRODUCTION", value: "$22.8M" },
-      { label: "2023 NEW WRITERS", value: "165" },
-    ],
+    eyebrow: homeSections.performance.eyebrow,
+    title: homeSections.performance.headline,
+    body: homeSections.performance.body,
+    kpis: homeSections.performance.kpis,
     writers: [165, 854, 1987],
     production: [8, 22.8, 84],
   },
   founder: {
-    eyebrow: siteCopy.routes.home.sections.founder.eyebrow,
-    headline: siteCopy.routes.home.sections.founder.headline,
-    body: siteCopy.routes.home.sections.founder.body,
+    eyebrow: homeSections.founder.eyebrow,
+    headline: homeSections.founder.headline,
+    body: homeSections.founder.body,
     followUrl: summitLinks.founderProfile,
-    image:
-      "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=1400&q=80",
-    imageAlt: "Black and white founder portrait looking toward the camera.",
+    image: photos.founder,
+    imageAlt: homeSections.founder.imageAlt,
   },
-  successKpis: [...siteCopy.routes.home.sections.successStrip.items].map((item) => ({
+  successKpis: homeSections.successStrip.items.map((item) => ({
     value: item.value,
     label: item.caption,
   })),
-  secondaryTestimonials: [
-    {
-      quote:
-        "When the culture, training, and systems all line up, performance stops feeling accidental. That is the difference here.",
-      name: "MIA CARTER",
-      role: "Field Leader",
-      image:
-        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=900&q=80",
-      imageAlt: "Portrait of a field leader smiling in a studio setting.",
-      videoUrl: summitLinks.testimonialVideo,
-    },
-    {
-      quote:
-        "This is what a real ramp looks like for hungry people: speed, clarity, support, and a room that expects more from you.",
-      name: "JORDAN VALE",
-      role: "Agency Builder",
-      image:
-        "https://images.unsplash.com/photo-1504257432389-52343af06ae3?auto=format&fit=crop&w=900&q=80",
-      imageAlt: "Portrait of an agency builder seated by a window.",
-      videoUrl: summitLinks.testimonialVideo,
-    },
-  ],
-  instagram: [
-    {
-      title: "Forbes-style momentum moment",
-      image:
-        "https://images.unsplash.com/photo-1516321165247-4aa89a48be28?auto=format&fit=crop&w=900&q=80",
-      url: summitLinks.instagramPost,
-    },
-    {
-      title: "Conference hallway energy",
-      image:
-        "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=900&q=80",
-      url: summitLinks.instagramPost,
-    },
-    {
-      title: "Stage and audience",
-      image:
-        "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=900&q=80",
-      url: summitLinks.instagramPost,
-    },
-    {
-      title: "24/7 building access energy",
-      image:
-        "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=900&q=80",
-      url: summitLinks.instagramPost,
-    },
-    {
-      title: "Fast-moving team huddle",
-      image:
-        "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=900&q=80",
-      url: summitLinks.instagramPost,
-    },
-    {
-      title: "Leadership conversation",
-      image:
-        "https://images.unsplash.com/photo-1515169067868-5387ec356754?auto=format&fit=crop&w=900&q=80",
-      url: summitLinks.instagramPost,
-    },
-    {
-      title: "Field training and support",
-      image:
-        "https://images.unsplash.com/photo-1522204523234-8729aa6e3d5f?auto=format&fit=crop&w=900&q=80",
-      url: summitLinks.instagramPost,
-    },
-    {
-      title: "After-hours celebration",
-      image:
-        "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=900&q=80",
-      url: summitLinks.instagramPost,
-    },
-    {
-      title: "Conference floor victory lap",
-      image:
-        "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=900&q=80",
-      url: summitLinks.instagramPost,
-    },
-  ],
+  secondaryTestimonials: joinTestimonials(homeSections.testimonialsSecondary.items),
+  instagram: homeSections.instagram.cards.map((title, index) => ({
+    title,
+    image: photos.instagramCards[index],
+    url: summitLinks.instagramPost,
+  })),
   partnership: {
-    headline: siteCopy.routes.home.sections.partnership.headline,
-    background:
-      "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1600&q=80",
+    headline: homeSections.partnership.headline,
+    background: photos.partnership,
+    imageAlt: homeSections.partnership.imageAlt,
   },
   finalCta: {
-    eyebrow: siteCopy.routes.home.sections.finalCta.eyebrow,
-    image:
-      "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1600&q=80",
+    eyebrow: homeSections.finalCta.eyebrow,
+    image: photos.finalCta,
+    imageAlt: homeSections.finalCta.imageAlt,
   },
   closingQuote: {
-    opening: "DON'T LET ANYONE TELL YOU THAT WAITING IS THE WHOLE STRATEGY.",
-    middle: "BUILD MOMENTUM, LEARN QUICKLY,",
-    closing: "AND KEEP MOVING.",
-    attribution: siteCopy.routes.home.sections.closingQuote.attribution,
-    image:
-      "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1200&q=80",
-    imageAlt: "Monochrome founder-style portrait beside the final quote.",
+    opening: homeSections.closingQuote.opening,
+    middle: homeSections.closingQuote.middle,
+    closing: homeSections.closingQuote.closing,
+    attribution: homeSections.closingQuote.attribution,
+    image: photos.closingQuote,
+    imageAlt: homeSections.closingQuote.imageAlt,
   },
 };
 

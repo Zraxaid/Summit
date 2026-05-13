@@ -13,9 +13,17 @@ const FADE_BIAS = 0.08;
 const EMPHASIS_BASE_ALPHA = 0.4;
 const EMPHASIS_GAIN = 0.6;
 
+function stripPunctuation(word: string) {
+  return word.replace(/[.,!?;:]+$/g, "").toLowerCase();
+}
+
 export function MissionEssaySection() {
   const essayRef = useRef<HTMLElement>(null);
   const words = useMemo(() => homeData.missionStatement.split(" "), []);
+  const emphasized = useMemo(
+    () => new Set(homeData.missionEmphasized.map((phrase) => phrase.toLowerCase())),
+    [],
+  );
   const { scrollYProgress } = useScroll({
     target: essayRef,
     offset: ["start 80%", "center center"],
@@ -38,7 +46,7 @@ export function MissionEssaySection() {
               PROGRESS_FLOOR,
               1,
             );
-            const emphasis = word.toUpperCase().includes("MOMENTUM");
+            const emphasis = emphasized.has(stripPunctuation(word));
 
             return (
               <span

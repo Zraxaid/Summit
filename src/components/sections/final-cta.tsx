@@ -12,7 +12,7 @@ export function FinalCtaSection() {
         <PhotoPanel
           className="final-cta-photo"
           image={homeData.finalCta.image}
-          alt="Summit team gathered around a table preparing for a recruiting event."
+          alt={homeData.finalCta.imageAlt}
         >
           <div className="final-cta-overlay">
             <p className="eyebrow">{homeData.finalCta.eyebrow}</p>

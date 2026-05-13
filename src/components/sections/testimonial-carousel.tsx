@@ -6,12 +6,12 @@ import { useEffect, useEffectEvent, useState } from "react";
 
 import { PhotoPanel, Reveal, easings } from "@/components/motion";
 import { siteCopy } from "@/lib/copy";
-import type { homeData } from "@/lib/site-data";
+import type { Testimonial } from "@/lib/site-data";
 
 const AUTO_ADVANCE_MS = 6000;
 
 export type TestimonialCarouselProps = {
-  items: Array<(typeof homeData.testimonials)[number]>;
+  items: Testimonial[];
   eyebrow: string;
 };
 
