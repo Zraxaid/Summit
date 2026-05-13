@@ -1,4 +1,5 @@
 import { jacksonRichards } from "./jackson-richards";
+import { louisArmitage } from "./louis-armitage";
 import type { Recruiter } from "./types";
 
 export type { Recruiter } from "./types";
@@ -18,6 +19,7 @@ export type {
 
 const recruiterRegistry: Record<string, Recruiter> = {
   [jacksonRichards.slug]: jacksonRichards,
+  [louisArmitage.slug]: louisArmitage,
 };
 
 export function getRecruiter(slug: string): Recruiter | null {
