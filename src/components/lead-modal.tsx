@@ -120,10 +120,12 @@ export function LeadModal({
   isOpen,
   onClose,
   returnFocusTarget,
+  recruiterSlug = null,
 }: {
   isOpen: boolean;
   onClose: () => void;
   returnFocusTarget: HTMLElement | null;
+  recruiterSlug?: string | null;
 }) {
   const titleId = useId();
   const descriptionId = useId();
@@ -271,7 +273,7 @@ export function LeadModal({
       const response = await fetch("/api/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, recruiter: recruiterSlug ?? "summit" }),
       });
 
       const payload = (await response.json()) as { ok: boolean; message: string };

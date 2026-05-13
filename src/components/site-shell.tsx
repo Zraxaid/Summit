@@ -10,18 +10,56 @@ import {
 } from "framer-motion";
 import { Mail, MapPin, Phone } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 import { LeadModal } from "@/components/lead-modal";
 import { siteCopy } from "@/lib/copy";
+import { getRecruiter } from "@/lib/recruiters";
 import { footerData } from "@/lib/site-data";
 
+function deriveRecruiterFromPath(pathname: string | null): RecruiterContextValue | null {
+  if (!pathname) {
+    return null;
+  }
+
+  const slug = pathname.split("/").filter(Boolean)[0];
+
+  if (!slug) {
+    return null;
+  }
+
+  const recruiter = getRecruiter(slug);
+
+  if (!recruiter) {
+    return null;
+  }
+
+  return {
+    slug: recruiter.slug,
+    name: recruiter.name,
+    ctaLabel: "APPLY TO MY TEAM",
+  };
+}
+
 type JoinTeamContextValue = {
-  open: (trigger?: HTMLElement | null) => void;
+  open: (trigger?: HTMLElement | null, recruiterSlug?: string | null) => void;
   close: () => void;
 };
 
 const JoinTeamContext = createContext<JoinTeamContextValue | null>(null);
+
+export type RecruiterContextValue = {
+  slug: string;
+  name: string;
+  ctaLabel: string;
+};
+
+const RecruiterContext = createContext<RecruiterContextValue | null>(null);
+
+export function useRecruiterContext(): RecruiterContextValue | null {
+  return useContext(RecruiterContext);
+}
 
 function InstagramGlyph({ size = 18 }: { size?: number }) {
   return (
@@ -84,7 +122,7 @@ export function useJoinTeamModal() {
 
 export function JoinTeamButton({
   className,
-  children = "JOIN THE TEAM",
+  children,
   variant = "solid",
 }: {
   className?: string;
@@ -92,6 +130,8 @@ export function JoinTeamButton({
   variant?: "solid" | "outline" | "text";
 }) {
   const { open } = useJoinTeamModal();
+  const recruiter = useRecruiterContext();
+  const resolvedLabel = children ?? recruiter?.ctaLabel ?? "JOIN THE TEAM";
   const magneticX = useMotionValue(0);
   const magneticY = useMotionValue(0);
   const x = useSpring(magneticX, { stiffness: 260, damping: 18 });
@@ -108,7 +148,7 @@ export function JoinTeamButton({
     <motion.button
       type="button"
       className={`${variantClassName}${className ? ` ${className}` : ""}`}
-      onClick={(event) => open(event.currentTarget)}
+      onClick={(event) => open(event.currentTarget, recruiter?.slug ?? null)}
       onMouseMove={(event) => {
         event.currentTarget.style.setProperty("--pointer-x", `${event.nativeEvent.offsetX}px`);
         event.currentTarget.style.setProperty("--pointer-y", `${event.nativeEvent.offsetY}px`);
@@ -130,16 +170,19 @@ export function JoinTeamButton({
       style={variant === "solid" ? { x, y } : undefined}
       whileTap={variant === "solid" ? { scale: 0.98 } : undefined}
     >
-      {children}
+      {resolvedLabel}
     </motion.button>
   );
 }
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const currentRecruiter = useMemo(() => deriveRecruiterFromPath(pathname), [pathname]);
   const [isOpen, setIsOpen] = useState(false);
   const [isCondensed, setIsCondensed] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [lastTrigger, setLastTrigger] = useState<HTMLElement | null>(null);
+  const [activeRecruiter, setActiveRecruiter] = useState<string | null>(null);
   const { scrollYProgress } = useScroll();
   const progressScale = useSpring(scrollYProgress, {
     stiffness: 140,
@@ -150,8 +193,9 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
 
   const value = useMemo(
     () => ({
-      open: (trigger?: HTMLElement | null) => {
+      open: (trigger?: HTMLElement | null, recruiterSlug?: string | null) => {
         setLastTrigger(trigger ?? null);
+        setActiveRecruiter(recruiterSlug ?? null);
         setIsOpen(true);
       },
       close: () => setIsOpen(false),
@@ -177,29 +221,36 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <JoinTeamContext.Provider value={value}>
-      <a className="skip-link" href="#main-content">
-        {siteCopy.global.header.skipLinkLabel}
-      </a>
-      <div className="site-frame">
-        <header
-          className={`site-header${isCondensed ? " is-condensed" : ""}${isComplete ? " is-complete" : ""}`}
-        >
-          <motion.div className="scroll-progress" style={{ scaleX: progressScale }} />
-          <motion.div className="scroll-progress-marker" style={{ left: markerLeft }} />
-          <Link href="/" className="brand-mark" aria-label={siteCopy.global.header.homeAriaLabel}>
-            <span className="brand-icon" aria-hidden="true">
-              <span />
-              <span />
-              <span />
-            </span>
-            <span className="brand-copy">
-              <strong>{siteCopy.global.header.brandLine1}</strong>
-              <span>{siteCopy.global.header.brandLine2}</span>
-            </span>
-          </Link>
-          <JoinTeamButton className="header-cta" />
-        </header>
+    <RecruiterContext.Provider value={currentRecruiter}>
+      <JoinTeamContext.Provider value={value}>
+        <a className="skip-link" href="#main-content">
+          {siteCopy.global.header.skipLinkLabel}
+        </a>
+        <div className="site-frame">
+          <header
+            className={`site-header${isCondensed ? " is-condensed" : ""}${isComplete ? " is-complete" : ""}${currentRecruiter ? " has-recruiter" : ""}`}
+          >
+            <motion.div className="scroll-progress" style={{ scaleX: progressScale }} />
+            <motion.div className="scroll-progress-marker" style={{ left: markerLeft }} />
+            <Link href="/" className="brand-mark" aria-label={siteCopy.global.header.homeAriaLabel}>
+              <span className="brand-icon" aria-hidden="true">
+                <span />
+                <span />
+                <span />
+              </span>
+              <span className="brand-copy">
+                <strong>{siteCopy.global.header.brandLine1}</strong>
+                <span>{siteCopy.global.header.brandLine2}</span>
+              </span>
+            </Link>
+            {currentRecruiter ? (
+              <span className="recruiter-chip" aria-label={`Recruiting with ${currentRecruiter.name}`}>
+                <span className="recruiter-chip-eyebrow">RECRUITING WITH</span>
+                <strong>{currentRecruiter.name}</strong>
+              </span>
+            ) : null}
+            <JoinTeamButton className="header-cta" />
+          </header>
 
         <main id="main-content" className="site-main">
           {children}
@@ -281,11 +332,13 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         </footer>
       </div>
 
-      <LeadModal
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        returnFocusTarget={lastTrigger}
-      />
-    </JoinTeamContext.Provider>
+        <LeadModal
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          returnFocusTarget={lastTrigger}
+          recruiterSlug={activeRecruiter}
+        />
+      </JoinTeamContext.Provider>
+    </RecruiterContext.Provider>
   );
 }
