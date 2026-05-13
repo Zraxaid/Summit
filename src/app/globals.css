@@ -1094,6 +1094,10 @@ textarea:focus-visible {
   border: 1px solid var(--line);
 }
 
+.partner-diamond-rect {
+  clip-path: none;
+}
+
 .partner-diamond-photo {
   position: absolute;
   inset: 0;
@@ -1616,6 +1620,48 @@ textarea:focus-visible {
 
   .modal-card {
     padding: 1.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .partner-diamond,
+  .partner-diamond-rect {
+    clip-path: none;
+    border-radius: 1.5rem;
+  }
+
+  .partner-diamond-photo {
+    min-height: 100%;
+  }
+
+  .partner-diamond-content {
+    padding: 2rem 1.5rem;
+  }
+
+  .partner-diamond-content h2 {
+    font-size: clamp(1.55rem, 6.4vw, 2.15rem);
+    line-height: 1.02;
+    max-width: none;
+    text-wrap: balance;
+  }
+
+  .partner-logo-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem;
+  }
+
+  .partner-logo-link {
+    min-height: 5.75rem;
+    padding: 0.9rem;
+  }
+
+  .partner-logo-link svg {
+    max-width: 10rem;
+  }
+
+  .partner-diamond-content .text-link-cta {
+    justify-self: center;
+    text-align: center;
   }
 }
 
@@ -2411,5 +2457,44 @@ textarea:focus-visible {
 @media (max-width: 640px) {
   .hero-collage {
     display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .partner-diamond.partner-diamond-rect {
+    clip-path: none !important;
+    border-radius: 1.5rem;
+    width: 100%;
+  }
+
+  .partner-diamond.partner-diamond-rect .partner-diamond-content {
+    padding: 2rem 1.5rem;
+  }
+
+  .partner-diamond.partner-diamond-rect .partner-diamond-content h2 {
+    width: 100%;
+    max-width: 100% !important;
+    font-size: clamp(1.05rem, 4.6vw, 1.6rem);
+    line-height: 1.08;
+    text-wrap: balance;
+  }
+
+  .partner-diamond.partner-diamond-rect .partner-logo-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem;
+  }
+
+  .partner-diamond.partner-diamond-rect .partner-logo-link {
+    min-height: 5.75rem;
+    padding: 0.9rem;
+  }
+
+  .partner-diamond.partner-diamond-rect .partner-logo-link svg {
+    max-width: 10rem;
+  }
+
+  .partner-diamond.partner-diamond-rect .text-link-cta {
+    justify-self: center;
+    text-align: center;
   }
 }

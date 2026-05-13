@@ -504,7 +504,7 @@ function MissionEssay() {
   const words = useMemo(() => homeData.missionStatement.split(" "), []);
   const { scrollYProgress } = useScroll({
     target: essayRef,
-    offset: ["start 80%", "end 20%"],
+    offset: ["start 80%", "center center"],
   });
   const [progress, setProgress] = useState(0);
 
@@ -518,7 +518,8 @@ function MissionEssay() {
         <p>
           {words.map((word, index) => {
             const threshold = index / words.length;
-            const opacity = clamp((progress - threshold + 0.14) * 7.5, 0.18, 1);
+            const acceleratedProgress = clamp(progress / 0.72, 0, 1);
+            const opacity = clamp((acceleratedProgress - threshold + 0.08) * 8.5, 0.18, 1);
             const emphasis = word.toUpperCase().includes("MOMENTUM");
 
             return (
@@ -986,15 +987,38 @@ function InstagramRail() {
 
 function PartnershipSection() {
   const reduceMotion = useReducedMotion();
+  const [isMobilePanel, setIsMobilePanel] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 768px)");
+    const sync = () => {
+      setIsMobilePanel(mediaQuery.matches);
+    };
+
+    sync();
+
+    if (typeof mediaQuery.addEventListener === "function") {
+      mediaQuery.addEventListener("change", sync);
+      return () => mediaQuery.removeEventListener("change", sync);
+    }
+
+    mediaQuery.addListener(sync);
+    return () => mediaQuery.removeListener(sync);
+  }, []);
 
   return (
     <section className="partner-section">
       <Reveal className="partner-shell">
         <motion.div
-          className="partner-diamond"
-          initial={reduceMotion ? false : { clipPath: "polygon(50% 0%, 60% 10%, 60% 100%, 40% 100%, 40% 10%)" }}
+          className={`partner-diamond${isMobilePanel ? " partner-diamond-rect" : ""}`}
+          style={isMobilePanel ? { clipPath: "none" } : undefined}
+          initial={
+            reduceMotion || isMobilePanel
+              ? false
+              : { clipPath: "polygon(50% 0%, 60% 10%, 60% 100%, 40% 100%, 40% 10%)" }
+          }
           whileInView={
-            reduceMotion
+            reduceMotion || isMobilePanel
               ? {}
               : { clipPath: "polygon(50% 0%, 100% 22%, 100% 100%, 0% 100%, 0% 22%)" }
           }
