@@ -2099,6 +2099,21 @@ textarea:focus-visible {
   will-change: transform, opacity;
 }
 
+/*
+ * Animated headings keep a compositor layer pinned so the browser does not
+ * drop GPU rendering at animation end. Without will-change the browser
+ * demotes the layer, re-runs text-wrap: balance, and the heading appears
+ * to flicker the moment the framer-motion inline transform clears.
+ */
+.hero-copy-block h1,
+.mission-split-copy h2,
+.founder-copy h2,
+.switcher-copy h2,
+.benefits-copy h2,
+.closing-quote-copy blockquote {
+  will-change: transform, opacity;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .scroll-progress-marker {
     display: none;

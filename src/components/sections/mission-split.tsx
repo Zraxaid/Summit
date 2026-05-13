@@ -31,9 +31,9 @@ export function MissionSplitSection() {
           <p className="eyebrow">{siteCopy.routes.home.sections.missionSplit.eyebrow}</p>
           <motion.h2
             initial={reduceMotion ? false : { x: 110, opacity: 0 }}
-            whileInView={reduceMotion ? {} : { x: [110, -18, 0], opacity: 1 }}
+            whileInView={reduceMotion ? {} : { x: 0, opacity: 1 }}
             viewport={{ once: true, amount: 0.45 }}
-            transition={{ duration: 0.9, times: [0, 0.75, 1], ease: easings.expoOut }}
+            transition={{ duration: 0.9, ease: easings.expoOut }}
           >
             {homeData.missionSplit.titlePrefix}{" "}
             <span>{homeData.missionSplit.highlight}</span>{" "}

@@ -108,8 +108,8 @@ export function HeroSection() {
             <p className="eyebrow">{siteCopy.routes.home.sections.hero.eyebrow}</p>
             <motion.h1
               initial={reduceMotion ? false : { x: 72, opacity: 0 }}
-              animate={reduceMotion ? {} : { x: [72, -14, 0], opacity: 1 }}
-              transition={{ duration: 0.88, times: [0, 0.72, 1], ease: easings.expoOut }}
+              animate={reduceMotion ? {} : { x: 0, opacity: 1 }}
+              transition={{ duration: 0.88, ease: easings.expoOut }}
             >
               {homeData.hero.headline}
             </motion.h1>
