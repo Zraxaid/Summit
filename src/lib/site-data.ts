@@ -11,15 +11,33 @@ const summitAddress = siteCopy.global.footer.address;
 const summitPhone = siteCopy.global.footer.phoneLabel;
 const summitPhoneRaw = "+14805508556";
 
+// Summit-owned URLs are pending product-owner confirmation. Until real Summit
+// social handles and a founder profile URL are supplied, route every external
+// CTA back to the marketing site so visitors do not land on the prior brand
+// (NonStop Financial) by accident.
+const SUMMIT_HOME = "https://www.summitfinancialrecruiting.com/";
+const summitSocial = {
+  instagram: SUMMIT_HOME,
+  tiktok: SUMMIT_HOME,
+  linkedin: SUMMIT_HOME,
+};
+
+export const summitLinks = {
+  social: summitSocial,
+  founderProfile: SUMMIT_HOME,
+  testimonialVideo: SUMMIT_HOME,
+  instagramPost: SUMMIT_HOME,
+} as const;
+
 export const footerData = {
   address: summitAddress,
   email: summitEmail,
   phone: summitPhone,
   phoneRaw: summitPhoneRaw,
   social: [
-    { id: "instagram", label: "Instagram", url: "https://www.instagram.com/nonstopfinancial/" },
-    { id: "tiktok", label: "TikTok", url: "https://www.tiktok.com/@nonstopfinancial" },
-    { id: "linkedin", label: "LinkedIn", url: "https://www.linkedin.com/company/nonstop-financial/" },
+    { id: "instagram", label: "Instagram", url: summitSocial.instagram },
+    { id: "tiktok", label: "TikTok", url: summitSocial.tiktok },
+    { id: "linkedin", label: "LinkedIn", url: summitSocial.linkedin },
   ],
   partners: [
     { id: "americo", name: "AMERICO", url: "https://www.americo.com/" },
@@ -92,7 +110,7 @@ export const homeData = {
       image:
         "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80",
       imageAlt: "Portrait of an ambitious young insurance agent in a dark jacket.",
-      videoUrl: "https://www.instagram.com/nonstopfinancial/",
+      videoUrl: summitLinks.testimonialVideo,
     },
     {
       quote:
@@ -102,7 +120,7 @@ export const homeData = {
       image:
         "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=900&q=80",
       imageAlt: "Portrait of a producer standing in a modern office hallway.",
-      videoUrl: "https://www.instagram.com/nonstopfinancial/",
+      videoUrl: summitLinks.testimonialVideo,
     },
     {
       quote:
@@ -112,7 +130,7 @@ export const homeData = {
       image:
         "https://images.unsplash.com/photo-1504593811423-6dd665756598?auto=format&fit=crop&w=900&q=80",
       imageAlt: "Portrait of a recruiting partner smiling confidently.",
-      videoUrl: "https://www.instagram.com/nonstopfinancial/",
+      videoUrl: summitLinks.testimonialVideo,
     },
   ],
   switcher: {
@@ -179,7 +197,7 @@ export const homeData = {
     eyebrow: siteCopy.routes.home.sections.founder.eyebrow,
     headline: siteCopy.routes.home.sections.founder.headline,
     body: siteCopy.routes.home.sections.founder.body,
-    followUrl: "https://www.instagram.com/nonstopfinancial/",
+    followUrl: summitLinks.founderProfile,
     image:
       "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=1400&q=80",
     imageAlt: "Black and white founder portrait looking toward the camera.",
@@ -197,7 +215,7 @@ export const homeData = {
       image:
         "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=900&q=80",
       imageAlt: "Portrait of a field leader smiling in a studio setting.",
-      videoUrl: "https://www.instagram.com/nonstopfinancial/",
+      videoUrl: summitLinks.testimonialVideo,
     },
     {
       quote:
@@ -207,7 +225,7 @@ export const homeData = {
       image:
         "https://images.unsplash.com/photo-1504257432389-52343af06ae3?auto=format&fit=crop&w=900&q=80",
       imageAlt: "Portrait of an agency builder seated by a window.",
-      videoUrl: "https://www.instagram.com/nonstopfinancial/",
+      videoUrl: summitLinks.testimonialVideo,
     },
   ],
   instagram: [
@@ -215,55 +233,55 @@ export const homeData = {
       title: "Forbes-style momentum moment",
       image:
         "https://images.unsplash.com/photo-1516321165247-4aa89a48be28?auto=format&fit=crop&w=900&q=80",
-      url: "https://www.instagram.com/p/DH_Xv3SxEsU/",
+      url: summitLinks.instagramPost,
     },
     {
       title: "Conference hallway energy",
       image:
         "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=900&q=80",
-      url: "https://www.instagram.com/p/DT8hQuhEgan/",
+      url: summitLinks.instagramPost,
     },
     {
       title: "Stage and audience",
       image:
         "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=900&q=80",
-      url: "https://www.instagram.com/p/DTlWpHjEgME/",
+      url: summitLinks.instagramPost,
     },
     {
       title: "24/7 building access energy",
       image:
         "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=900&q=80",
-      url: "https://www.instagram.com/p/DTLI5qviGqm/",
+      url: summitLinks.instagramPost,
     },
     {
       title: "Fast-moving team huddle",
       image:
         "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=900&q=80",
-      url: "https://www.instagram.com/p/DSiqeoIkmpv/",
+      url: summitLinks.instagramPost,
     },
     {
       title: "Leadership conversation",
       image:
         "https://images.unsplash.com/photo-1515169067868-5387ec356754?auto=format&fit=crop&w=900&q=80",
-      url: "https://www.instagram.com/p/DSD6fCWEjnk/",
+      url: summitLinks.instagramPost,
     },
     {
       title: "Field training and support",
       image:
         "https://images.unsplash.com/photo-1522204523234-8729aa6e3d5f?auto=format&fit=crop&w=900&q=80",
-      url: "https://www.instagram.com/p/DQ5SeL6khy_/",
+      url: summitLinks.instagramPost,
     },
     {
       title: "After-hours celebration",
       image:
         "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=900&q=80",
-      url: "https://www.instagram.com/p/DQhyn0xkvA6/",
+      url: summitLinks.instagramPost,
     },
     {
       title: "Conference floor victory lap",
       image:
         "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=900&q=80",
-      url: "https://www.instagram.com/p/DQUsgQBkjk9/",
+      url: summitLinks.instagramPost,
     },
   ],
   partnership: {
