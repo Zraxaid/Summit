@@ -1,27 +1,5 @@
 @import "tailwindcss";
-
-:root {
-  --background: #090a0f;
-  --foreground: #f5f1e8;
-  --surface: #11131b;
-  --surface-strong: #171b24;
-  --surface-soft: #1d222f;
-  --card: #f3ede0;
-  --card-ink: #111318;
-  --muted: #9ea5b8;
-  --line: rgba(255, 255, 255, 0.12);
-  --line-dark: rgba(17, 19, 24, 0.12);
-  --accent: #ff7b1c;
-  --accent-deep: #d95300;
-  --section-gap: clamp(4rem, 8vw, 8rem);
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "Geist Mono", "Geist Mono Fallback", ui-monospace, monospace;
-}
+@import "./tokens.css";
 
 * {
   box-sizing: border-box;
@@ -2169,10 +2147,6 @@ textarea:focus-visible {
 }
 
 @media (max-width: 750px) {
-  :root {
-    --section-gap: clamp(4rem, 12vh, 6rem);
-  }
-
   .hero-section {
     padding-top: 4.25rem;
     padding-bottom: 3.5rem;
