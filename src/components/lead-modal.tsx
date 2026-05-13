@@ -67,8 +67,24 @@ function getErrors(state: LeadFormState) {
     }
   }
 
-  if (state.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email)) {
+  if (state.email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(state.email)) {
     errors.email = "Enter a valid email address.";
+  }
+
+  if (state.phone) {
+    const digits = state.phone.replace(/\D+/g, "");
+
+    if (digits.length < 7) {
+      errors.phone = "Enter a phone number we can reach you on.";
+    }
+  }
+
+  if (state.birthday) {
+    const date = new Date(state.birthday);
+
+    if (Number.isNaN(date.valueOf()) || date > new Date()) {
+      errors.birthday = "Enter a real birthday.";
+    }
   }
 
   if (!state.consent) {
@@ -114,6 +130,7 @@ export function LeadModal({
   const statusId = useId();
   const dialogRef = useRef<HTMLDivElement>(null);
   const firstInputRef = useRef<HTMLInputElement>(null);
+  const todayIso = useMemo(() => new Date().toISOString().slice(0, 10), []);
   const [form, setForm] = useState(initialState);
   const [touched, setTouched] = useState<TouchedState>({});
   const [forceShowAllErrors, setForceShowAllErrors] = useState(false);
@@ -316,6 +333,8 @@ export function LeadModal({
               <span>{siteCopy.global.modal.fieldLabels[0]}</span>
               <input
                 ref={firstInputRef}
+                name="firstName"
+                autoComplete="given-name"
                 value={form.firstName}
                 onChange={(event) => updateField("firstName", event.target.value)}
                 onBlur={() => markTouched("firstName")}
@@ -331,6 +350,8 @@ export function LeadModal({
             <label>
               <span>{siteCopy.global.modal.fieldLabels[1]}</span>
               <input
+                name="lastName"
+                autoComplete="family-name"
                 value={form.lastName}
                 onChange={(event) => updateField("lastName", event.target.value)}
                 onBlur={() => markTouched("lastName")}
@@ -346,7 +367,10 @@ export function LeadModal({
             <label>
               <span>{siteCopy.global.modal.fieldLabels[2]}</span>
               <input
+                name="email"
                 type="email"
+                autoComplete="email"
+                inputMode="email"
                 value={form.email}
                 onChange={(event) => updateField("email", event.target.value)}
                 onBlur={() => markTouched("email")}
@@ -364,7 +388,10 @@ export function LeadModal({
               <div className="phone-field">
                 <span>US +1</span>
                 <input
+                  name="phone"
                   type="tel"
+                  autoComplete="tel-national"
+                  inputMode="tel"
                   value={form.phone}
                   onChange={(event) => updateField("phone", event.target.value)}
                   onBlur={() => markTouched("phone")}
@@ -381,6 +408,8 @@ export function LeadModal({
             <label>
               <span>{siteCopy.global.modal.fieldLabels[4]}</span>
               <input
+                name="location"
+                autoComplete="address-level2"
                 value={form.location}
                 onChange={(event) => updateField("location", event.target.value)}
                 onBlur={() => markTouched("location")}
@@ -396,7 +425,11 @@ export function LeadModal({
             <label>
               <span>{siteCopy.global.modal.fieldLabels[5]}</span>
               <input
+                name="birthday"
                 type="date"
+                autoComplete="bday"
+                max={todayIso}
+                min="1900-01-01"
                 value={form.birthday}
                 onChange={(event) => updateField("birthday", event.target.value)}
                 onBlur={() => markTouched("birthday")}
