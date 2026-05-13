@@ -116,36 +116,37 @@ export function LeadModal({
   const firstInputRef = useRef<HTMLInputElement>(null);
   const [form, setForm] = useState(initialState);
   const [touched, setTouched] = useState<TouchedState>({});
-  const [errors, setErrors] = useState<FieldErrors>({});
+  const [forceShowAllErrors, setForceShowAllErrors] = useState(false);
   const [status, setStatus] = useState<{
     type: "idle" | "success" | "error" | "submitting";
     message: string;
   }>({ type: "idle", message: "" });
 
+  const errors = useMemo(() => getErrors(form), [form]);
+
   const visibleErrors = useMemo(() => {
     const nextErrors: FieldErrors = {};
 
-    Object.entries(errors).forEach(([key, value]) => {
-      if (value && touched[key as LeadFormField]) {
-        nextErrors[key as LeadFormField] = value;
+    (Object.entries(errors) as Array<[LeadFormField, string]>).forEach(([key, value]) => {
+      if (value && (forceShowAllErrors || touched[key])) {
+        nextErrors[key] = value;
       }
     });
 
     return nextErrors;
-  }, [errors, touched]);
+  }, [errors, forceShowAllErrors, touched]);
 
   const canSubmit = useMemo(() => {
     if (status.type === "submitting") {
       return false;
     }
 
-    const nextErrors = getErrors(form);
-    return Object.keys(nextErrors).length === 0;
-  }, [form, status.type]);
+    return Object.keys(errors).length === 0;
+  }, [errors, status.type]);
 
   const handleDismiss = useCallback(() => {
     setTouched({});
-    setErrors({});
+    setForceShowAllErrors(false);
     setStatus({ type: "idle", message: "" });
     onClose();
   }, [onClose]);
@@ -210,9 +211,7 @@ export function LeadModal({
     key: Key,
     value: LeadFormState[Key],
   ) {
-    const nextForm = { ...form, [key]: value };
-    setForm(nextForm);
-    setErrors(getErrors(nextForm));
+    setForm((current) => ({ ...current, [key]: value }));
     setStatus((current) =>
       current.type === "error" ? { type: "idle", message: "" } : current,
     );
@@ -220,25 +219,29 @@ export function LeadModal({
 
   function markTouched<Key extends LeadFormField>(key: Key) {
     setTouched((current) => ({ ...current, [key]: true }));
-    setErrors(getErrors(form));
   }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const nextTouched = Object.fromEntries(
-      [...requiredFields, "consent"].map((field) => [field, true]),
-    ) as TouchedState;
-    const nextErrors = getErrors(form);
+    setForceShowAllErrors(true);
 
-    setTouched((current) => ({ ...current, ...nextTouched }));
-    setErrors(nextErrors);
-
-    if (Object.keys(nextErrors).length > 0) {
+    if (Object.keys(errors).length > 0) {
       setStatus({
         type: "error",
         message: siteCopy.global.modal.formErrorSummary,
       });
+
+      const firstErrorKey = (Object.keys(errors) as LeadFormField[])[0];
+      const dialog = dialogRef.current;
+
+      if (dialog && firstErrorKey) {
+        const target = dialog.querySelector<HTMLElement>(
+          `[aria-invalid="true"], [name="${firstErrorKey}"]`,
+        );
+        target?.focus({ preventScroll: false });
+      }
+
       return;
     }
 
@@ -263,7 +266,7 @@ export function LeadModal({
 
       setForm(initialState);
       setTouched({});
-      setErrors({});
+      setForceShowAllErrors(false);
       setStatus({ type: "success", message: payload.message });
     } catch {
       setStatus({
