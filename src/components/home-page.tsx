@@ -3,9 +3,6 @@
 import {
   AnimatePresence,
   motion,
-  useAnimationFrame,
-  useInView,
-  useMotionValue,
   useMotionValueEvent,
   useReducedMotion,
   useScroll,
@@ -15,6 +12,14 @@ import { ChevronLeft, ChevronRight, MoveRight, Quote } from "lucide-react";
 import Image from "next/image";
 import { type CSSProperties, useEffect, useEffectEvent, useMemo, useRef, useState } from "react";
 
+import {
+  DirectionMarquee,
+  PhotoPanel,
+  Reveal,
+  clamp,
+  easings,
+  useAnimatedNumber,
+} from "@/components/motion";
 import { PartnerLogo } from "@/components/partner-logos";
 import { JoinTeamButton } from "@/components/site-shell";
 import { siteCopy } from "@/lib/copy";
@@ -32,31 +37,6 @@ const arrowTiles = [
 ];
 
 const successRatios = [1, 0.84, 0.93, 0.72];
-
-function clamp(value: number, min: number, max: number) {
-  return Math.min(Math.max(value, min), max);
-}
-
-function wrap(value: number, min: number, max: number) {
-  const range = max - min;
-
-  if (range === 0) {
-    return min;
-  }
-
-  return ((((value - min) % range) + range) % range) + min;
-}
-
-function easeOutCubic(value: number) {
-  return 1 - (1 - value) ** 3;
-}
-
-function easeOutBack(value: number) {
-  const c1 = 1.70158;
-  const c3 = c1 + 1;
-
-  return 1 + c3 * (value - 1) ** 3 + c1 * (value - 1) ** 2;
-}
 
 function linePath(values: number[], width: number, height: number, padding = 28) {
   const max = Math.max(...values);
@@ -104,123 +84,6 @@ function formatWholeNumber(value: number) {
   }).format(value);
 }
 
-function useAnimatedNumber(
-  target: number,
-  {
-    duration = 1400,
-    overshoot = 0,
-    amount = 0.55,
-  }: {
-    duration?: number;
-    overshoot?: number;
-    amount?: number;
-  } = {},
-) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const reduceMotion = useReducedMotion();
-  const isInView = useInView(ref, { once: true, amount });
-  const [value, setValue] = useState(0);
-  const [done, setDone] = useState(false);
-
-  useEffect(() => {
-    if (reduceMotion || !isInView || done) {
-      return;
-    }
-
-    let frame = 0;
-    const overshootTarget = target * (1 + overshoot);
-    const start = performance.now();
-
-    const tick = (currentTime: number) => {
-      const progress = clamp((currentTime - start) / duration, 0, 1);
-      const nextValue =
-        progress < 0.82
-          ? overshoot > 0
-            ? overshootTarget * easeOutCubic(progress / 0.82)
-            : target * easeOutCubic(progress)
-          : overshoot > 0
-            ? overshootTarget - (overshootTarget - target) * easeOutBack((progress - 0.82) / 0.18)
-            : target;
-
-      setValue(nextValue);
-
-      if (progress < 1) {
-        frame = window.requestAnimationFrame(tick);
-      } else {
-        setValue(target);
-        setDone(true);
-      }
-    };
-
-    frame = window.requestAnimationFrame(tick);
-    return () => window.cancelAnimationFrame(frame);
-  }, [amount, done, duration, isInView, overshoot, reduceMotion, target]);
-
-  return {
-    ref,
-    value: reduceMotion ? target : value,
-    done: reduceMotion ? true : done,
-  };
-}
-
-function Reveal({
-  children,
-  className,
-  amount = 0.25,
-  delay = 0,
-}: {
-  children: React.ReactNode;
-  className?: string;
-  amount?: number;
-  delay?: number;
-}) {
-  const reduceMotion = useReducedMotion();
-
-  return (
-    <motion.div
-      className={className}
-      initial={reduceMotion ? false : { opacity: 0, y: 28 }}
-      whileInView={reduceMotion ? {} : { opacity: 1, y: 0 }}
-      viewport={{ once: true, amount }}
-      transition={{ duration: 0.8, delay, ease: [0.2, 0.8, 0.2, 1] }}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-function PhotoPanel({
-  image,
-  alt,
-  className,
-  priority = false,
-  sizes = "(max-width: 750px) 100vw, 50vw",
-  children,
-}: {
-  image: string;
-  alt: string;
-  className?: string;
-  priority?: boolean;
-  sizes?: string;
-  children?: React.ReactNode;
-}) {
-  return (
-    <div
-      className={`photo-panel${className ? ` ${className}` : ""}`}
-    >
-      <Image
-        src={image}
-        alt={alt}
-        fill
-        className="photo-panel-image"
-        sizes={sizes}
-        priority={priority}
-      />
-      {children}
-    </div>
-  );
-}
-
 function AnimatedStat({ value, unit, body }: (typeof homeData.stats)[number]) {
   const { ref, value: current, done } = useAnimatedNumber(value, {
     duration: 1500,
@@ -246,88 +109,6 @@ function AnimatedStat({ value, unit, body }: (typeof homeData.stats)[number]) {
       </p>
       <p>{body}</p>
     </Reveal>
-  );
-}
-
-function DirectionMarquee({
-  items,
-  invert = false,
-}: {
-  items: readonly string[];
-  invert?: boolean;
-}) {
-  const reduceMotion = useReducedMotion();
-  const rowRef = useRef<HTMLDivElement>(null);
-  const x = useMotionValue(0);
-  const lastScrollRef = useRef(0);
-  const boostRef = useRef(0);
-  const directionRef = useRef(1);
-  const [rowWidth, setRowWidth] = useState(0);
-
-  useEffect(() => {
-    const node = rowRef.current;
-
-    if (!node) {
-      return;
-    }
-
-    const measure = () => {
-      const nextWidth = node.getBoundingClientRect().width;
-      setRowWidth(nextWidth);
-      x.set(-nextWidth);
-    };
-
-    measure();
-    const observer = new ResizeObserver(measure);
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, [x]);
-
-  useAnimationFrame((_, delta) => {
-    if (reduceMotion || !rowWidth) {
-      return;
-    }
-
-    const currentScroll = window.scrollY;
-    const deltaScroll = currentScroll - lastScrollRef.current;
-    lastScrollRef.current = currentScroll;
-    boostRef.current = boostRef.current * 0.88 + clamp(deltaScroll, -38, 38) * 0.12;
-
-    if (Math.abs(deltaScroll) > 0.1) {
-      directionRef.current = deltaScroll > 0 ? 1 : -1;
-    }
-
-    const speed = 32 + Math.min(Math.abs(boostRef.current) * 2.6, 76);
-    const next = wrap(x.get() + directionRef.current * speed * (delta / 1000), -rowWidth * 2, 0);
-    x.set(next);
-  });
-
-  return (
-    <div className={`marquee-band${invert ? " invert" : ""}`}>
-      {reduceMotion ? (
-        <div className="marquee-static">
-          {items.map((item, index) => (
-            <span key={`${item}-${index}`}>
-              <b>{item}</b>
-              <i aria-hidden="true" />
-            </span>
-          ))}
-        </div>
-      ) : (
-        <motion.div className="marquee-track-live" style={{ x }}>
-          {[0, 1, 2].map((copy) => (
-            <div key={copy} className="marquee-group" ref={copy === 1 ? rowRef : undefined}>
-              {items.map((item, index) => (
-                <span key={`${copy}-${item}-${index}`}>
-                  <b>{item}</b>
-                  <i aria-hidden="true" />
-                </span>
-              ))}
-            </div>
-          ))}
-        </motion.div>
-      )}
-    </div>
   );
 }
 
@@ -376,7 +157,7 @@ function HeroSection() {
             }}
             initial={reduceMotion ? false : { opacity: 0, scale: 0.68, x: -28, y: 18 }}
             animate={reduceMotion ? {} : { opacity: 1, scale: 1, x: 0, y: 0 }}
-            transition={{ duration: 1.05, delay: arrow.delay, ease: [0.2, 0.8, 0.2, 1] }}
+            transition={{ duration: 1.05, delay: arrow.delay, ease: easings.smoothOut }}
           />
         ))}
       </motion.div>
@@ -386,7 +167,7 @@ function HeroSection() {
           className="hero-mark"
           initial={reduceMotion ? false : { opacity: 0, scale: 0.9 }}
           animate={reduceMotion ? {} : { opacity: 1, scale: 1 }}
-          transition={{ duration: 0.7, ease: [0.2, 0.8, 0.2, 1] }}
+          transition={{ duration: 0.7, ease: easings.smoothOut }}
         >
           <svg viewBox="0 0 240 160" aria-hidden="true">
             <motion.path
@@ -419,7 +200,7 @@ function HeroSection() {
             <motion.h1
               initial={reduceMotion ? false : { x: 72, opacity: 0 }}
               animate={reduceMotion ? {} : { x: [72, -14, 0], opacity: 1 }}
-              transition={{ duration: 0.88, times: [0, 0.72, 1], ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.88, times: [0, 0.72, 1], ease: easings.expoOut }}
             >
               {homeData.hero.headline}
             </motion.h1>
@@ -672,7 +453,7 @@ function TestimonialCarousel({
               initial={reduceMotion ? false : { opacity: 0, rotateY: -20, rotateZ: -2, x: 48, scale: 0.96 }}
               animate={reduceMotion ? {} : { opacity: 1, rotateY: 0, rotateZ: 0, x: 0, scale: 1 }}
               exit={reduceMotion ? {} : { opacity: 0, rotateY: 20, rotateZ: 2, x: -48, scale: 0.94 }}
-              transition={{ duration: 0.58, ease: [0.2, 0.8, 0.2, 1] }}
+              transition={{ duration: 0.58, ease: easings.smoothOut }}
             >
               <motion.div
                 key={`swoosh-${current.name}`}
@@ -778,7 +559,7 @@ function FastFiveSection() {
                     y: reduceMotion ? 0 : (1 - stepProgress) * 36,
                     scale: index < visibleSteps ? 1 : 0.96,
                   }}
-                  transition={{ duration: 0.42, ease: [0.2, 0.8, 0.2, 1] }}
+                  transition={{ duration: 0.42, ease: easings.smoothOut }}
                 >
                   <span>{step.number}</span>
                   <h3>{step.title}</h3>
@@ -1023,7 +804,7 @@ function PartnershipSection() {
               : { clipPath: "polygon(50% 0%, 100% 22%, 100% 100%, 0% 100%, 0% 22%)" }
           }
           viewport={{ once: true, amount: 0.4 }}
-          transition={{ duration: 1.1, ease: [0.2, 0.8, 0.2, 1] }}
+          transition={{ duration: 1.1, ease: easings.smoothOut }}
         >
           <PhotoPanel
             className="partner-diamond-photo"
@@ -1116,7 +897,7 @@ export function HomePage() {
             initial={{ clipPath: "polygon(18% 14%, 58% 0%, 86% 34%, 68% 100%, 0% 84%, 0% 32%)" }}
             whileInView={{ clipPath: "polygon(7% 0%, 100% 0%, 100% 100%, 26% 100%, 0% 76%, 0% 17%)" }}
             viewport={{ once: true, amount: 0.45 }}
-            transition={{ duration: 1.1, ease: [0.2, 0.8, 0.2, 1] }}
+            transition={{ duration: 1.1, ease: easings.smoothOut }}
           >
             <PhotoPanel
               className="mission-split-photo"
@@ -1131,7 +912,7 @@ export function HomePage() {
               initial={reduceMotion ? false : { x: 110, opacity: 0 }}
               whileInView={reduceMotion ? {} : { x: [110, -18, 0], opacity: 1 }}
               viewport={{ once: true, amount: 0.45 }}
-              transition={{ duration: 0.9, times: [0, 0.75, 1], ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.9, times: [0, 0.75, 1], ease: easings.expoOut }}
             >
               {homeData.missionSplit.titlePrefix}{" "}
               <span>{homeData.missionSplit.highlight}</span>{" "}
@@ -1164,7 +945,7 @@ export function HomePage() {
               initial={reduceMotion ? false : { x: -42, opacity: 0 }}
               whileInView={reduceMotion ? {} : { x: 0, opacity: 1 }}
               viewport={{ once: true, amount: 0.4 }}
-              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.7, ease: easings.expoOut }}
             >
               {homeData.switcher.title}
             </motion.h2>
@@ -1187,7 +968,7 @@ export function HomePage() {
               initial={reduceMotion ? false : { x: 36, opacity: 0 }}
               whileInView={reduceMotion ? {} : { x: 0, opacity: 1 }}
               viewport={{ once: true, amount: 0.35 }}
-              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.7, ease: easings.expoOut }}
             >
               {homeData.benefits.title}
             </motion.h2>
@@ -1232,7 +1013,7 @@ export function HomePage() {
             initial={{ opacity: 0, scale: 1.08 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, amount: 0.35 }}
-            transition={{ duration: 1.1, ease: [0.2, 0.8, 0.2, 1] }}
+            transition={{ duration: 1.1, ease: easings.smoothOut }}
           >
             <PhotoPanel
               className="founder-photo"
@@ -1246,7 +1027,7 @@ export function HomePage() {
               initial={reduceMotion ? false : { x: 110, opacity: 0 }}
               whileInView={reduceMotion ? {} : { x: [110, -18, 0], opacity: 1 }}
               viewport={{ once: true, amount: 0.35 }}
-              transition={{ duration: 0.9, times: [0, 0.75, 1], ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.9, times: [0, 0.75, 1], ease: easings.expoOut }}
             >
               {homeData.founder.headline}
             </motion.h2>
@@ -1308,7 +1089,7 @@ export function HomePage() {
               initial={reduceMotion ? false : { x: -34, opacity: 0 }}
               whileInView={reduceMotion ? {} : { x: 0, opacity: 1 }}
               viewport={{ once: true, amount: 0.35 }}
-              transition={{ duration: 0.72, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.72, ease: easings.expoOut }}
             >
               <span>{homeData.closingQuote.opening}</span>{" "}
               <em>{homeData.closingQuote.middle}</em>{" "}
