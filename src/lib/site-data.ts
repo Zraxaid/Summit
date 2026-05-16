@@ -9,24 +9,21 @@ export type LegalSection = {
 const summitEmail = siteCopy.global.footer.emailLabel;
 const summitAddress = siteCopy.global.footer.address;
 const summitPhone = siteCopy.global.footer.phoneLabel;
-const summitPhoneRaw = "+14805508556";
+const summitPhoneRaw = "+18052313858";
 
-// Summit-owned URLs are pending product-owner confirmation. Until real Summit
-// social handles and a founder profile URL are supplied, route every external
-// CTA back to the marketing site so visitors do not land on the prior brand
-// (NonStop Financial) by accident.
+// Real Summit URLs. Update here and every CTA picks them up.
 const SUMMIT_HOME = "https://www.summitfinancialrecruiting.com/";
 const summitSocial = {
-  instagram: SUMMIT_HOME,
+  instagram: "https://www.instagram.com/summitimpactgroup/",
   tiktok: SUMMIT_HOME,
   linkedin: SUMMIT_HOME,
 };
 
 export const summitLinks = {
   social: summitSocial,
-  founderProfile: SUMMIT_HOME,
-  testimonialVideo: SUMMIT_HOME,
-  instagramPost: SUMMIT_HOME,
+  founderProfile: "https://www.instagram.com/deanz4syth/",
+  testimonialVideo: summitSocial.instagram,
+  instagramPost: summitSocial.instagram,
 } as const;
 
 export const footerData = {
