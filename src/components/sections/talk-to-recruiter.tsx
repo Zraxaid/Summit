@@ -4,6 +4,7 @@ import Image from "next/image";
 
 import { Reveal } from "@/components/motion";
 import { JoinTeamButton } from "@/components/site-shell";
+import { LogoPlaceholder } from "@/components/ui/logo-placeholder";
 import type { Recruiter } from "@/lib/recruiters";
 
 export function TalkToRecruiterSection({ recruiter }: { recruiter: Recruiter }) {
@@ -15,13 +16,17 @@ export function TalkToRecruiterSection({ recruiter }: { recruiter: Recruiter }) 
     <section className="talk-to-recruiter-section">
       <Reveal className="talk-to-recruiter-shell" amount={0.35}>
         <div className="talk-to-recruiter-photo">
-          <Image
-            src={recruiter.portrait.src}
-            alt={recruiter.portrait.alt}
-            fill
-            sizes="(max-width: 750px) 100vw, 40vw"
-            className="talk-to-recruiter-image"
-          />
+          {recruiter.portrait.src ? (
+            <Image
+              src={recruiter.portrait.src}
+              alt={recruiter.portrait.alt}
+              fill
+              sizes="(max-width: 750px) 100vw, 40vw"
+              className="talk-to-recruiter-image"
+            />
+          ) : (
+            <LogoPlaceholder label={recruiter.name} />
+          )}
         </div>
 
         <div className="talk-to-recruiter-copy">

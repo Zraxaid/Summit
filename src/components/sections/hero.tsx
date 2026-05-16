@@ -33,25 +33,29 @@ export function HeroSection() {
   return (
     <section ref={heroRef} className="hero-section">
       <motion.div className="hero-backdrop" style={{ y: backdropY }}>
-        <div className="hero-collage" aria-hidden="true">
-          {homeData.hero.heroPhotos.map((image, index) => (
-            <motion.div
-              key={image}
-              className={`hero-collage-card hero-collage-card-${index + 1}`}
-              initial={reduceMotion ? false : { opacity: 0, y: 48, scale: 0.92 }}
-              animate={reduceMotion ? {} : { opacity: 1, y: 0, scale: 1 }}
-              transition={{ delay: 0.6 + index * 0.18, duration: 1 }}
-            >
-              <Image
-                src={image}
-                alt=""
-                fill
-                sizes="(max-width: 750px) 28vw, 16vw"
-                className="hero-collage-image"
-              />
-            </motion.div>
-          ))}
-        </div>
+        {homeData.hero.heroPhotos.some(Boolean) ? (
+          <div className="hero-collage" aria-hidden="true">
+            {homeData.hero.heroPhotos.map((image, index) =>
+              image ? (
+                <motion.div
+                  key={image}
+                  className={`hero-collage-card hero-collage-card-${index + 1}`}
+                  initial={reduceMotion ? false : { opacity: 0, y: 48, scale: 0.92 }}
+                  animate={reduceMotion ? {} : { opacity: 1, y: 0, scale: 1 }}
+                  transition={{ delay: 0.6 + index * 0.18, duration: 1 }}
+                >
+                  <Image
+                    src={image}
+                    alt=""
+                    fill
+                    sizes="(max-width: 750px) 28vw, 16vw"
+                    className="hero-collage-image"
+                  />
+                </motion.div>
+              ) : null,
+            )}
+          </div>
+        ) : null}
 
         {arrowTiles.map((arrow, index) => (
           <motion.div

@@ -11,11 +11,11 @@ export const louisArmitage: Recruiter = {
   city: "Austin, TX",
   joinedYear: 2021,
   portrait: {
-    src: "https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?auto=format&fit=crop&w=1200&q=80",
+    src: "",
     alt: "Portrait of Louis Armitage.",
   },
   teamPhoto: {
-    src: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=1600&q=80",
+    src: "",
     alt: "Louis Armitage huddled with his Summit team after a strong week.",
   },
   hero: {
@@ -48,7 +48,7 @@ export const louisArmitage: Recruiter = {
       name: "INÉS DELGADO",
       role: "Agency Builder",
       portrait: {
-        src: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=900&q=80",
+        src: "",
         alt: "Portrait of Inés Delgado.",
       },
       joinedAt: "Feb 2024",
@@ -60,7 +60,7 @@ export const louisArmitage: Recruiter = {
       name: "TOBIAS KENT",
       role: "Senior Producer",
       portrait: {
-        src: "https://images.unsplash.com/photo-1545167622-3a6ac756afa4?auto=format&fit=crop&w=900&q=80",
+        src: "",
         alt: "Portrait of Tobias Kent.",
       },
       joinedAt: "May 2024",
@@ -72,7 +72,7 @@ export const louisArmitage: Recruiter = {
       name: "RAE OKONKWO",
       role: "Field Leader",
       portrait: {
-        src: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=900&q=80",
+        src: "",
         alt: "Portrait of Rae Okonkwo.",
       },
       joinedAt: "Sep 2023",

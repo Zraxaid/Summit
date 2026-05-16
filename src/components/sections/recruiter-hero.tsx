@@ -5,6 +5,7 @@ import Image from "next/image";
 
 import { Reveal, easings } from "@/components/motion";
 import { JoinTeamButton } from "@/components/site-shell";
+import { LogoPlaceholder } from "@/components/ui/logo-placeholder";
 import type { Recruiter } from "@/lib/recruiters";
 
 export function RecruiterHero({ recruiter }: { recruiter: Recruiter }) {
@@ -19,14 +20,18 @@ export function RecruiterHero({ recruiter }: { recruiter: Recruiter }) {
           animate={reduceMotion ? {} : { opacity: 1, scale: 1 }}
           transition={{ duration: 1, ease: easings.smoothOut }}
         >
-          <Image
-            src={recruiter.portrait.src}
-            alt={recruiter.portrait.alt}
-            fill
-            priority
-            sizes="(max-width: 750px) 100vw, 50vw"
-            className="recruiter-hero-portrait-image"
-          />
+          {recruiter.portrait.src ? (
+            <Image
+              src={recruiter.portrait.src}
+              alt={recruiter.portrait.alt}
+              fill
+              priority
+              sizes="(max-width: 750px) 100vw, 50vw"
+              className="recruiter-hero-portrait-image"
+            />
+          ) : (
+            <LogoPlaceholder label={recruiter.name} />
+          )}
         </motion.div>
 
         <div className="recruiter-hero-copy">

@@ -226,11 +226,11 @@ export const siteCopy = {
           ctaLabel: "JOIN THE TEAM",
         },
         founder: {
-          eyebrow: "MEET JAY MASKA",
+          eyebrow: "MEET BRENDAN FORSYTH",
           headline: "WEALTH GROWTH EXPERTISE AT THE SPEED OF REAL LIFE",
           body:
-            "Jay built Summit with one objective: make it easier for driven people to find a real system, real mentorship, and real momentum. The standard is speed with structure, not speed without support.",
-          ctaLabel: "FOLLOW JAY",
+            "Brendan built Summit with one objective: make it easier for driven people to find a real system, real mentorship, and real momentum. The standard is speed with structure, not speed without support.",
+          ctaLabel: "FOLLOW BRENDAN",
           imageAlt: "Black and white founder portrait looking toward the camera.",
         },
         successStrip: {
@@ -267,7 +267,7 @@ export const siteCopy = {
           ],
         },
         instagram: {
-          eyebrow: "FOLLOW JAY",
+          eyebrow: "FOLLOW BRENDAN",
           headline: "Culture, wins, and recruiting momentum in real time.",
           platformLabel: "INSTAGRAM",
           cards: [
@@ -299,7 +299,7 @@ export const siteCopy = {
           opening: "DON'T LET ANYONE TELL YOU THAT WAITING IS THE WHOLE STRATEGY.",
           middle: "BUILD MOMENTUM, LEARN QUICKLY,",
           closing: "AND KEEP MOVING.",
-          attribution: "JAY MASKA, 2026",
+          attribution: "BRENDAN FORSYTH, 2026",
           imageAlt: "Monochrome founder-style portrait beside the final quote.",
         },
       },

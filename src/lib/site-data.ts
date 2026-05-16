@@ -57,54 +57,28 @@ export const footerData = {
 const homeSections = siteCopy.routes.home.sections;
 
 // --------------------------------------------------------------------------
-// Image asset URLs. These remote placeholders are Unsplash stand-ins and
-// should be replaced with licensed Summit-owned photography during the next
-// content pass. Each surface lists its sole asset here so swapping is a
-// one-line edit.
+// Image asset URLs. All photography is intentionally blank for now — every
+// surface renders the branded LogoPlaceholder while we wait for real Summit
+// imagery. Drop a URL into any field and the placeholder is replaced with
+// next/image.
 // --------------------------------------------------------------------------
 const photos = {
-  hero: [
-    "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=1200&q=80",
-    "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80",
-    "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80",
-  ],
-  missionSplit:
-    "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1600&q=80",
-  switcher:
-    "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1600&q=80",
-  benefits:
-    "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1600&q=80",
-  founder:
-    "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=1400&q=80",
-  partnership:
-    "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1600&q=80",
-  finalCta:
-    "https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1600&q=80",
-  closingQuote:
-    "https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1200&q=80",
+  hero: ["", "", ""] as readonly string[],
+  missionSplit: "",
+  switcher: "",
+  benefits: "",
+  founder: "",
+  partnership: "",
+  finalCta: "",
+  closingQuote: "",
   testimonials: {
-    dayethan:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80",
-    kevin:
-      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=900&q=80",
-    alex:
-      "https://images.unsplash.com/photo-1504593811423-6dd665756598?auto=format&fit=crop&w=900&q=80",
-    mia:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=900&q=80",
-    jordan:
-      "https://images.unsplash.com/photo-1504257432389-52343af06ae3?auto=format&fit=crop&w=900&q=80",
+    dayethan: "",
+    kevin: "",
+    alex: "",
+    mia: "",
+    jordan: "",
   },
-  instagramCards: [
-    "https://images.unsplash.com/photo-1516321165247-4aa89a48be28?auto=format&fit=crop&w=900&q=80",
-    "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=900&q=80",
-    "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=900&q=80",
-    "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=900&q=80",
-    "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=900&q=80",
-    "https://images.unsplash.com/photo-1515169067868-5387ec356754?auto=format&fit=crop&w=900&q=80",
-    "https://images.unsplash.com/photo-1522204523234-8729aa6e3d5f?auto=format&fit=crop&w=900&q=80",
-    "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=900&q=80",
-    "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=900&q=80",
-  ],
+  instagramCards: ["", "", "", "", "", "", "", "", ""] as readonly string[],
 } as const;
 
 const testimonialImageById = photos.testimonials;

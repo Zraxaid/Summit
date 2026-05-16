@@ -48,16 +48,20 @@ export function TestimonialCarousel({ items, eyebrow }: TestimonialCarouselProps
     >
       <Reveal className="carousel-shell">
         <div className="carousel-stack">
-          <div
-            className="carousel-stack-ghost carousel-stack-ghost-far"
-            style={{ backgroundImage: `url(${afterNext.image})` }}
-            aria-hidden="true"
-          />
-          <div
-            className="carousel-stack-ghost carousel-stack-ghost-near"
-            style={{ backgroundImage: `url(${next.image})` }}
-            aria-hidden="true"
-          />
+          {afterNext.image ? (
+            <div
+              className="carousel-stack-ghost carousel-stack-ghost-far"
+              style={{ backgroundImage: `url(${afterNext.image})` }}
+              aria-hidden="true"
+            />
+          ) : null}
+          {next.image ? (
+            <div
+              className="carousel-stack-ghost carousel-stack-ghost-near"
+              style={{ backgroundImage: `url(${next.image})` }}
+              aria-hidden="true"
+            />
+          ) : null}
 
           <AnimatePresence mode="wait">
             <motion.article

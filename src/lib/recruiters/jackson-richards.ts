@@ -11,11 +11,11 @@ export const jacksonRichards: Recruiter = {
   city: "Phoenix, AZ",
   joinedYear: 2022,
   portrait: {
-    src: "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?auto=format&fit=crop&w=1200&q=80",
+    src: "",
     alt: "Portrait of Jackson Richards.",
   },
   teamPhoto: {
-    src: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1600&q=80",
+    src: "",
     alt: "Jackson Richards with his Summit recruiting team.",
   },
   hero: {
@@ -48,7 +48,7 @@ export const jacksonRichards: Recruiter = {
       name: "MARCUS LEWIS",
       role: "Agent",
       portrait: {
-        src: "https://images.unsplash.com/photo-1463453091185-61582044d556?auto=format&fit=crop&w=900&q=80",
+        src: "",
         alt: "Portrait of Marcus Lewis.",
       },
       joinedAt: "Mar 2024",
@@ -60,7 +60,7 @@ export const jacksonRichards: Recruiter = {
       name: "PRIYA SANCHEZ",
       role: "Agent",
       portrait: {
-        src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=900&q=80",
+        src: "",
         alt: "Portrait of Priya Sanchez.",
       },
       joinedAt: "Aug 2024",
@@ -72,7 +72,7 @@ export const jacksonRichards: Recruiter = {
       name: "DARIUS WALKER",
       role: "Field Leader",
       portrait: {
-        src: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=900&q=80",
+        src: "",
         alt: "Portrait of Darius Walker.",
       },
       joinedAt: "Jan 2024",

@@ -4,6 +4,7 @@ import { useReducedMotion } from "framer-motion";
 import Image from "next/image";
 
 import { Reveal } from "@/components/motion";
+import { LogoPlaceholder } from "@/components/ui/logo-placeholder";
 import { siteCopy } from "@/lib/copy";
 import type { Recruiter } from "@/lib/recruiters";
 import { homeData } from "@/lib/site-data";
@@ -37,13 +38,17 @@ export function RecruiterInstagramSection({ recruiter }: { recruiter: Recruiter 
               rel="noopener noreferrer"
             >
               <div className="instagram-card-photo">
-                <Image
-                  src={card.image}
-                  alt={card.title}
-                  fill
-                  sizes="(max-width: 750px) 70vw, (max-width: 1100px) 40vw, 18rem"
-                  className="instagram-card-image"
-                />
+                {card.image ? (
+                  <Image
+                    src={card.image}
+                    alt={card.title}
+                    fill
+                    sizes="(max-width: 750px) 70vw, (max-width: 1100px) 40vw, 18rem"
+                    className="instagram-card-image"
+                  />
+                ) : (
+                  <LogoPlaceholder compact label={card.title} />
+                )}
               </div>
               <div className="instagram-card-copy">
                 <span>{siteCopy.routes.home.sections.instagram.platformLabel}</span>

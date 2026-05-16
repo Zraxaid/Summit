@@ -86,15 +86,56 @@ export default async function RecruiterOgImage({
             bottom: 72,
             width: 360,
             display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
             borderRadius: 24,
             border: "1px solid rgba(255, 255, 255, 0.16)",
             overflow: "hidden",
-            backgroundImage: `url(${recruiter.portrait.src})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
+            ...(recruiter.portrait.src
+              ? {
+                  backgroundImage: `url(${recruiter.portrait.src})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }
+              : {
+                  background:
+                    "radial-gradient(circle at 30% 22%, rgba(255, 123, 28, 0.28), transparent 55%), linear-gradient(180deg, #11131b 0%, #0a0b10 100%)",
+                }),
             boxShadow: "0 30px 80px rgba(0, 0, 0, 0.35)",
           }}
-        />
+        >
+          {recruiter.portrait.src ? null : (
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: 14,
+                color: "#f5f1e8",
+              }}
+            >
+              <div
+                style={{
+                  width: 120,
+                  height: 120,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: 28,
+                  background:
+                    "radial-gradient(circle at 30% 20%, rgba(255, 123, 28, 0.4), transparent 55%), linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.01))",
+                  border: "1px solid rgba(255, 255, 255, 0.18)",
+                  fontSize: 78,
+                  color: "#ff7b1c",
+                  fontWeight: 800,
+                }}
+              >
+                ▲
+              </div>
+              <span style={{ fontSize: 16, letterSpacing: 8, color: "#9ea5b8" }}>SUMMIT</span>
+            </div>
+          )}
+        </div>
 
         <div
           style={{
