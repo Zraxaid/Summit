@@ -9,6 +9,7 @@ import {
   useTransform,
 } from "framer-motion";
 import { Mail, MapPin, Phone } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
@@ -234,9 +235,14 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
             <motion.div className="scroll-progress-marker" style={{ left: markerLeft }} />
             <Link href="/" className="brand-mark" aria-label={siteCopy.global.header.homeAriaLabel}>
               <span className="brand-icon" aria-hidden="true">
-                <span />
-                <span />
-                <span />
+                <Image
+                  src="/images/summit-mark.png"
+                  alt=""
+                  width={96}
+                  height={96}
+                  className="brand-icon-image"
+                  priority
+                />
               </span>
               <span className="brand-copy">
                 <strong>{siteCopy.global.header.brandLine1}</strong>
@@ -259,9 +265,13 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         <footer className="site-footer">
           <div className="footer-logo">
             <span className="brand-icon footer-icon" aria-hidden="true">
-              <span />
-              <span />
-              <span />
+              <Image
+                src="/images/summit-mark.png"
+                alt=""
+                width={96}
+                height={96}
+                className="brand-icon-image"
+              />
             </span>
             <div className="footer-logo-copy">
               <strong>{siteCopy.global.header.brandLine1}</strong>

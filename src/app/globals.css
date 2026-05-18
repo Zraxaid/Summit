@@ -102,34 +102,13 @@ textarea:focus-visible {
   height: 3rem;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  border-radius: 0.9rem;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background:
-    radial-gradient(circle at 30% 20%, rgba(33, 182, 255, 0.4), transparent 56%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.01));
+  flex-shrink: 0;
 }
 
-.brand-icon span {
-  position: absolute;
-  display: block;
-  width: 1.2rem;
-  height: 0.16rem;
-  border-radius: 999px;
-  background: white;
-}
-
-.brand-icon span:nth-child(1) {
-  transform: rotate(56deg) translateY(-0.18rem);
-}
-
-.brand-icon span:nth-child(2) {
-  transform: rotate(-56deg) translateY(-0.18rem);
-}
-
-.brand-icon span:nth-child(3) {
-  transform: translateY(0.56rem);
-  width: 0.82rem;
+.brand-icon-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .brand-copy,
@@ -2171,50 +2150,20 @@ textarea:focus-visible {
   border: 1px solid var(--line-dark);
 }
 
-.logo-placeholder-mark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: clamp(3.25rem, 16%, 6rem);
-  aspect-ratio: 1 / 1;
-  border-radius: 1.1rem;
-  background:
-    radial-gradient(circle at 30% 20%, rgba(33, 182, 255, 0.4), transparent 55%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.01));
-  border: 1px solid rgba(255, 255, 255, 0.16);
+.logo-placeholder-image {
+  width: clamp(8rem, 48%, 18rem);
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.32));
 }
 
-.logo-placeholder-light .logo-placeholder-mark {
-  background:
-    radial-gradient(circle at 30% 20%, rgba(33, 182, 255, 0.3), transparent 55%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.35));
-  border-color: rgba(17, 19, 24, 0.12);
+.logo-placeholder-light .logo-placeholder-image {
+  filter: drop-shadow(0 8px 18px rgba(33, 65, 110, 0.18));
 }
 
-.logo-placeholder-mark svg {
-  width: 58%;
-  height: 58%;
-  color: var(--accent);
-}
-
-.logo-placeholder-wordmark {
-  font-size: 0.72rem;
-  letter-spacing: 0.42em;
-  text-transform: uppercase;
-  color: var(--muted);
-  font-weight: 600;
-}
-
-.logo-placeholder-light .logo-placeholder-wordmark {
-  color: rgba(17, 19, 24, 0.55);
-}
-
-.logo-placeholder-compact {
-  gap: 0;
-}
-
-.logo-placeholder-compact .logo-placeholder-mark {
-  width: clamp(2.4rem, 24%, 4rem);
+.logo-placeholder-compact .logo-placeholder-image {
+  width: clamp(2.6rem, 38%, 5rem);
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.32));
 }
 
 /* --------------------------------------------------------------------------

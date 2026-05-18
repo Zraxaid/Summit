@@ -1,3 +1,6 @@
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
+
 import { ImageResponse } from "next/og";
 
 import { siteConfig } from "@/lib/site-config";
@@ -7,6 +10,9 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default async function OpengraphImage() {
+  const markBuffer = await readFile(join(process.cwd(), "public/images/summit-mark.png"));
+  const markSrc = `data:image/png;base64,${markBuffer.toString("base64")}`;
+
   return new ImageResponse(
     (
       <div
@@ -24,24 +30,13 @@ export default async function OpengraphImage() {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
-          <div
-            style={{
-              width: 64,
-              height: 64,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              borderRadius: 16,
-              border: "1px solid rgba(255, 255, 255, 0.16)",
-              background:
-                "linear-gradient(180deg, rgba(33, 182, 255, 0.4), rgba(33, 182, 255, 0.05))",
-              fontSize: 36,
-              color: "#fff",
-              fontWeight: 800,
-            }}
-          >
-            ▲
-          </div>
+          <img
+            src={markSrc}
+            width={72}
+            height={72}
+            alt=""
+            style={{ objectFit: "contain" }}
+          />
           <div style={{ display: "flex", flexDirection: "column" }}>
             <strong style={{ fontSize: 22, letterSpacing: 8 }}>SUMMIT</strong>
             <span

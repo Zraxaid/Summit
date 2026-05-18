@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 type LogoPlaceholderProps = {
   className?: string;
   variant?: "dark" | "light";
@@ -14,32 +16,22 @@ export function LogoPlaceholder({
   label,
   compact = false,
 }: LogoPlaceholderProps) {
+  const src = compact ? "/images/summit-mark.png" : "/images/summit-logo.png";
+
   return (
     <div
       className={`logo-placeholder logo-placeholder-${variant}${compact ? " logo-placeholder-compact" : ""}${className ? ` ${className}` : ""}`}
-      aria-label={label ? `${label} (image pending)` : undefined}
+      aria-label={label}
       role={label ? "img" : "presentation"}
     >
-      <span className="logo-placeholder-mark" aria-hidden="true">
-        <svg viewBox="0 0 100 100">
-          <path
-            d="M28 74 L50 26 L72 74"
-            stroke="currentColor"
-            strokeWidth="9"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            fill="none"
-          />
-          <path
-            d="M42 82 L58 82"
-            stroke="currentColor"
-            strokeWidth="9"
-            strokeLinecap="round"
-            fill="none"
-          />
-        </svg>
-      </span>
-      {compact ? null : <span className="logo-placeholder-wordmark" aria-hidden="true">SUMMIT</span>}
+      <Image
+        src={src}
+        alt=""
+        width={compact ? 256 : 800}
+        height={compact ? 256 : 800}
+        className="logo-placeholder-image"
+        priority={false}
+      />
     </div>
   );
 }

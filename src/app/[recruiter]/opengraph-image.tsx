@@ -1,3 +1,6 @@
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
+
 import { ImageResponse } from "next/og";
 import { notFound } from "next/navigation";
 
@@ -22,6 +25,11 @@ export default async function RecruiterOgImage({
     notFound();
   }
 
+  const markBuffer = await readFile(join(process.cwd(), "public/images/summit-mark.png"));
+  const markSrc = `data:image/png;base64,${markBuffer.toString("base64")}`;
+  const logoBuffer = await readFile(join(process.cwd(), "public/images/summit-logo.png"));
+  const logoSrc = `data:image/png;base64,${logoBuffer.toString("base64")}`;
+
   return new ImageResponse(
     (
       <div
@@ -45,24 +53,13 @@ export default async function RecruiterOgImage({
             gap: 14,
           }}
         >
-          <div
-            style={{
-              width: 52,
-              height: 52,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              borderRadius: 12,
-              border: "1px solid rgba(255, 255, 255, 0.16)",
-              background:
-                "linear-gradient(180deg, rgba(33, 182, 255, 0.4), rgba(33, 182, 255, 0.05))",
-              fontSize: 28,
-              color: "#fff",
-              fontWeight: 800,
-            }}
-          >
-            ▲
-          </div>
+          <img
+            src={markSrc}
+            width={60}
+            height={60}
+            alt=""
+            style={{ objectFit: "contain" }}
+          />
           <div style={{ display: "flex", flexDirection: "column" }}>
             <strong style={{ fontSize: 18, letterSpacing: 6 }}>SUMMIT</strong>
             <span
@@ -105,35 +102,13 @@ export default async function RecruiterOgImage({
           }}
         >
           {recruiter.portrait.src ? null : (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 14,
-                color: "#f5f1e8",
-              }}
-            >
-              <div
-                style={{
-                  width: 120,
-                  height: 120,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: 28,
-                  background:
-                    "radial-gradient(circle at 30% 20%, rgba(33, 182, 255, 0.4), transparent 55%), linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.01))",
-                  border: "1px solid rgba(255, 255, 255, 0.18)",
-                  fontSize: 78,
-                  color: "#21b6ff",
-                  fontWeight: 800,
-                }}
-              >
-                ▲
-              </div>
-              <span style={{ fontSize: 16, letterSpacing: 8, color: "#9ea5b8" }}>SUMMIT</span>
-            </div>
+            <img
+              src={logoSrc}
+              width={280}
+              height={280}
+              alt=""
+              style={{ objectFit: "contain" }}
+            />
           )}
         </div>
 
