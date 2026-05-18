@@ -47,7 +47,7 @@ export default async function OpengraphImage() {
                 color: "#9ea5b8",
               }}
             >
-              Financial Recruiting
+              Impact Group
             </span>
           </div>
         </div>

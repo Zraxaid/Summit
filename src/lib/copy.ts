@@ -2,13 +2,13 @@ export const siteCopy = {
   global: {
     header: {
       brandLine1: "SUMMIT",
-      brandLine2: "Financial Recruiting",
+      brandLine2: "Impact Group",
       primaryCtaLabel: "JOIN THE TEAM",
-      homeAriaLabel: "Summit home",
+      homeAriaLabel: "Summit Impact Group home",
       skipLinkLabel: "Skip to content",
     },
     footer: {
-      brandWordmark: "SUMMIT - FINANCIAL RECRUITING",
+      brandWordmark: "SUMMIT IMPACT GROUP",
       contactHeading: "Contact Info",
       address: "Miami, FL and remote nationwide",
       emailLabel: "summitimpactgroup@gmail.com",
@@ -16,7 +16,7 @@ export const siteCopy = {
       followHeading: "Follow Us",
       socialLabels: ["Instagram", "TikTok", "LinkedIn"],
       partnersHeading: "Our Partners",
-      copyrightLine: "© 2026 Summit Financial Recruiting",
+      copyrightLine: "© 2026 Summit Impact Group",
       legalLinks: ["Terms of Use", "Privacy Policy"],
     },
     modal: {
@@ -232,17 +232,6 @@ export const siteCopy = {
             "Brendan built Summit with one objective: make it easier for driven people to find a real system, real mentorship, and real momentum. The standard is speed with structure, not speed without support.",
           ctaLabel: "FOLLOW BRENDAN",
           imageAlt: "Black and white founder portrait looking toward the camera.",
-        },
-        successStrip: {
-          items: [
-            { value: "300+", caption: "GRADUATES OF OUR TRAINING PROGRAM" },
-            { value: "$5,000,000", caption: "FFL BONUSES PAID OUT EVERY MONTH" },
-            { value: "$84 MILLION", caption: "OF ISSUED PREMIUM IN 2025" },
-            {
-              value: "FASTEST GROWING",
-              caption: "WEALTH-GENERATING SOLUTION FOR 18-28 YEAR OLDS",
-            },
-          ],
         },
         testimonialsSecondary: {
           eyebrow: "WHY I STAYED",

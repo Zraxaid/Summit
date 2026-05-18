@@ -100,9 +100,9 @@ export const louisArmitage: Recruiter = {
     summitLinks.instagramPost,
   ],
   metadata: {
-    title: "Louis Armitage — Summit Financial Recruiting",
+    title: "Louis Armitage — Summit Impact Group",
     description:
-      "Apply directly to Louis Armitage's Austin team at Summit Financial Recruiting. Mentorship, exclusive leads, and a faster path into wealth-building work.",
+      "Apply directly to Louis Armitage's Austin team at Summit Impact Group. Mentorship, exclusive leads, and a faster path into wealth-building work.",
   },
   visibility: "public",
 };

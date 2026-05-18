@@ -11,6 +11,5 @@ export { PartnershipSection } from "./partnership";
 export { PerformanceDashboardSection } from "./performance";
 export { QuarterlyChartSection } from "./quarterly-chart";
 export { StatTriadSection } from "./stat-triad";
-export { SuccessStripSection } from "./success-strip";
 export { SwitcherSection } from "./switcher";
 export { TestimonialCarousel } from "./testimonial-carousel";

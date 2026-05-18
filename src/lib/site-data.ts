@@ -37,20 +37,41 @@ export const footerData = {
     { id: "linkedin", label: "LinkedIn", url: summitSocial.linkedin },
   ],
   partners: [
-    { id: "americo", name: "AMERICO", url: "https://www.americo.com/" },
+    { id: "american-home-life", name: "AMERICAN HOME LIFE", url: "https://www.ahlic.com/" },
+    { id: "american-amicable", name: "AMERICAN AMICABLE", url: "https://www.americanamicable.com/" },
+    {
+      id: "mutual-of-omaha",
+      name: "MUTUAL OF OMAHA",
+      url: "https://www.mutualofomaha.com/",
+    },
+    {
+      id: "royal-neighbors-of-america",
+      name: "ROYAL NEIGHBORS OF AMERICA",
+      url: "https://www.royalneighbors.org/",
+    },
+    { id: "foresters", name: "FORESTERS", url: "https://www.foresters.com/" },
+    {
+      id: "american-general-life",
+      name: "AMERICAN GENERAL LIFE",
+      url: "https://www.aig.com/",
+    },
+    { id: "transamerica", name: "TRANSAMERICA", url: "https://www.transamerica.com/" },
+    { id: "fg", name: "F&G", url: "https://www.fglife.com/" },
+    { id: "baltimore-life", name: "BALTIMORE LIFE", url: "https://www.baltlife.com/" },
+    {
+      id: "liberty-bankers",
+      name: "LIBERTY BANKERS",
+      url: "https://www.libertybankerslife.com/",
+    },
+    { id: "combined", name: "COMBINED", url: "https://www.combinedinsurance.com/" },
+    { id: "instabrain", name: "INSTABRAIN", url: "#" },
+    { id: "corebridge", name: "COREBRIDGE", url: "https://www.corebridgefinancial.com/" },
+    { id: "ethos", name: "ETHOS", url: "https://www.ethos.com/" },
     {
       id: "national-life-group",
       name: "NATIONAL LIFE GROUP",
       url: "https://www.nationallife.com/",
     },
-    { id: "fg", name: "F&G", url: "https://www.fglife.com/" },
-    { id: "transamerica", name: "TRANSAMERICA", url: "https://www.transamerica.com/" },
-    {
-      id: "mutual-of-omaha",
-      name: "MUTUAL OF OMAHA",
-      url: "https://www.lifeinsurance-mutualofomaha.com/",
-    },
-    { id: "ethos", name: "ETHOS", url: "https://www.ethos.com/" },
   ],
 };
 
@@ -169,10 +190,6 @@ export const homeData = {
     image: photos.founder,
     imageAlt: homeSections.founder.imageAlt,
   },
-  successKpis: homeSections.successStrip.items.map((item) => ({
-    value: item.value,
-    label: item.caption,
-  })),
   secondaryTestimonials: joinTestimonials(homeSections.testimonialsSecondary.items),
   instagram: homeSections.instagram.cards.map((title, index) => ({
     title,

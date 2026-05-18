@@ -29,9 +29,9 @@ export const metadata: Metadata = {
   authors: [{ name: siteConfig.brand }],
   keywords: [
     "insurance recruiting",
-    "financial recruiting",
+    "impact group",
     "agent careers",
-    "Summit Financial Recruiting",
+    "Summit Impact Group",
     "insurance agents",
   ],
   alternates: {

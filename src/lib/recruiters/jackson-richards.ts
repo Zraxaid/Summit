@@ -100,7 +100,7 @@ export const jacksonRichards: Recruiter = {
     summitLinks.instagramPost,
   ],
   metadata: {
-    title: "Jackson Richards — Summit Financial Recruiting",
+    title: "Jackson Richards — Summit Impact Group",
     description:
       "Apply directly to Jackson Richards's Summit team. Personal mentorship, exclusive leads, and a faster ramp into insurance recruiting.",
   },

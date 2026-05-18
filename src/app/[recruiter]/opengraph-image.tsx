@@ -70,7 +70,7 @@ export default async function RecruiterOgImage({
                 color: "#9ea5b8",
               }}
             >
-              Financial Recruiting
+              Impact Group
             </span>
           </div>
         </div>

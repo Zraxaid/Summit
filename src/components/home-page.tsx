@@ -15,7 +15,6 @@ import {
   PerformanceDashboardSection,
   QuarterlyChartSection,
   StatTriadSection,
-  SuccessStripSection,
   SwitcherSection,
   TestimonialCarousel,
 } from "@/components/sections";
@@ -61,7 +60,6 @@ export function HomePage() {
       <FastFiveSection />
       <PerformanceDashboardSection />
       <FounderSection />
-      <SuccessStripSection />
 
       <TestimonialCarousel
         items={homeData.secondaryTestimonials}
