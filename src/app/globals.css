@@ -78,7 +78,7 @@ textarea:focus-visible {
   bottom: -1px;
   width: 100%;
   height: 3px;
-  background: linear-gradient(90deg, var(--accent), #ffa259);
+  background: linear-gradient(90deg, var(--accent), #7dd6ff);
   transform-origin: 0 50%;
 }
 
@@ -106,7 +106,7 @@ textarea:focus-visible {
   border-radius: 0.9rem;
   border: 1px solid rgba(255, 255, 255, 0.14);
   background:
-    radial-gradient(circle at 30% 20%, rgba(255, 123, 28, 0.4), transparent 56%),
+    radial-gradient(circle at 30% 20%, rgba(33, 182, 255, 0.4), transparent 56%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.01));
 }
 
@@ -179,14 +179,14 @@ textarea:focus-visible {
 .button-primary {
   background: var(--accent);
   color: #0f1014;
-  box-shadow: 0 16px 40px rgba(255, 123, 28, 0.18);
+  box-shadow: 0 16px 40px rgba(33, 182, 255, 0.18);
 }
 
 .button-primary:hover,
 .button-primary:focus-visible,
 .button-submit:hover,
 .button-submit:focus-visible {
-  background: #ff964c;
+  background: #5ccafa;
   transform: translateY(-2px);
 }
 
@@ -216,7 +216,7 @@ textarea:focus-visible {
 
 .button-text:hover,
 .button-text:focus-visible {
-  color: #ff984e;
+  color: #5ccafa;
 }
 
 .header-cta {
@@ -231,7 +231,7 @@ textarea:focus-visible {
   border-radius: var(--radius-pill);
   border: 1px solid var(--accent-soft);
   background:
-    linear-gradient(180deg, rgba(255, 123, 28, 0.12), rgba(255, 123, 28, 0.04));
+    linear-gradient(180deg, rgba(33, 182, 255, 0.12), rgba(33, 182, 255, 0.04));
   color: var(--foreground);
   font-size: 0.74rem;
   line-height: 1;
@@ -279,7 +279,7 @@ textarea:focus-visible {
   padding-top: 6rem;
   padding-bottom: var(--section-gap);
   background:
-    radial-gradient(circle at top left, rgba(255, 123, 28, 0.14), transparent 24%),
+    radial-gradient(circle at top left, rgba(33, 182, 255, 0.14), transparent 24%),
     radial-gradient(circle at top right, rgba(80, 104, 187, 0.11), transparent 28%),
     linear-gradient(180deg, #0a0b10 0%, #0f1218 100%);
 }
@@ -332,7 +332,7 @@ textarea:focus-visible {
   height: 4.8rem;
   border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 999px;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.04), rgba(255, 123, 28, 0.12));
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.04), rgba(33, 182, 255, 0.12));
 }
 
 .hero-content {
@@ -537,7 +537,7 @@ textarea:focus-visible {
 }
 
 .cta-band-dark {
-  background: linear-gradient(180deg, rgba(255, 123, 28, 0.05), transparent);
+  background: linear-gradient(180deg, rgba(33, 182, 255, 0.05), transparent);
 }
 
 .cta-band p {
@@ -597,7 +597,7 @@ textarea:focus-visible {
   padding: 1.5rem 1.5rem 2rem;
   border-radius: 1.6rem;
   border: 1px solid var(--line);
-  background: linear-gradient(180deg, rgba(255, 123, 28, 0.06), rgba(255, 255, 255, 0.02));
+  background: linear-gradient(180deg, rgba(33, 182, 255, 0.06), rgba(255, 255, 255, 0.02));
 }
 
 .quarterly-axis-label {
@@ -712,7 +712,7 @@ textarea:focus-visible {
   border-radius: 1.7rem;
   border: 1px solid var(--line);
   background:
-    linear-gradient(135deg, rgba(255, 123, 28, 0.12), transparent 42%),
+    linear-gradient(135deg, rgba(33, 182, 255, 0.12), transparent 42%),
     rgba(255, 255, 255, 0.03);
   overflow: hidden;
 }
@@ -1717,8 +1717,8 @@ textarea:focus-visible {
 }
 
 .site-header.is-complete {
-  background: rgba(28, 14, 6, 0.94);
-  border-color: rgba(255, 123, 28, 0.25);
+  background: rgba(6, 20, 38, 0.94);
+  border-color: rgba(33, 182, 255, 0.25);
 }
 
 .brand-mark {
@@ -1741,9 +1741,9 @@ textarea:focus-visible {
   width: 12px;
   height: 12px;
   margin-left: -6px;
-  background: linear-gradient(135deg, #ffb777, var(--accent));
+  background: linear-gradient(135deg, #7dd6ff, var(--accent));
   clip-path: polygon(50% 0%, 100% 35%, 66% 35%, 66% 100%, 34% 100%, 34% 35%, 0% 35%);
-  filter: drop-shadow(0 0 10px rgba(255, 123, 28, 0.45));
+  filter: drop-shadow(0 0 10px rgba(33, 182, 255, 0.45));
 }
 
 .button-primary,
@@ -1774,7 +1774,7 @@ textarea:focus-visible {
 
 .button-primary {
   box-shadow:
-    0 16px 40px rgba(255, 123, 28, 0.18),
+    0 16px 40px rgba(33, 182, 255, 0.18),
     inset 0 1px 0 rgba(255, 255, 255, 0.28);
 }
 
@@ -1988,7 +1988,7 @@ textarea:focus-visible {
 
 .success-card {
   background:
-    linear-gradient(160deg, rgba(255, 123, 28, 0.08), transparent 46%),
+    linear-gradient(160deg, rgba(33, 182, 255, 0.08), transparent 46%),
     rgba(255, 255, 255, 0.03);
 }
 
@@ -2041,7 +2041,7 @@ textarea:focus-visible {
   display: block;
   width: 100%;
   height: 100%;
-  background: linear-gradient(180deg, var(--accent), rgba(255, 123, 28, 0.16));
+  background: linear-gradient(180deg, var(--accent), rgba(33, 182, 255, 0.16));
   transform-origin: top center;
 }
 
@@ -2052,13 +2052,13 @@ textarea:focus-visible {
 
 .process-grid-pinned article {
   background:
-    linear-gradient(180deg, rgba(255, 123, 28, 0.08), transparent 26%),
+    linear-gradient(180deg, rgba(33, 182, 255, 0.08), transparent 26%),
     rgba(255, 255, 255, 0.82);
 }
 
 .performance-kpi.accent {
   background:
-    radial-gradient(circle at top right, rgba(255, 123, 28, 0.16), transparent 42%),
+    radial-gradient(circle at top right, rgba(33, 182, 255, 0.16), transparent 42%),
     rgba(17, 19, 24, 0.05);
 }
 
@@ -2102,7 +2102,7 @@ textarea:focus-visible {
 
 .partner-logo-link:hover {
   transform: translateY(-4px);
-  border-color: rgba(255, 123, 28, 0.3);
+  border-color: rgba(33, 182, 255, 0.3);
   background: rgba(255, 255, 255, 0.05);
 }
 
@@ -2156,7 +2156,7 @@ textarea:focus-visible {
 
 .logo-placeholder-dark {
   background:
-    radial-gradient(circle at 30% 22%, rgba(255, 123, 28, 0.18), transparent 52%),
+    radial-gradient(circle at 30% 22%, rgba(33, 182, 255, 0.18), transparent 52%),
     radial-gradient(circle at 78% 82%, rgba(80, 104, 187, 0.07), transparent 58%),
     linear-gradient(180deg, #11131b 0%, #0a0b10 100%);
   color: var(--foreground);
@@ -2165,7 +2165,7 @@ textarea:focus-visible {
 
 .logo-placeholder-light {
   background:
-    radial-gradient(circle at 30% 22%, rgba(255, 123, 28, 0.14), transparent 55%),
+    radial-gradient(circle at 30% 22%, rgba(33, 182, 255, 0.14), transparent 55%),
     linear-gradient(180deg, #f6efe3 0%, #ece2cd 100%);
   color: var(--card-ink);
   border: 1px solid var(--line-dark);
@@ -2179,14 +2179,14 @@ textarea:focus-visible {
   aspect-ratio: 1 / 1;
   border-radius: 1.1rem;
   background:
-    radial-gradient(circle at 30% 20%, rgba(255, 123, 28, 0.4), transparent 55%),
+    radial-gradient(circle at 30% 20%, rgba(33, 182, 255, 0.4), transparent 55%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.01));
   border: 1px solid rgba(255, 255, 255, 0.16);
 }
 
 .logo-placeholder-light .logo-placeholder-mark {
   background:
-    radial-gradient(circle at 30% 20%, rgba(255, 123, 28, 0.3), transparent 55%),
+    radial-gradient(circle at 30% 20%, rgba(33, 182, 255, 0.3), transparent 55%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.35));
   border-color: rgba(17, 19, 24, 0.12);
 }
@@ -2330,7 +2330,7 @@ textarea:focus-visible {
   border-radius: 1.3rem;
   border: 1px solid var(--line);
   background:
-    linear-gradient(160deg, rgba(255, 123, 28, 0.08), transparent 46%),
+    linear-gradient(160deg, rgba(33, 182, 255, 0.08), transparent 46%),
     rgba(255, 255, 255, 0.03);
 }
 
@@ -2400,7 +2400,7 @@ textarea:focus-visible {
   font-size: 1.6rem;
   font-weight: 800;
   padding-left: 0.4rem;
-  box-shadow: 0 20px 60px rgba(255, 123, 28, 0.32);
+  box-shadow: 0 20px 60px rgba(33, 182, 255, 0.32);
 }
 
 .recruiter-video-caption {

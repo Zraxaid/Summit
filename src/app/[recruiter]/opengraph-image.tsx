@@ -30,7 +30,7 @@ export default async function RecruiterOgImage({
           height: "100%",
           display: "flex",
           background:
-            "radial-gradient(circle at 18% 14%, rgba(255, 123, 28, 0.32), transparent 38%), linear-gradient(180deg, #0a0b10 0%, #0f1218 100%)",
+            "radial-gradient(circle at 18% 14%, rgba(33, 182, 255, 0.32), transparent 38%), linear-gradient(180deg, #0a0b10 0%, #0f1218 100%)",
           color: "#f5f1e8",
           fontFamily: "Geist, system-ui, sans-serif",
         }}
@@ -55,7 +55,7 @@ export default async function RecruiterOgImage({
               borderRadius: 12,
               border: "1px solid rgba(255, 255, 255, 0.16)",
               background:
-                "linear-gradient(180deg, rgba(255, 123, 28, 0.4), rgba(255, 123, 28, 0.05))",
+                "linear-gradient(180deg, rgba(33, 182, 255, 0.4), rgba(33, 182, 255, 0.05))",
               fontSize: 28,
               color: "#fff",
               fontWeight: 800,
@@ -99,7 +99,7 @@ export default async function RecruiterOgImage({
                 }
               : {
                   background:
-                    "radial-gradient(circle at 30% 22%, rgba(255, 123, 28, 0.28), transparent 55%), linear-gradient(180deg, #11131b 0%, #0a0b10 100%)",
+                    "radial-gradient(circle at 30% 22%, rgba(33, 182, 255, 0.28), transparent 55%), linear-gradient(180deg, #11131b 0%, #0a0b10 100%)",
                 }),
             boxShadow: "0 30px 80px rgba(0, 0, 0, 0.35)",
           }}
@@ -123,10 +123,10 @@ export default async function RecruiterOgImage({
                   justifyContent: "center",
                   borderRadius: 28,
                   background:
-                    "radial-gradient(circle at 30% 20%, rgba(255, 123, 28, 0.4), transparent 55%), linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.01))",
+                    "radial-gradient(circle at 30% 20%, rgba(33, 182, 255, 0.4), transparent 55%), linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.01))",
                   border: "1px solid rgba(255, 255, 255, 0.18)",
                   fontSize: 78,
-                  color: "#ff7b1c",
+                  color: "#21b6ff",
                   fontWeight: 800,
                 }}
               >
@@ -152,7 +152,7 @@ export default async function RecruiterOgImage({
             style={{
               fontSize: 20,
               letterSpacing: 8,
-              color: "#ff7b1c",
+              color: "#21b6ff",
               textTransform: "uppercase",
             }}
           >

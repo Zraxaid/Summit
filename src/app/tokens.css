@@ -28,10 +28,10 @@
   --line-dark-soft: rgba(17, 19, 24, 0.08);
 
   /* Color · Accent */
-  --accent: #ff7b1c;
-  --accent-strong: #ff964c;
-  --accent-deep: #d95300;
-  --accent-soft: rgba(255, 123, 28, 0.14);
+  --accent: #21b6ff;
+  --accent-strong: #5ccafa;
+  --accent-deep: #0d6dd6;
+  --accent-soft: rgba(33, 182, 255, 0.14);
   --danger: #a63c06;
 
   /* Legacy aliases used by globals.css (kept for backwards compat) */

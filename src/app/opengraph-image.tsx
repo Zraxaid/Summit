@@ -18,7 +18,7 @@ export default async function OpengraphImage() {
           justifyContent: "space-between",
           padding: "72px",
           background:
-            "radial-gradient(circle at 18% 14%, rgba(255, 123, 28, 0.32), transparent 38%), linear-gradient(180deg, #0a0b10 0%, #0f1218 100%)",
+            "radial-gradient(circle at 18% 14%, rgba(33, 182, 255, 0.32), transparent 38%), linear-gradient(180deg, #0a0b10 0%, #0f1218 100%)",
           color: "#f5f1e8",
           fontFamily: "Geist, system-ui, sans-serif",
         }}
@@ -34,7 +34,7 @@ export default async function OpengraphImage() {
               borderRadius: 16,
               border: "1px solid rgba(255, 255, 255, 0.16)",
               background:
-                "linear-gradient(180deg, rgba(255, 123, 28, 0.4), rgba(255, 123, 28, 0.05))",
+                "linear-gradient(180deg, rgba(33, 182, 255, 0.4), rgba(33, 182, 255, 0.05))",
               fontSize: 36,
               color: "#fff",
               fontWeight: 800,
@@ -62,7 +62,7 @@ export default async function OpengraphImage() {
             style={{
               fontSize: 22,
               letterSpacing: 8,
-              color: "#ff7b1c",
+              color: "#21b6ff",
               textTransform: "uppercase",
             }}
           >
@@ -95,7 +95,7 @@ export default async function OpengraphImage() {
             style={{
               padding: "16px 28px",
               borderRadius: 12,
-              background: "#ff7b1c",
+              background: "#21b6ff",
               color: "#0f1014",
               fontSize: 22,
               letterSpacing: 4,
