@@ -10,7 +10,7 @@ export const siteCopy = {
     footer: {
       brandWordmark: "SUMMIT - FINANCIAL RECRUITING",
       contactHeading: "Contact Info",
-      address: "Scottsdale, AZ and remote nationwide",
+      address: "Miami, FL and remote nationwide",
       emailLabel: "summitimpactgroup@gmail.com",
       phoneLabel: "(805) 231-3858",
       followHeading: "Follow Us",

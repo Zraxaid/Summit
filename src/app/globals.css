@@ -327,14 +327,11 @@ textarea:focus-visible {
   color: var(--foreground);
 }
 
-.hero-mark svg {
-  width: clamp(7rem, 12vw, 10rem);
+.hero-mark-image {
+  width: clamp(8rem, 14vw, 12rem);
   height: auto;
-  overflow: visible;
-}
-
-.hero-mark circle {
-  fill: var(--accent);
+  display: block;
+  filter: drop-shadow(0 14px 32px rgba(33, 182, 255, 0.32));
 }
 
 .hero-copy {
@@ -2555,8 +2552,8 @@ textarea:focus-visible {
     width: 100%;
   }
 
-  .hero-mark svg {
-    width: 5.4rem;
+  .hero-mark-image {
+    width: 6.4rem;
   }
 
   .hero-collage {

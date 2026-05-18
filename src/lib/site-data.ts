@@ -280,10 +280,10 @@ export const termsSections: LegalSection[] = [
     "Summit may update these terms from time to time. Continued use after updates means you accept the revised terms.",
   ]),
   makeSection("Governing Law", [
-    "These terms are governed by applicable Arizona law, without regard to conflict of law principles.",
+    "These terms are governed by applicable Florida law, without regard to conflict of law principles.",
   ]),
   makeSection("Contact Us", [
-    `Questions about these terms can be sent to ${summitEmail} or mailed to Summit's recruiting office in Scottsdale, Arizona.`,
+    `Questions about these terms can be sent to ${summitEmail} or mailed to Summit's recruiting office in Miami, Florida.`,
   ]),
 ];
 
@@ -341,9 +341,9 @@ export const privacySections: LegalSection[] = [
     "Summit may update this policy from time to time. Material changes will be reflected on this page with an updated effective date.",
   ]),
   makeSection("Governing Law", [
-    "This policy is interpreted under applicable Arizona law except where another privacy regime requires a different treatment.",
+    "This policy is interpreted under applicable Florida law except where another privacy regime requires a different treatment.",
   ]),
   makeSection("Contact Us", [
-    `For privacy requests or questions, contact ${summitEmail} or write to Summit's recruiting office in Scottsdale, Arizona.`,
+    `For privacy requests or questions, contact ${summitEmail} or write to Summit's recruiting office in Miami, Florida.`,
   ]),
 ];

@@ -78,33 +78,18 @@ export function HeroSection() {
       <div className="hero-content">
         <motion.div
           className="hero-mark"
-          initial={reduceMotion ? false : { opacity: 0, scale: 0.9 }}
-          animate={reduceMotion ? {} : { opacity: 1, scale: 1 }}
-          transition={{ duration: 0.7, ease: easings.smoothOut }}
+          initial={reduceMotion ? false : { opacity: 0, scale: 0.85, y: -12 }}
+          animate={reduceMotion ? {} : { opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 0.9, ease: easings.smoothOut }}
         >
-          <svg viewBox="0 0 240 160" aria-hidden="true">
-            <motion.path
-              d="M42 116 100 36l56 80"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="14"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              initial={reduceMotion ? false : { pathLength: 0, opacity: 0 }}
-              animate={reduceMotion ? {} : { pathLength: 1, opacity: 1 }}
-              transition={{ duration: 1, delay: 0.25 }}
-            />
-            <motion.path
-              d="M76 116h52"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="14"
-              strokeLinecap="round"
-              initial={reduceMotion ? false : { pathLength: 0, opacity: 0 }}
-              animate={reduceMotion ? {} : { pathLength: 1, opacity: 1 }}
-              transition={{ duration: 0.9, delay: 0.58 }}
-            />
-          </svg>
+          <Image
+            src="/images/summit-mark.png"
+            alt=""
+            width={400}
+            height={392}
+            className="hero-mark-image"
+            priority
+          />
         </motion.div>
 
         <div className="hero-copy">
