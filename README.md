@@ -23,10 +23,30 @@ and Framer Motion.
 
 ```bash
 npm install
-npm run dev          # next dev — http://localhost:3000
-npm run build        # production build (turbopack)
-npm run lint         # eslint
+cp .env.example .env.local   # fill in Supabase + Resend keys for lead-capture
+npm run dev                  # next dev — http://localhost:3000
+npm run build                # production build (turbopack)
+npm run lint                 # eslint
 ```
+
+### Lead-capture environment variables
+
+The modal posts to `/api/lead`, which persists to Supabase and emails a
+notification via Resend. With no env vars set the endpoint still returns
+success to the visitor but the submission is dropped server-side (with a
+warning logged). Setup steps:
+
+1. **Supabase** — the leads project lives at
+   `https://supabase.com/dashboard/project/auyeqzcprfnoyaquqklc`. Grab the
+   service role key from *Settings → API* and set `SUPABASE_SERVICE_ROLE_KEY`.
+2. **Resend** — create an account at https://resend.com, copy the API key
+   into `RESEND_API_KEY`. The default `from` uses Resend's shared
+   `onboarding@resend.dev` so no domain verification is needed for v1.
+3. **Recipient** — `LEAD_NOTIFICATION_EMAIL` defaults to `zraxaid@gmail.com`.
+   Set a different value (or a comma-separated list) to override.
+
+Set the same variables on Vercel (or wherever you deploy) under
+*Project Settings → Environment Variables*.
 
 Useful routes:
 

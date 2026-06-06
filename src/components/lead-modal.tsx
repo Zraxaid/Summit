@@ -94,6 +94,33 @@ function getErrors(state: LeadFormState) {
   return errors;
 }
 
+const UTM_KEYS = [
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_term",
+  "utm_content",
+] as const;
+
+function readUtmFromLocation(): Partial<Record<(typeof UTM_KEYS)[number], string>> {
+  if (typeof window === "undefined") {
+    return {};
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const result: Partial<Record<(typeof UTM_KEYS)[number], string>> = {};
+
+  for (const key of UTM_KEYS) {
+    const value = params.get(key);
+
+    if (value) {
+      result[key] = value;
+    }
+  }
+
+  return result;
+}
+
 function getFocusableElements(container: HTMLElement | null) {
   if (!container) {
     return [];
@@ -273,7 +300,11 @@ export function LeadModal({
       const response = await fetch("/api/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, recruiter: recruiterSlug ?? "summit" }),
+        body: JSON.stringify({
+          ...form,
+          recruiter: recruiterSlug ?? "summit",
+          utm: readUtmFromLocation(),
+        }),
       });
 
       const payload = (await response.json()) as { ok: boolean; message: string };
