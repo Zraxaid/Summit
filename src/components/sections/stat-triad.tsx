@@ -1,19 +1,29 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 
-import { Reveal, useAnimatedNumber } from "@/components/motion";
+import { Reveal, easings, useAnimatedNumber, useTilt } from "@/components/motion";
 import { homeData } from "@/lib/site-data";
 
 function AnimatedStat({ value, unit, body }: (typeof homeData.stats)[number]) {
+  const reduceMotion = useReducedMotion();
   const { ref, value: current, done } = useAnimatedNumber(value, {
     duration: 1500,
     overshoot: 0.18,
   });
+  const { handlers, style } = useTilt({ max: 6 });
 
   return (
-    <Reveal className="stat-card">
+    <motion.div
+      className="stat-card tilt-card"
+      initial={reduceMotion ? false : { opacity: 0, y: 28 }}
+      whileInView={reduceMotion ? {} : { opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.25 }}
+      transition={{ duration: 0.7, ease: easings.smoothOut }}
+      style={style}
+      {...handlers}
+    >
       <p className="stat-value">
         <span ref={ref} aria-live="polite" aria-label={`${value}${unit}`}>
           {Math.round(current)}
@@ -30,7 +40,7 @@ function AnimatedStat({ value, unit, body }: (typeof homeData.stats)[number]) {
         </motion.span>
       </p>
       <p>{body}</p>
-    </Reveal>
+    </motion.div>
   );
 }
 

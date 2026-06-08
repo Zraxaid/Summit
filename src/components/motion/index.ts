@@ -10,4 +10,6 @@ export type { RevealProps } from "./reveal";
 export { useAnimatedNumber } from "./use-animated-number";
 export type { AnimatedNumberOptions } from "./use-animated-number";
 
+export { useTilt } from "./use-tilt";
+
 export { clamp, durations, easeOutBack, easeOutCubic, easings, wrap } from "./math";

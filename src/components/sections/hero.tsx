@@ -96,6 +96,7 @@ export function HeroSection() {
           <Reveal className="hero-copy-block" amount={0.45}>
             <p className="eyebrow">{siteCopy.routes.home.sections.hero.eyebrow}</p>
             <motion.h1
+              className="text-gradient"
               initial={reduceMotion ? false : { x: 72, opacity: 0 }}
               animate={reduceMotion ? {} : { x: 0, opacity: 1 }}
               transition={{ duration: 0.88, ease: easings.expoOut }}
