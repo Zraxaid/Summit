@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
 
 import { Reveal, useAnimatedNumber } from "@/components/motion";
 import { homeData } from "@/lib/site-data";
@@ -25,7 +26,7 @@ function AnimatedStat({ value, unit, body }: (typeof homeData.stats)[number]) {
           transition={{ duration: 0.28 }}
           aria-hidden="true"
         >
-          ↗
+          <ArrowUpRight size={28} strokeWidth={2.5} />
         </motion.span>
       </p>
       <p>{body}</p>

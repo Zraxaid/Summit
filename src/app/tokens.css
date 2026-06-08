@@ -32,6 +32,9 @@
   --accent-strong: #5ccafa;
   --accent-deep: #0d6dd6;
   --accent-soft: rgba(33, 182, 255, 0.14);
+  /* Accessible accent for text/graphics on light (cream/white) surfaces.
+     Neon --accent only clears ~1.96:1 on cream; this clears ~6.8:1 (WCAG AA). */
+  --accent-on-light: #0a4f9e;
   --danger: #a63c06;
 
   /* Legacy aliases used by globals.css (kept for backwards compat) */

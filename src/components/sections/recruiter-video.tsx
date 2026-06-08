@@ -1,5 +1,7 @@
 "use client";
 
+import { Play } from "lucide-react";
+
 import { Reveal } from "@/components/motion";
 import type { Recruiter } from "@/lib/recruiters";
 
@@ -26,7 +28,7 @@ export function RecruiterVideoSection({ recruiter }: { recruiter: Recruiter }) {
               aria-label={`Watch ${recruiter.name}'s intro video`}
             >
               <span className="recruiter-video-play" aria-hidden="true">
-                ▶
+                <Play size={26} fill="currentColor" strokeWidth={0} />
               </span>
               <span className="recruiter-video-caption">Watch the 60-second intro</span>
             </a>
