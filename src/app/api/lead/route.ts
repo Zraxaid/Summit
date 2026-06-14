@@ -106,7 +106,11 @@ export async function POST(request: Request) {
   }
 
   const resendKey = process.env.RESEND_API_KEY;
-  const notifyTo = process.env.LEAD_NOTIFICATION_EMAIL ?? "zraxaid@gmail.com";
+  // Default recipient is the Resend account owner. Resend's unverified
+  // "testing mode" only delivers to the account owner's own address, so this
+  // must stay protegionlife@gmail.com until a domain is verified at
+  // resend.com/domains (after which any LEAD_NOTIFICATION_EMAIL works).
+  const notifyTo = process.env.LEAD_NOTIFICATION_EMAIL ?? "protegionlife@gmail.com";
   const notifyFrom =
     process.env.LEAD_NOTIFICATION_FROM ?? "Summit Leads <onboarding@resend.dev>";
 

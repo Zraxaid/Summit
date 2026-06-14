@@ -42,8 +42,14 @@ warning logged). Setup steps:
 2. **Resend** — create an account at https://resend.com, copy the API key
    into `RESEND_API_KEY`. The default `from` uses Resend's shared
    `onboarding@resend.dev` so no domain verification is needed for v1.
-3. **Recipient** — `LEAD_NOTIFICATION_EMAIL` defaults to `zraxaid@gmail.com`.
-   Set a different value (or a comma-separated list) to override.
+3. **Recipient** — `LEAD_NOTIFICATION_EMAIL` defaults to
+   `protegionlife@gmail.com` (the Resend account owner). While the account
+   has no verified domain, Resend's testing mode can **only deliver to that
+   owner address** — sending to any other recipient is rejected. To notify a
+   different address, verify a domain at resend.com/domains and set
+   `LEAD_NOTIFICATION_FROM` to an address on that domain. Every lead is saved
+   to Supabase regardless of email outcome (`email_status` / `email_error`
+   columns record what happened).
 
 Set the same variables on Vercel (or wherever you deploy) under
 *Project Settings → Environment Variables*.
