@@ -184,6 +184,8 @@ export async function POST(request: Request) {
         .update({
           email_status: emailStatus,
           email_error: emailError,
+          email_to: notifyTo,
+          email_from: notifyFrom,
         })
         .eq("id", leadId);
     } catch (error) {
@@ -200,6 +202,8 @@ export async function POST(request: Request) {
     // Helpful for support — surface in dev tools only, harmless in prod.
     debug: {
       leadId,
+      emailTo: notifyTo,
+      emailFrom: notifyFrom,
       emailStatus,
       emailMessageId,
     },
