@@ -110,34 +110,88 @@ export async function POST(request: Request) {
   const notifyFrom =
     process.env.LEAD_NOTIFICATION_FROM ?? "Summit Leads <onboarding@resend.dev>";
 
-  if (resendKey) {
-    try {
-      const resend = new Resend(resendKey);
-      const subject = buildSubject(payload);
-      const html = renderLeadEmailHtml(payload, leadId, dbError);
-      const text = renderLeadEmailText(payload, leadId, dbError);
+  let emailStatus: "sent" | "failed" | "no_api_key" | "no_recipient" = "no_api_key";
+  let emailError: string | null = null;
+  let emailMessageId: string | null = null;
 
-      await resend.emails.send({
-        from: notifyFrom,
-        to: notifyTo.split(",").map((address) => address.trim()).filter(Boolean),
-        subject,
-        html,
-        text,
-        replyTo: payload.email,
+  if (!resendKey) {
+    console.warn("[lead] RESEND_API_KEY not set — no email sent.");
+  } else {
+    const recipients = notifyTo
+      .split(",")
+      .map((address) => address.trim())
+      .filter(Boolean);
+
+    if (recipients.length === 0) {
+      emailStatus = "no_recipient";
+      console.warn("[lead] LEAD_NOTIFICATION_EMAIL resolved to empty list — no email sent.");
+    } else {
+      try {
+        const resend = new Resend(resendKey);
+        const subject = buildSubject(payload);
+        const html = renderLeadEmailHtml(payload, leadId, dbError);
+        const text = renderLeadEmailText(payload, leadId, dbError);
+
+        const result = await resend.emails.send({
+          from: notifyFrom,
+          to: recipients,
+          subject,
+          html,
+          text,
+          replyTo: payload.email,
+        });
+
+        // Resend SDK returns { data, error } — it does NOT throw on send
+        // failure. We have to inspect `error` ourselves or failures vanish.
+        if (result.error) {
+          emailStatus = "failed";
+          emailError =
+            result.error.message ?? `${result.error.name ?? "ResendError"}`;
+          console.error("[lead] resend send failed:", result.error);
+        } else {
+          emailStatus = "sent";
+          emailMessageId = result.data?.id ?? null;
+        }
+      } catch (error) {
+        emailStatus = "failed";
+        emailError =
+          error instanceof Error ? error.message : "Unknown email transport error.";
+        console.error("[lead] resend threw:", emailError);
+      }
+    }
+  }
+
+  // Annotate the lead row with the email outcome so future failures don't
+  // require Vercel-log access to diagnose.
+  if (leadId && supabaseUrl && supabaseServiceKey) {
+    try {
+      const supabase = createClient(supabaseUrl, supabaseServiceKey, {
+        auth: { persistSession: false },
       });
+      await supabase
+        .from("leads")
+        .update({
+          email_status: emailStatus,
+          email_error: emailError,
+        })
+        .eq("id", leadId);
     } catch (error) {
       console.error(
-        "[lead] resend send failed:",
+        "[lead] failed to write email_status back to lead row:",
         error instanceof Error ? error.message : error,
       );
     }
-  } else {
-    console.warn("[lead] RESEND_API_KEY not set — no email sent.");
   }
 
   return NextResponse.json({
     ok: true,
     message: siteCopy.global.modal.submitSuccess,
+    // Helpful for support — surface in dev tools only, harmless in prod.
+    debug: {
+      leadId,
+      emailStatus,
+      emailMessageId,
+    },
   });
 }
 
