@@ -12,8 +12,10 @@ type LeadPayload = {
   location?: string;
   birthday?: string;
   licensed?: string;
-  relocate?: string;
-  notes?: string;
+  commission?: string;
+  commitment?: string;
+  timeline?: string;
+  motivation?: string;
   consent?: boolean;
   recruiter?: string;
   utm?: Partial<Record<"utm_source" | "utm_medium" | "utm_campaign" | "utm_term" | "utm_content", string>>;
@@ -77,8 +79,10 @@ export async function POST(request: Request) {
           location: payload.location,
           birthday: payload.birthday,
           licensed: payload.licensed ?? null,
-          relocate: payload.relocate ?? null,
-          notes: payload.notes ?? null,
+          commission: payload.commission ?? null,
+          commitment: payload.commitment ?? null,
+          timeline: payload.timeline ?? null,
+          motivation: payload.motivation ?? null,
           consent: payload.consent ?? false,
           recruiter: payload.recruiter ?? "summit",
           utm_source: payload.utm?.utm_source ?? null,
@@ -234,13 +238,15 @@ function buildRows(payload: LeadPayload): Array<[string, string]> {
     ["Phone", payload.phone ?? "—"],
     ["Location", payload.location ?? "—"],
     ["Birthday", payload.birthday ?? "—"],
-    ["Currently licensed?", payload.licensed ?? "—"],
-    ["Willing to relocate?", payload.relocate ?? "—"],
+    ["Licensing", payload.licensed ?? "—"],
+    ["Income preference", payload.commission ?? "—"],
+    ["Time commitment", payload.commitment ?? "—"],
+    ["Start timeline", payload.timeline ?? "—"],
     ["Recruiter tag", payload.recruiter ?? "summit"],
   ];
 
-  if (payload.notes) {
-    rows.push(["Notes", payload.notes]);
+  if (payload.motivation) {
+    rows.push(["Why now", payload.motivation]);
   }
 
   const utm = payload.utm ?? {};

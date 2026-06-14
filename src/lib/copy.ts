@@ -32,10 +32,38 @@ export const siteCopy = {
         "Location",
         "Birthday",
       ],
-      radioGroup1Label: "Are you currently licensed to sell insurance?",
-      radioGroup2Label: "Are you willing to relocate for this position?",
-      radioOptions: ["YES", "NO"],
-      textareaLabel: "Anything else we should know?",
+      questions: {
+        licensing: {
+          label: "Are you licensed to sell life insurance?",
+          options: [
+            "Yes — active license",
+            "In progress",
+            "Not yet — but willing to get licensed",
+            "No, and not planning to",
+          ],
+        },
+        commission: {
+          label:
+            "This role is 1099, commission-based (not salaried). Are you comfortable with performance-based income?",
+          options: [
+            "Yes — that's what I want",
+            "Open to it — want to learn more",
+            "I'm looking for a salaried job",
+          ],
+        },
+        commitment: {
+          label: "How much time can you commit?",
+          options: ["Full-time", "Part-time (10–20 hrs/week)", "Just exploring"],
+        },
+        timeline: {
+          label: "When are you looking to start?",
+          options: ["Immediately", "Within 2–4 weeks", "1–2 months", "Just researching"],
+        },
+      },
+      selectPlaceholder: "Select one…",
+      motivationLabel: "Why are you looking to make a change right now?",
+      motivationPlaceholder:
+        "A sentence or two on what's driving you — this is the part we actually read.",
       consentLine: "I accept the Terms of Use and Privacy Policy.",
       submitLabel: "JOIN THE TEAM",
       submittingLabel: "SENDING...",

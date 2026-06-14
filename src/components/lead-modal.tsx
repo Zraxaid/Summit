@@ -13,14 +13,18 @@ type LeadFormState = {
   location: string;
   birthday: string;
   licensed: string;
-  relocate: string;
-  notes: string;
+  commission: string;
+  commitment: string;
+  timeline: string;
+  motivation: string;
   consent: boolean;
 };
 
 type LeadFormField = keyof LeadFormState;
 type FieldErrors = Partial<Record<LeadFormField, string>>;
 type TouchedState = Partial<Record<LeadFormField, boolean>>;
+
+const MOTIVATION_MIN_LENGTH = 10;
 
 const initialState: LeadFormState = {
   firstName: "",
@@ -30,12 +34,14 @@ const initialState: LeadFormState = {
   location: "",
   birthday: "",
   licensed: "",
-  relocate: "",
-  notes: "",
+  commission: "",
+  commitment: "",
+  timeline: "",
+  motivation: "",
   consent: false,
 };
 
-const requiredLabels: Record<Exclude<LeadFormField, "notes">, string> = {
+const requiredLabels: Record<string, string> = {
   firstName: "First name",
   lastName: "Last name",
   email: "Email",
@@ -43,8 +49,9 @@ const requiredLabels: Record<Exclude<LeadFormField, "notes">, string> = {
   location: "Location",
   birthday: "Birthday",
   licensed: "Licensing status",
-  relocate: "Relocation preference",
-  consent: "Consent",
+  commission: "Income preference",
+  commitment: "Time commitment",
+  timeline: "Start timeline",
 };
 
 const requiredFields = [
@@ -55,7 +62,17 @@ const requiredFields = [
   "location",
   "birthday",
   "licensed",
-  "relocate",
+  "commission",
+  "commitment",
+  "timeline",
+] as const;
+
+// Dropdown qualifier questions, in render order. `key` maps to form state.
+const selectQuestions = [
+  { key: "licensed", config: siteCopy.global.modal.questions.licensing },
+  { key: "commission", config: siteCopy.global.modal.questions.commission },
+  { key: "commitment", config: siteCopy.global.modal.questions.commitment },
+  { key: "timeline", config: siteCopy.global.modal.questions.timeline },
 ] as const;
 
 function getErrors(state: LeadFormState) {
@@ -85,6 +102,13 @@ function getErrors(state: LeadFormState) {
     if (Number.isNaN(date.valueOf()) || date > new Date()) {
       errors.birthday = "Enter a real birthday.";
     }
+  }
+
+  const motivation = state.motivation.trim();
+  if (motivation.length === 0) {
+    errors.motivation = "Tell us a little about why you're reaching out.";
+  } else if (motivation.length < MOTIVATION_MIN_LENGTH) {
+    errors.motivation = "A sentence or two helps us route you to the right mentor.";
   }
 
   if (!state.consent) {
@@ -476,59 +500,52 @@ export function LeadModal({
             </label>
           </div>
 
-          <fieldset>
-            <legend>{siteCopy.global.modal.radioGroup1Label}</legend>
-            <div className="radio-row">
-              {siteCopy.global.modal.radioOptions.map((option) => (
-                <label key={option} className="radio-pill">
-                  <input
-                    type="radio"
-                    name="licensed"
-                    checked={form.licensed === option}
-                    onChange={() => {
-                      updateField("licensed", option);
-                      markTouched("licensed");
-                    }}
-                  />
-                  <span>{option}</span>
-                </label>
-              ))}
-            </div>
-            <small id={errorId("licensed")} className="field-error" aria-live="polite">
-              {visibleErrors.licensed ?? ""}
-            </small>
-          </fieldset>
-
-          <fieldset>
-            <legend>{siteCopy.global.modal.radioGroup2Label}</legend>
-            <div className="radio-row">
-              {siteCopy.global.modal.radioOptions.map((option) => (
-                <label key={option} className="radio-pill">
-                  <input
-                    type="radio"
-                    name="relocate"
-                    checked={form.relocate === option}
-                    onChange={() => {
-                      updateField("relocate", option);
-                      markTouched("relocate");
-                    }}
-                  />
-                  <span>{option}</span>
-                </label>
-              ))}
-            </div>
-            <small id={errorId("relocate")} className="field-error" aria-live="polite">
-              {visibleErrors.relocate ?? ""}
-            </small>
-          </fieldset>
+          {selectQuestions.map(({ key, config }) => (
+            <label key={key} className="select-field">
+              <span>{config.label}</span>
+              <select
+                name={key}
+                value={form[key]}
+                onChange={(event) => {
+                  updateField(key, event.target.value);
+                  markTouched(key);
+                }}
+                onBlur={() => markTouched(key)}
+                aria-invalid={Boolean(visibleErrors[key])}
+                aria-describedby={visibleErrors[key] ? errorId(key) : undefined}
+                required
+              >
+                <option value="" disabled>
+                  {siteCopy.global.modal.selectPlaceholder}
+                </option>
+                {config.options.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+              <small id={errorId(key)} className="field-error" aria-live="polite">
+                {visibleErrors[key] ?? ""}
+              </small>
+            </label>
+          ))}
 
           <label>
-            <span>{siteCopy.global.modal.textareaLabel}</span>
+            <span>{siteCopy.global.modal.motivationLabel}</span>
             <textarea
+              name="motivation"
               rows={4}
-              value={form.notes}
-              onChange={(event) => updateField("notes", event.target.value)}
+              placeholder={siteCopy.global.modal.motivationPlaceholder}
+              value={form.motivation}
+              onChange={(event) => updateField("motivation", event.target.value)}
+              onBlur={() => markTouched("motivation")}
+              aria-invalid={Boolean(visibleErrors.motivation)}
+              aria-describedby={visibleErrors.motivation ? errorId("motivation") : undefined}
+              required
             />
+            <small id={errorId("motivation")} className="field-error" aria-live="polite">
+              {visibleErrors.motivation ?? ""}
+            </small>
           </label>
 
           <label className="consent-row">
