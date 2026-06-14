@@ -106,13 +106,20 @@ export async function POST(request: Request) {
   }
 
   const resendKey = process.env.RESEND_API_KEY;
-  // Default recipient is the Resend account owner. Resend's unverified
-  // "testing mode" only delivers to the account owner's own address, so this
-  // must stay protegionlife@gmail.com until a domain is verified at
-  // resend.com/domains (after which any LEAD_NOTIFICATION_EMAIL works).
-  const notifyTo = process.env.LEAD_NOTIFICATION_EMAIL ?? "protegionlife@gmail.com";
+  // Resend account owner — the only address Resend will deliver to while no
+  // domain is verified (testing mode via the shared onboarding@resend.dev).
+  const RESEND_ACCOUNT_OWNER = "protegionlife@gmail.com";
   const notifyFrom =
     process.env.LEAD_NOTIFICATION_FROM ?? "Summit Leads <onboarding@resend.dev>";
+  // When sending from Resend's shared testing address (no verified domain),
+  // delivery to anything but the account owner is rejected. Force the
+  // recipient so a stale/misconfigured LEAD_NOTIFICATION_EMAIL can't break it.
+  // Once a domain is verified and LEAD_NOTIFICATION_FROM points at it, this
+  // override lifts and LEAD_NOTIFICATION_EMAIL is honored as-is.
+  const usingTestingSender = /@resend\.dev/i.test(notifyFrom);
+  const notifyTo = usingTestingSender
+    ? RESEND_ACCOUNT_OWNER
+    : process.env.LEAD_NOTIFICATION_EMAIL ?? RESEND_ACCOUNT_OWNER;
 
   let emailStatus: "sent" | "failed" | "no_api_key" | "no_recipient" = "no_api_key";
   let emailError: string | null = null;
