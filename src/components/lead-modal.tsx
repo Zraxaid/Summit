@@ -4,19 +4,20 @@ import Link from "next/link";
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 
 import { siteCopy } from "@/lib/copy";
+import { getRecruiter } from "@/lib/recruiters";
 
 type LeadFormState = {
   firstName: string;
   lastName: string;
   email: string;
   phone: string;
-  location: string;
-  birthday: string;
+  state: string;
+  age: string;
   licensed: string;
   commission: string;
   commitment: string;
-  timeline: string;
   motivation: string;
+  referredBy: string;
   consent: boolean;
 };
 
@@ -25,19 +26,35 @@ type FieldErrors = Partial<Record<LeadFormField, string>>;
 type TouchedState = Partial<Record<LeadFormField, boolean>>;
 
 const MOTIVATION_MIN_LENGTH = 10;
+const AGE_MIN = 18;
+const AGE_MAX = 99;
+const REFERRED_BY_MIN_LENGTH = 2;
+
+// Full US state list (50 states + DC) used by the State dropdown.
+const US_STATES = [
+  "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado",
+  "Connecticut", "Delaware", "District of Columbia", "Florida", "Georgia",
+  "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky",
+  "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota",
+  "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire",
+  "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota",
+  "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island",
+  "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont",
+  "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming",
+] as const;
 
 const initialState: LeadFormState = {
   firstName: "",
   lastName: "",
   email: "",
   phone: "",
-  location: "",
-  birthday: "",
+  state: "",
+  age: "",
   licensed: "",
   commission: "",
   commitment: "",
-  timeline: "",
   motivation: "",
+  referredBy: "",
   consent: false,
 };
 
@@ -46,12 +63,12 @@ const requiredLabels: Record<string, string> = {
   lastName: "Last name",
   email: "Email",
   phone: "Phone",
-  location: "Location",
-  birthday: "Birthday",
+  state: "State",
+  age: "Age",
   licensed: "Licensing status",
   commission: "Income preference",
   commitment: "Time commitment",
-  timeline: "Start timeline",
+  referredBy: "Who referred you",
 };
 
 const requiredFields = [
@@ -59,12 +76,12 @@ const requiredFields = [
   "lastName",
   "email",
   "phone",
-  "location",
-  "birthday",
+  "state",
+  "age",
   "licensed",
   "commission",
   "commitment",
-  "timeline",
+  "referredBy",
 ] as const;
 
 // Dropdown qualifier questions, in render order. `key` maps to form state.
@@ -72,7 +89,6 @@ const selectQuestions = [
   { key: "licensed", config: siteCopy.global.modal.questions.licensing },
   { key: "commission", config: siteCopy.global.modal.questions.commission },
   { key: "commitment", config: siteCopy.global.modal.questions.commitment },
-  { key: "timeline", config: siteCopy.global.modal.questions.timeline },
 ] as const;
 
 function getErrors(state: LeadFormState) {
@@ -96,11 +112,14 @@ function getErrors(state: LeadFormState) {
     }
   }
 
-  if (state.birthday) {
-    const date = new Date(state.birthday);
-
-    if (Number.isNaN(date.valueOf()) || date > new Date()) {
-      errors.birthday = "Enter a real birthday.";
+  if (state.age) {
+    const parsed = Number(state.age);
+    if (!Number.isInteger(parsed)) {
+      errors.age = "Enter your age as a whole number.";
+    } else if (parsed < AGE_MIN) {
+      errors.age = `You must be at least ${AGE_MIN} to apply.`;
+    } else if (parsed > AGE_MAX) {
+      errors.age = "Enter a real age.";
     }
   }
 
@@ -109,6 +128,10 @@ function getErrors(state: LeadFormState) {
     errors.motivation = "Tell us a little about why you're reaching out.";
   } else if (motivation.length < MOTIVATION_MIN_LENGTH) {
     errors.motivation = "A sentence or two helps us route you to the right mentor.";
+  }
+
+  if (state.referredBy && state.referredBy.trim().length < REFERRED_BY_MIN_LENGTH) {
+    errors.referredBy = "Enter the full name of who referred you.";
   }
 
   if (!state.consent) {
@@ -183,7 +206,6 @@ export function LeadModal({
   const statusId = useId();
   const dialogRef = useRef<HTMLDivElement>(null);
   const firstInputRef = useRef<HTMLInputElement>(null);
-  const todayIso = useMemo(() => new Date().toISOString().slice(0, 10), []);
   const [form, setForm] = useState(initialState);
   const [touched, setTouched] = useState<TouchedState>({});
   const [forceShowAllErrors, setForceShowAllErrors] = useState(false);
@@ -192,7 +214,21 @@ export function LeadModal({
     message: string;
   }>({ type: "idle", message: "" });
 
-  const errors = useMemo(() => getErrors(form), [form]);
+  // Derive the "Who referred you?" pre-fill from the upline recruiter on
+  // the current route (e.g. /jackson-richards). Done at render time with
+  // a touched-flag so the user can edit freely without any setState-in-
+  // effect plumbing.
+  const autoReferredBy = useMemo(() => {
+    if (!recruiterSlug) return "";
+    return getRecruiter(recruiterSlug)?.name ?? "";
+  }, [recruiterSlug]);
+  const [referredByTouched, setReferredByTouched] = useState(false);
+  const effectiveReferredBy = referredByTouched ? form.referredBy : autoReferredBy;
+
+  const errors = useMemo(
+    () => getErrors({ ...form, referredBy: effectiveReferredBy }),
+    [form, effectiveReferredBy],
+  );
 
   const visibleErrors = useMemo(() => {
     const nextErrors: FieldErrors = {};
@@ -326,6 +362,7 @@ export function LeadModal({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...form,
+          referredBy: effectiveReferredBy,
           recruiter: recruiterSlug ?? "summit",
           utm: readUtmFromLocation(),
         }),
@@ -340,6 +377,7 @@ export function LeadModal({
 
       setForm(initialState);
       setTouched({});
+      setReferredByTouched(false);
       setForceShowAllErrors(false);
       setStatus({ type: "success", message: payload.message });
     } catch {
@@ -462,40 +500,53 @@ export function LeadModal({
               </small>
             </label>
 
-            <label>
+            <label className="select-field">
               <span>{siteCopy.global.modal.fieldLabels[4]}</span>
-              <input
-                name="location"
-                autoComplete="address-level2"
-                value={form.location}
-                onChange={(event) => updateField("location", event.target.value)}
-                onBlur={() => markTouched("location")}
-                aria-invalid={Boolean(visibleErrors.location)}
-                aria-describedby={visibleErrors.location ? errorId("location") : undefined}
+              <select
+                name="state"
+                autoComplete="address-level1"
+                value={form.state}
+                onChange={(event) => {
+                  updateField("state", event.target.value);
+                  markTouched("state");
+                }}
+                onBlur={() => markTouched("state")}
+                aria-invalid={Boolean(visibleErrors.state)}
+                aria-describedby={visibleErrors.state ? errorId("state") : undefined}
                 required
-              />
-              <small id={errorId("location")} className="field-error" aria-live="polite">
-                {visibleErrors.location ?? ""}
+              >
+                <option value="" disabled>
+                  {siteCopy.global.modal.selectPlaceholder}
+                </option>
+                {US_STATES.map((name) => (
+                  <option key={name} value={name}>
+                    {name}
+                  </option>
+                ))}
+              </select>
+              <small id={errorId("state")} className="field-error" aria-live="polite">
+                {visibleErrors.state ?? ""}
               </small>
             </label>
 
             <label>
               <span>{siteCopy.global.modal.fieldLabels[5]}</span>
               <input
-                name="birthday"
-                type="date"
-                autoComplete="bday"
-                max={todayIso}
-                min="1900-01-01"
-                value={form.birthday}
-                onChange={(event) => updateField("birthday", event.target.value)}
-                onBlur={() => markTouched("birthday")}
-                aria-invalid={Boolean(visibleErrors.birthday)}
-                aria-describedby={visibleErrors.birthday ? errorId("birthday") : undefined}
+                name="age"
+                type="number"
+                inputMode="numeric"
+                min={AGE_MIN}
+                max={AGE_MAX}
+                step={1}
+                value={form.age}
+                onChange={(event) => updateField("age", event.target.value)}
+                onBlur={() => markTouched("age")}
+                aria-invalid={Boolean(visibleErrors.age)}
+                aria-describedby={visibleErrors.age ? errorId("age") : undefined}
                 required
               />
-              <small id={errorId("birthday")} className="field-error" aria-live="polite">
-                {visibleErrors.birthday ?? ""}
+              <small id={errorId("age")} className="field-error" aria-live="polite">
+                {visibleErrors.age ?? ""}
               </small>
             </label>
           </div>
@@ -529,6 +580,29 @@ export function LeadModal({
               </small>
             </label>
           ))}
+
+          <label>
+            <span>{siteCopy.global.modal.referredByLabel}</span>
+            <input
+              name="referredBy"
+              autoComplete="name"
+              placeholder={siteCopy.global.modal.referredByPlaceholder}
+              value={effectiveReferredBy}
+              onChange={(event) => {
+                if (!referredByTouched) {
+                  setReferredByTouched(true);
+                }
+                updateField("referredBy", event.target.value);
+              }}
+              onBlur={() => markTouched("referredBy")}
+              aria-invalid={Boolean(visibleErrors.referredBy)}
+              aria-describedby={visibleErrors.referredBy ? errorId("referredBy") : undefined}
+              required
+            />
+            <small id={errorId("referredBy")} className="field-error" aria-live="polite">
+              {visibleErrors.referredBy ?? ""}
+            </small>
+          </label>
 
           <label>
             <span>{siteCopy.global.modal.motivationLabel}</span>

@@ -9,13 +9,13 @@ type LeadPayload = {
   lastName?: string;
   email?: string;
   phone?: string;
-  location?: string;
-  birthday?: string;
+  state?: string;
+  age?: string | number;
   licensed?: string;
   commission?: string;
   commitment?: string;
-  timeline?: string;
   motivation?: string;
+  referredBy?: string;
   consent?: boolean;
   recruiter?: string;
   utm?: Partial<Record<"utm_source" | "utm_medium" | "utm_campaign" | "utm_term" | "utm_content", string>>;
@@ -26,8 +26,9 @@ const requiredFields = [
   "lastName",
   "email",
   "phone",
-  "location",
-  "birthday",
+  "state",
+  "age",
+  "referredBy",
 ] as const;
 
 export async function POST(request: Request) {
@@ -69,6 +70,12 @@ export async function POST(request: Request) {
         auth: { persistSession: false },
       });
 
+      const ageNumber = (() => {
+        if (payload.age === undefined || payload.age === null || payload.age === "") return null;
+        const parsed = Number(payload.age);
+        return Number.isInteger(parsed) ? parsed : null;
+      })();
+
       const { data, error } = await supabase
         .from("leads")
         .insert({
@@ -76,13 +83,13 @@ export async function POST(request: Request) {
           last_name: payload.lastName,
           email: payload.email,
           phone: payload.phone,
-          location: payload.location,
-          birthday: payload.birthday,
+          state: payload.state,
+          age: ageNumber,
           licensed: payload.licensed ?? null,
           commission: payload.commission ?? null,
           commitment: payload.commitment ?? null,
-          timeline: payload.timeline ?? null,
           motivation: payload.motivation ?? null,
+          referred_by: payload.referredBy ?? null,
           consent: payload.consent ?? false,
           recruiter: payload.recruiter ?? "summit",
           utm_source: payload.utm?.utm_source ?? null,
@@ -236,13 +243,12 @@ function buildRows(payload: LeadPayload): Array<[string, string]> {
     ["Name", `${payload.firstName ?? ""} ${payload.lastName ?? ""}`.trim()],
     ["Email", payload.email ?? "—"],
     ["Phone", payload.phone ?? "—"],
-    ["Location", payload.location ?? "—"],
-    ["Birthday", payload.birthday ?? "—"],
+    ["State", payload.state ?? "—"],
+    ["Age", payload.age !== undefined && payload.age !== "" ? String(payload.age) : "—"],
     ["Licensing", payload.licensed ?? "—"],
     ["Income preference", payload.commission ?? "—"],
     ["Time commitment", payload.commitment ?? "—"],
-    ["Start timeline", payload.timeline ?? "—"],
-    ["Recruiter tag", payload.recruiter ?? "summit"],
+    ["Referred by", payload.referredBy ?? "—"],
   ];
 
   if (payload.motivation) {

@@ -29,8 +29,8 @@ export const siteCopy = {
         "Last Name",
         "Email",
         "Phone",
-        "Location",
-        "Birthday",
+        "State",
+        "Age",
       ],
       questions: {
         licensing: {
@@ -55,15 +55,13 @@ export const siteCopy = {
           label: "How much time can you commit?",
           options: ["Full-time", "Part-time (10–20 hrs/week)", "Just exploring"],
         },
-        timeline: {
-          label: "When are you looking to start?",
-          options: ["Immediately", "Within 2–4 weeks", "1–2 months", "Just researching"],
-        },
       },
       selectPlaceholder: "Select one…",
       motivationLabel: "Why are you looking to make a change right now?",
       motivationPlaceholder:
         "A sentence or two on what's driving you — this is the part we actually read.",
+      referredByLabel: "Who referred you?",
+      referredByPlaceholder: "First & last name of the person who sent you here.",
       consentLine: "I accept the Terms of Use and Privacy Policy.",
       submitLabel: "JOIN THE TEAM",
       submittingLabel: "SENDING...",
