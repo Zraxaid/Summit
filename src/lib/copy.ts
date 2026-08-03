@@ -143,7 +143,7 @@ export const siteCopy = {
               quote:
                 "I dropped out of college, but here I get to live the culture and grow into real leadership every single day.",
               name: "HUNTER YOUNG",
-              role: "Team Lead",
+              role: "Sales Producer",
               imageAlt: "Portrait of a team lead smiling confidently in the office.",
             },
             {
@@ -159,7 +159,7 @@ export const siteCopy = {
               quote:
                 "I was on the cook line wanting more for myself. Now I'm making 30k+ and building something that's actually mine.",
               name: "LOUIS ARMITAGE",
-              role: "Producer",
+              role: "Sales Manager",
               imageAlt: "Portrait of a producer standing confidently in a bright office.",
             },
             {
@@ -167,7 +167,7 @@ export const siteCopy = {
               quote:
                 "I came from a blue-collar job, and by my third month I was making 10k+ in profit.",
               name: "ADAM ORTEGA",
-              role: "Producer",
+              role: "Sales Producer",
               imageAlt: "Portrait of a producer smiling in a casual office setting.",
             },
           ],
