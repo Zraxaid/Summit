@@ -22,7 +22,6 @@ const summitSocial = {
 export const summitLinks = {
   social: summitSocial,
   founderProfile: "https://www.instagram.com/deanz4syth/",
-  testimonialVideo: summitSocial.instagram,
   instagramPost: summitSocial.instagram,
 } as const;
 
@@ -93,9 +92,6 @@ const photos = {
   finalCta: "",
   closingQuote: "",
   testimonials: {
-    dayethan: "",
-    kevin: "",
-    alex: "",
     mia: "",
     jordan: "",
     hunter: "",
@@ -119,14 +115,12 @@ type TestimonialCopy = {
 
 export type Testimonial = TestimonialCopy & {
   image: string;
-  videoUrl: string;
 };
 
 function joinTestimonials(items: readonly TestimonialCopy[]): Testimonial[] {
   return items.map((item) => ({
     ...item,
     image: testimonialImageById[item.id as TestimonialImageId],
-    videoUrl: summitLinks.testimonialVideo,
   }));
 }
 

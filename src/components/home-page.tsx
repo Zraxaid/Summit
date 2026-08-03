@@ -38,7 +38,7 @@ export function HomePage() {
       <MissionSplitSection />
 
       <TestimonialCarousel
-        items={[...homeData.testimonials, ...homeData.secondaryTestimonials]}
+        items={homeData.testimonials}
         eyebrow={siteCopy.routes.home.sections.testimonialsPrimary.eyebrow}
       />
 

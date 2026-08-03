@@ -5,7 +5,6 @@ import { ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { useEffect, useEffectEvent, useState } from "react";
 
 import { PhotoPanel, Reveal, easings } from "@/components/motion";
-import { siteCopy } from "@/lib/copy";
 import type { Testimonial } from "@/lib/site-data";
 
 const AUTO_ADVANCE_MS = 6000;
@@ -96,9 +95,6 @@ export function TestimonialCarousel({ items, eyebrow }: TestimonialCarouselProps
                     <strong>{current.name}</strong>
                     <span>{current.role}</span>
                   </div>
-                  <a href={current.videoUrl} target="_blank" rel="noopener noreferrer">
-                    {siteCopy.routes.home.sections.testimonialsPrimary.watchLabel}
-                  </a>
                 </div>
               </div>
 

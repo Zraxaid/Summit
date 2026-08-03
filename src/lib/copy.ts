@@ -137,32 +137,7 @@ export const siteCopy = {
         },
         testimonialsPrimary: {
           eyebrow: "WHY I CHOSE SUMMIT",
-          watchLabel: "WATCH THE VIDEO >",
           items: [
-            {
-              id: "dayethan",
-              quote:
-                "The mentor, the environment, and the accountability changed how quickly I started believing I could really build something here.",
-              name: "DAYETHAN NELSON",
-              role: "Agent",
-              imageAlt: "Portrait of an ambitious young insurance agent in a dark jacket.",
-            },
-            {
-              id: "kevin",
-              quote:
-                "Now I feel like an actual business owner. The system keeps me focused on momentum instead of guesswork.",
-              name: "KEVIN OLIVERO",
-              role: "Senior Producer",
-              imageAlt: "Portrait of a producer standing in a modern office hallway.",
-            },
-            {
-              id: "alex",
-              quote:
-                "The energy I am around every single day raises my standards. You can feel the pace the moment you walk into the room.",
-              name: "ALEX RUIZ",
-              role: "Recruiting Partner",
-              imageAlt: "Portrait of a recruiting partner smiling confidently.",
-            },
             {
               id: "hunter",
               quote:
@@ -293,7 +268,6 @@ export const siteCopy = {
         },
         testimonialsSecondary: {
           eyebrow: "WHY I STAYED",
-          watchLabel: "WATCH THE VIDEO >",
           items: [
             {
               id: "mia",
