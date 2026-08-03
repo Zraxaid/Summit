@@ -1633,6 +1633,98 @@ textarea:focus-visible {
   }
 }
 
+/* ---------------------------------------------------------------------------
+ * Premium polish pass: film-grain texture, a breathing CTA glow, accent-lit
+ * stat numbers, glowing section seams at the palette flips, and a framed
+ * ring on portrait photos. Same accent color and rhythm as the rest of the
+ * design system — no new palette, just more visual depth on top of it.
+ * ------------------------------------------------------------------------- */
+
+/* Subtle film grain across the whole site for cinematic, less-flat depth.
+   z-index sits below the header (80) and the modal backdrop (120) so it
+   never washes out interactive overlays. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 180px 180px;
+}
+
+/* Idle breathing glow on primary CTAs so JOIN THE TEAM stays eye-catching
+   even before a visitor hovers it; pauses on hover/focus so the existing
+   lift + brighten treatment reads clearly. */
+@keyframes cta-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 16px 40px rgba(33, 182, 255, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.28),
+      0 0 0 0 rgba(33, 182, 255, 0.35);
+  }
+
+  50% {
+    box-shadow:
+      0 16px 40px rgba(33, 182, 255, 0.28),
+      inset 0 1px 0 rgba(255, 255, 255, 0.28),
+      0 0 22px 6px rgba(33, 182, 255, 0.28);
+  }
+}
+
+.button-primary {
+  animation: cta-pulse 3.2s ease-in-out infinite;
+}
+
+.button-primary:hover,
+.button-primary:focus-visible {
+  animation-play-state: paused;
+}
+
+/* Accent glow on the count-up stat numbers — the first big numbers a
+   visitor reads, so they should read as the loudest thing on the page. */
+.stat-value span:first-child {
+  background: linear-gradient(100deg, var(--accent-strong), var(--accent) 60%, #7dd6ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 34px rgba(33, 182, 255, 0.35);
+}
+
+/* Glowing horizontal seam marking the dark <-> cream transitions, so the
+   palette flip reads as a deliberate beat instead of a flat cut. */
+.benefits-section,
+.founder-section {
+  position: relative;
+}
+
+.benefits-section::before,
+.founder-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.55;
+  filter: blur(0.5px);
+}
+
+/* Glowing ring around testimonial/founder portraits — a small, consistent
+   "framed" touch even while photography is still a placeholder. Compound
+   class keeps this from fighting the base .photo-panel box-shadow. */
+.photo-panel.carousel-portrait,
+.photo-panel.founder-photo {
+  box-shadow:
+    inset 0 -40px 100px rgba(9, 10, 15, 0.32),
+    0 0 0 1px rgba(33, 182, 255, 0.25),
+    0 0 32px rgba(33, 182, 255, 0.12);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -1640,7 +1732,8 @@ textarea:focus-visible {
 
   .instagram-track,
   .hero-section::before,
-  .text-gradient {
+  .text-gradient,
+  .button-primary {
     animation: none;
   }
 
