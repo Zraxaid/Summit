@@ -98,6 +98,10 @@ const photos = {
     alex: "",
     mia: "",
     jordan: "",
+    hunter: "",
+    evan: "",
+    louis: "",
+    adam: "",
   },
   instagramCards: ["", "", "", "", "", "", "", "", ""] as readonly string[],
 } as const;

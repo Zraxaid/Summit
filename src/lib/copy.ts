@@ -163,6 +163,38 @@ export const siteCopy = {
               role: "Recruiting Partner",
               imageAlt: "Portrait of a recruiting partner smiling confidently.",
             },
+            {
+              id: "hunter",
+              quote:
+                "I dropped out of college, but here I get to live the culture and grow into real leadership every single day.",
+              name: "HUNTER YOUNG",
+              role: "Team Lead",
+              imageAlt: "Portrait of a team lead smiling confidently in the office.",
+            },
+            {
+              id: "evan",
+              quote:
+                "I wanted to break into sales, and the training and mentorship — especially the one-on-ones — helped me produce 50k in my second month.",
+              name: "EVAN MONTEGEAUDO",
+              role: "Sales Producer",
+              imageAlt: "Portrait of a sales producer at his desk.",
+            },
+            {
+              id: "louis",
+              quote:
+                "I was on the cook line wanting more for myself. Now I'm making 30k+ and building something that's actually mine.",
+              name: "LOUIS ARMITAGE",
+              role: "Producer",
+              imageAlt: "Portrait of a producer standing confidently in a bright office.",
+            },
+            {
+              id: "adam",
+              quote:
+                "I came from a blue-collar job, and by my third month I was making 10k+ in profit.",
+              name: "ADAM ORTEGA",
+              role: "Producer",
+              imageAlt: "Portrait of a producer smiling in a casual office setting.",
+            },
           ],
         },
         switcher: {
