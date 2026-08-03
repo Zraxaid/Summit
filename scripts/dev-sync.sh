@@ -31,7 +31,15 @@ echo "  tracking: $REMOTE/$BRANCH"
 echo "  url:      http://localhost:$PORT"
 echo
 
-[ -d node_modules ] || { info "Installing dependencies (first run, takes a minute)…"; npm install; }
+# npm can regenerate package-lock.json with harmless formatting/resolution
+# differences depending on npm version, which would otherwise permanently
+# poison the dirty-tree check below and block every future auto-pull. Reset
+# it back to the committed version right after any install.
+reset_lockfile_drift() {
+  git checkout -- package-lock.json 2>/dev/null || true
+}
+
+[ -d node_modules ] || { info "Installing dependencies (first run, takes a minute)…"; npm install; reset_lockfile_drift; }
 
 if [ ! -f .env.local ] && [ -f .env.example ]; then
   warn "No .env.local — lead submissions will log a warning and not be saved (Supabase/Resend not configured)."
@@ -61,6 +69,11 @@ while true; do
   remote_sha="$(git rev-parse FETCH_HEAD 2>/dev/null)" || continue
   [ "$local_sha" = "$remote_sha" ] && continue
 
+  # A manual `npm install` outside this script is a common way the lockfile
+  # ends up drifted from the committed version — clean that up before
+  # checking for real uncommitted changes below.
+  reset_lockfile_drift
+
   # Only move if the remote strictly contains what we have.
   if ! git merge-base --is-ancestor "$local_sha" "$remote_sha" 2>/dev/null; then
     warn "Branch has diverged from $REMOTE/$BRANCH — skipping auto-pull. Resolve by hand."
@@ -80,6 +93,7 @@ while true; do
   if [ "$lock_before" != "$lock_after" ]; then
     info "Dependencies changed — installing…"
     npm install
+    reset_lockfile_drift
   fi
 
   git --no-pager log --oneline "$local_sha..$remote_sha" | sed 's/^/  /'
