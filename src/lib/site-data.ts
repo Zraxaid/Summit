@@ -63,7 +63,6 @@ export const footerData = {
       url: "https://www.libertybankerslife.com/",
     },
     { id: "combined", name: "COMBINED", url: "https://www.combinedinsurance.com/" },
-    { id: "instabrain", name: "INSTABRAIN", url: "#" },
     { id: "corebridge", name: "COREBRIDGE", url: "https://www.corebridgefinancial.com/" },
     { id: "ethos", name: "ETHOS", url: "https://www.ethos.com/" },
     {
@@ -71,6 +70,9 @@ export const footerData = {
       name: "NATIONAL LIFE GROUP",
       url: "https://www.nationallife.com/",
     },
+    { id: "aflac", name: "AFLAC", url: "https://www.aflac.com/" },
+    { id: "aetna", name: "AETNA", url: "https://www.aetna.com/" },
+    { id: "athene", name: "ATHENE", url: "https://www.athene.com/" },
   ],
 };
 

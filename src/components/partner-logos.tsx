@@ -10,10 +10,12 @@ export type PartnerLogoId =
   | "baltimore-life"
   | "liberty-bankers"
   | "combined"
-  | "instabrain"
   | "corebridge"
   | "ethos"
-  | "national-life-group";
+  | "national-life-group"
+  | "aflac"
+  | "aetna"
+  | "athene";
 
 type PartnerLogoProps = {
   id: PartnerLogoId;
@@ -32,10 +34,12 @@ const PARTNER_LABELS: Record<PartnerLogoId, string[]> = {
   "baltimore-life": ["BALTIMORE", "LIFE"],
   "liberty-bankers": ["LIBERTY", "BANKERS"],
   combined: ["COMBINED"],
-  instabrain: ["INSTABRAIN"],
   corebridge: ["COREBRIDGE"],
   ethos: ["ETHOS"],
   "national-life-group": ["NATIONAL LIFE", "GROUP"],
+  aflac: ["AFLAC"],
+  aetna: ["AETNA"],
+  athene: ["ATHENE"],
 };
 
 export function PartnerLogo({ id, className }: PartnerLogoProps) {
