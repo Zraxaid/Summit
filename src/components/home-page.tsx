@@ -1,15 +1,11 @@
 "use client";
 
-import { DirectionMarquee } from "@/components/motion";
 import {
   BenefitsSection,
   FastFiveSection,
   FinalCtaSection,
   FounderSection,
   HeroSection,
-  InstagramRailSection,
-  MissionEssaySection,
-  MissionSplitSection,
   PerformanceDashboardSection,
   StatTriadSection,
   TestimonialCarousel,
@@ -32,11 +28,6 @@ export function HomePage() {
       <HeroSection />
       <StatTriadSection />
 
-      <DirectionMarquee items={homeData.breakMarquee} />
-
-      <MissionEssaySection />
-      <MissionSplitSection />
-
       <TestimonialCarousel
         items={homeData.testimonials}
         eyebrow={siteCopy.routes.home.sections.testimonialsPrimary.eyebrow}
@@ -48,7 +39,6 @@ export function HomePage() {
       <PerformanceDashboardSection />
       <FounderSection quote={homeData.closingQuote} />
 
-      <InstagramRailSection />
       <FinalCtaSection />
     </div>
   );
