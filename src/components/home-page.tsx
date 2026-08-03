@@ -6,7 +6,6 @@ import {
   FinalCtaSection,
   FounderSection,
   HeroSection,
-  PerformanceDashboardSection,
   StatTriadSection,
   TestimonialCarousel,
 } from "@/components/sections";
@@ -36,7 +35,6 @@ export function HomePage() {
       <BenefitsSection items={landingBenefitItems} />
 
       <FastFiveSection />
-      <PerformanceDashboardSection />
       <FounderSection quote={homeData.closingQuote} />
 
       <FinalCtaSection />

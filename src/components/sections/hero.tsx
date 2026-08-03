@@ -1,7 +1,6 @@
 "use client";
 
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { MoveRight } from "lucide-react";
 import Image from "next/image";
 import { useRef } from "react";
 
@@ -109,10 +108,6 @@ export function HeroSection() {
           </Reveal>
           <Reveal className="hero-actions" amount={0.5} delay={0.2}>
             <JoinTeamButton />
-            <a href="#performance" className="hero-ghost-link">
-              <span>{siteCopy.routes.home.sections.hero.secondaryCtaLabel}</span>
-              <MoveRight size={18} />
-            </a>
           </Reveal>
         </div>
       </div>
