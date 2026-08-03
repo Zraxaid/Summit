@@ -6,7 +6,14 @@ import { PhotoPanel, Reveal, easings } from "@/components/motion";
 import { siteCopy } from "@/lib/copy";
 import { homeData } from "@/lib/site-data";
 
-export function FounderSection() {
+export type FounderClosingQuote = {
+  opening: string;
+  middle: string;
+  closing: string;
+  attribution: string;
+};
+
+export function FounderSection({ quote }: { quote?: FounderClosingQuote } = {}) {
   const reduceMotion = useReducedMotion();
 
   return (
@@ -38,6 +45,20 @@ export function FounderSection() {
           <a href={homeData.founder.followUrl} target="_blank" rel="noopener noreferrer">
             {siteCopy.routes.home.sections.founder.ctaLabel}
           </a>
+          {quote ? (
+            <motion.div
+              className="founder-quote"
+              initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+              whileInView={reduceMotion ? {} : { opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.4 }}
+              transition={{ duration: 0.7, ease: easings.expoOut, delay: 0.15 }}
+            >
+              <blockquote>
+                <span>{quote.opening}</span> <em>{quote.middle}</em> <span>{quote.closing}</span>
+              </blockquote>
+              <p>{quote.attribution}</p>
+            </motion.div>
+          ) : null}
         </div>
       </Reveal>
     </section>

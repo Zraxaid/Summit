@@ -25,7 +25,11 @@ function BenefitCard({ benefit, index }: { benefit: string; index: number }) {
   );
 }
 
-export function BenefitsSection() {
+export function BenefitsSection({
+  items = homeData.benefits.items,
+}: {
+  items?: readonly string[];
+} = {}) {
   const reduceMotion = useReducedMotion();
 
   return (
@@ -47,8 +51,8 @@ export function BenefitsSection() {
             {homeData.benefits.title}
           </motion.h2>
           <p>{homeData.benefits.body}</p>
-          <div className="benefit-grid">
-            {homeData.benefits.items.map((benefit, index) => (
+          <div className={`benefit-grid${items.length <= 4 ? " benefit-grid-compact" : ""}`}>
+            {items.map((benefit, index) => (
               <BenefitCard key={benefit} benefit={benefit} index={index} />
             ))}
           </div>

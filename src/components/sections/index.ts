@@ -1,5 +1,4 @@
 export { BenefitsSection } from "./benefits";
-export { ClosingQuoteSection } from "./closing-quote";
 export { FastFiveSection } from "./fast-five";
 export { FinalCtaSection } from "./final-cta";
 export { FounderSection } from "./founder";

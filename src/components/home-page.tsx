@@ -3,7 +3,6 @@
 import { DirectionMarquee } from "@/components/motion";
 import {
   BenefitsSection,
-  ClosingQuoteSection,
   FastFiveSection,
   FinalCtaSection,
   FounderSection,
@@ -11,16 +10,21 @@ import {
   InstagramRailSection,
   MissionEssaySection,
   MissionSplitSection,
-  PartnershipSection,
   PerformanceDashboardSection,
-  QuarterlyChartSection,
   StatTriadSection,
-  SwitcherSection,
   TestimonialCarousel,
 } from "@/components/sections";
-import { JoinTeamButton } from "@/components/site-shell";
 import { siteCopy } from "@/lib/copy";
 import { homeData } from "@/lib/site-data";
+
+// Trimmed from the full 6-item roster shared with the recruiter funnel pages:
+// keeps the four strongest, cuts the two that overlap with the untouched
+// Fast Five section below (training/mentorship is already covered there).
+const landingBenefitItems = homeData.benefits.items.filter(
+  (item) =>
+    item !== "WEEKLY TRAININGS + LIVE WORKSHOPS" &&
+    item !== "DIVERSIFIED LINE-UP WITH TRAININGS FOR EACH",
+);
 
 export function HomePage() {
   return (
@@ -30,46 +34,22 @@ export function HomePage() {
 
       <DirectionMarquee items={homeData.breakMarquee} />
 
-      <section className="cta-band cta-band-dark">
-        <p>{siteCopy.routes.home.sections.firstCtaBand.caption}</p>
-        <JoinTeamButton className="wide-cta">
-          {siteCopy.routes.home.sections.firstCtaBand.ctaLabel}
-        </JoinTeamButton>
-      </section>
-
-      <QuarterlyChartSection />
       <MissionEssaySection />
       <MissionSplitSection />
 
       <TestimonialCarousel
-        items={homeData.testimonials}
+        items={[...homeData.testimonials, ...homeData.secondaryTestimonials]}
         eyebrow={siteCopy.routes.home.sections.testimonialsPrimary.eyebrow}
       />
 
-      <SwitcherSection />
-      <BenefitsSection />
-
-      <DirectionMarquee items={homeData.valueMarquee} invert />
-
-      <section className="cta-band">
-        <JoinTeamButton className="wide-cta">
-          {siteCopy.routes.home.sections.middleCtaBand.ctaLabel}
-        </JoinTeamButton>
-      </section>
+      <BenefitsSection items={landingBenefitItems} />
 
       <FastFiveSection />
       <PerformanceDashboardSection />
-      <FounderSection />
-
-      <TestimonialCarousel
-        items={homeData.secondaryTestimonials}
-        eyebrow={siteCopy.routes.home.sections.testimonialsSecondary.eyebrow}
-      />
+      <FounderSection quote={homeData.closingQuote} />
 
       <InstagramRailSection />
-      <PartnershipSection />
       <FinalCtaSection />
-      <ClosingQuoteSection />
     </div>
   );
 }

@@ -917,6 +917,10 @@ textarea:focus-visible {
   gap: 1rem;
 }
 
+.benefit-grid-compact {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .benefit-grid article,
 .process-grid article {
   padding: 1.35rem;
@@ -1244,6 +1248,45 @@ textarea:focus-visible {
   letter-spacing: 0.18em;
   text-transform: uppercase;
   font-size: 0.82rem;
+}
+
+.founder-quote {
+  margin-top: 1.75rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+}
+
+.founder-quote blockquote {
+  margin: 0;
+  text-transform: uppercase;
+  font-size: clamp(1.3rem, 2.4vw, 2rem);
+  line-height: 1.15;
+}
+
+.founder-quote blockquote span:first-child,
+.founder-quote blockquote em {
+  color: var(--accent);
+  font-style: normal;
+}
+
+.founder-quote p {
+  position: relative;
+  margin: 0.9rem 0 0;
+  padding-bottom: 0.8rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.founder-quote p::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 8rem;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), transparent);
 }
 
 .site-footer {
