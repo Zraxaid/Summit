@@ -157,7 +157,7 @@ export const siteCopy = {
             {
               id: "louis",
               quote:
-                "I was on the cook line wanting more for myself. Now I'm making 30k+ and building something that's actually mine.",
+                "I've been able to scale my income to over $30k a month at 21 years old and now I'm teaching guys how to do the same.",
               name: "LOUIS ARMITAGE",
               role: "Sales Manager",
               imageAlt: "Portrait of a producer standing confidently in a bright office.",
