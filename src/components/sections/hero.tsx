@@ -76,7 +76,10 @@ export function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.3, ease: easings.smoothOut }}
         >
-          <p className="eyebrow">Meet the founder of Summit</p>
+          <p className="hero-video-caption-eyebrow">
+            {siteCopy.routes.home.sections.founder.eyebrow}
+          </p>
+          <p className="hero-video-caption-title">Founder, Summit Impact Group</p>
         </motion.div>
       ) : null}
 
