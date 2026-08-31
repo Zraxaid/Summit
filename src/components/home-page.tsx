@@ -1,6 +1,5 @@
 "use client";
 
-import { IntroSplash } from "@/components/intro-splash";
 import {
   BenefitsSection,
   FastFiveSection,
@@ -25,7 +24,6 @@ const landingBenefitItems = homeData.benefits.items.filter(
 export function HomePage() {
   return (
     <div className="home-page">
-      <IntroSplash />
       <HeroSection />
       <StatTriadSection />
 
