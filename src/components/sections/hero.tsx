@@ -72,8 +72,8 @@ export function HeroSection() {
       {!showContent && !reduceMotion ? (
         <motion.div
           className="hero-video-caption"
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, x: -16 }}
+          animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.9, delay: 0.3, ease: easings.smoothOut }}
         >
           <p className="hero-video-caption-eyebrow">
@@ -84,20 +84,19 @@ export function HeroSection() {
       ) : null}
 
       {!showContent && !reduceMotion ? (
-        <button
-          type="button"
-          className="hero-video-sound-toggle"
-          onClick={handleToggleSound}
-          aria-label={isMuted ? "Turn on video sound" : "Mute video"}
-        >
-          {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
-        </button>
-      ) : null}
-
-      {!showContent && !reduceMotion ? (
-        <button type="button" className="hero-video-skip" onClick={handleSkipIntro}>
-          Skip intro
-        </button>
+        <div className="hero-video-controls">
+          <button type="button" className="hero-video-skip" onClick={handleSkipIntro}>
+            Skip intro
+          </button>
+          <button
+            type="button"
+            className="hero-video-sound-toggle"
+            onClick={handleToggleSound}
+            aria-label={isMuted ? "Turn on video sound" : "Mute video"}
+          >
+            {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+          </button>
+        </div>
       ) : null}
 
       <AnimatePresence>
