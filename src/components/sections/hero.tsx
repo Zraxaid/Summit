@@ -31,6 +31,21 @@ export function HeroSection() {
 
   return (
     <section ref={heroRef} className="hero-section">
+      {reduceMotion ? null : (
+        <>
+          <video
+            className="hero-video"
+            src="/videos/hero-loop.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+            aria-hidden="true"
+          />
+          <div className="hero-video-overlay" aria-hidden="true" />
+        </>
+      )}
+
       <motion.div className="hero-backdrop" style={{ y: backdropY }}>
         {homeData.hero.heroPhotos.some(Boolean) ? (
           <div className="hero-collage" aria-hidden="true">

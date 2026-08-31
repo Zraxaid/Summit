@@ -332,6 +332,26 @@ textarea:focus-visible {
   opacity: 1;
 }
 
+/* Looping muted background video behind the hero copy. Negative z-index
+   keeps it beneath the existing aurora glow (::before, z-index 0) and all
+   normal-flow content, so it reads as backdrop, not foreground. Skipped
+   entirely under prefers-reduced-motion (see hero.tsx). */
+.hero-video {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-video-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, rgba(6, 7, 11, 0.45) 0%, rgba(6, 7, 11, 0.72) 100%);
+}
+
 .hero-backdrop {
   position: absolute;
   inset: 0;
