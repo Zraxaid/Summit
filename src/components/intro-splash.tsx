@@ -32,18 +32,6 @@ export function IntroSplash() {
     return () => window.clearTimeout(timer);
   }, [reduceMotion]);
 
-  useEffect(() => {
-    if (!show) {
-      return;
-    }
-
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = previousOverflow;
-    };
-  }, [show]);
-
   if (!mounted) {
     return null;
   }

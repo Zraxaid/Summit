@@ -407,20 +407,13 @@ textarea:focus-visible {
   letter-spacing: 0.02em;
 }
 
-.hero-video-skip {
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 0.55rem 1.1rem;
-  background: rgba(9, 10, 15, 0.78);
-  color: var(--foreground);
-  font-size: 0.85rem;
-  letter-spacing: 0.04em;
-  cursor: pointer;
-  backdrop-filter: blur(6px);
+body.video-lock-active .site-header {
+  display: none;
 }
 
-.hero-video-skip:hover {
-  border-color: var(--accent);
+body.video-lock-active .hero-section {
+  min-height: 100svh;
+  padding-top: 0;
 }
 
 .hero-backdrop {
