@@ -1,6 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { Volume2, VolumeX } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
@@ -24,8 +25,10 @@ const INTRO_WATCH_DELAY_MS = 6000;
 
 export function HeroSection() {
   const heroRef = useRef<HTMLElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const reduceMotion = useReducedMotion();
   const [showContent, setShowContent] = useState(!!reduceMotion);
+  const [isMuted, setIsMuted] = useState(true);
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
@@ -38,10 +41,24 @@ export function HeroSection() {
     return () => window.clearTimeout(timer);
   }, [reduceMotion]);
 
+  useEffect(() => {
+    if (!showContent || !videoRef.current) return;
+    videoRef.current.muted = true;
+    setIsMuted(true);
+  }, [showContent]);
+
+  const handleToggleSound = () => {
+    if (!videoRef.current) return;
+    const nextMuted = !videoRef.current.muted;
+    videoRef.current.muted = nextMuted;
+    setIsMuted(nextMuted);
+  };
+
   return (
     <section ref={heroRef} className="hero-section">
       {reduceMotion ? null : (
         <video
+          ref={videoRef}
           className="hero-video"
           src="/videos/hero-loop.mp4"
           autoPlay
@@ -51,6 +68,17 @@ export function HeroSection() {
           aria-hidden="true"
         />
       )}
+
+      {!showContent && !reduceMotion ? (
+        <button
+          type="button"
+          className="hero-video-sound-toggle"
+          onClick={handleToggleSound}
+          aria-label={isMuted ? "Turn on video sound" : "Mute video"}
+        >
+          {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+        </button>
+      ) : null}
 
       <AnimatePresence>
         {showContent && !reduceMotion ? (
