@@ -1,8 +1,8 @@
 "use client";
 
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Reveal, easings } from "@/components/motion";
 import { JoinTeamButton } from "@/components/site-shell";
@@ -20,31 +20,50 @@ const arrowTiles = [
   { top: "66%", left: "38%", width: 180, delay: 1.15, rotate: -12 },
 ];
 
+const INTRO_WATCH_DELAY_MS = 6000;
+
 export function HeroSection() {
   const heroRef = useRef<HTMLElement>(null);
   const reduceMotion = useReducedMotion();
+  const [showContent, setShowContent] = useState(!!reduceMotion);
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
   });
   const backdropY = useTransform(scrollYProgress, [0, 1], [0, 120]);
 
+  useEffect(() => {
+    if (reduceMotion) return;
+    const timer = window.setTimeout(() => setShowContent(true), INTRO_WATCH_DELAY_MS);
+    return () => window.clearTimeout(timer);
+  }, [reduceMotion]);
+
   return (
     <section ref={heroRef} className="hero-section">
       {reduceMotion ? null : (
-        <>
-          <video
-            className="hero-video"
-            src="/videos/hero-loop.mp4"
-            autoPlay
-            loop
-            muted
-            playsInline
+        <video
+          className="hero-video"
+          src="/videos/hero-loop.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          aria-hidden="true"
+        />
+      )}
+
+      <AnimatePresence>
+        {showContent && !reduceMotion ? (
+          <motion.div
+            key="hero-video-overlay"
+            className="hero-video-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.2, ease: "easeInOut" }}
             aria-hidden="true"
           />
-          <div className="hero-video-overlay" aria-hidden="true" />
-        </>
-      )}
+        ) : null}
+      </AnimatePresence>
 
       <motion.div className="hero-backdrop" style={{ y: backdropY }}>
         {homeData.hero.heroPhotos.some(Boolean) ? (
@@ -89,43 +108,45 @@ export function HeroSection() {
         ))}
       </motion.div>
 
-      <div className="hero-content">
-        <motion.div
-          className="hero-mark"
-          initial={reduceMotion ? false : { opacity: 0, scale: 0.85, y: -12 }}
-          animate={reduceMotion ? {} : { opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: easings.smoothOut }}
-        >
-          <Image
-            src="/images/summit-mark.png"
-            alt=""
-            width={400}
-            height={392}
-            className="hero-mark-image"
-            priority
-          />
-        </motion.div>
+      {showContent ? (
+        <div className="hero-content">
+          <motion.div
+            className="hero-mark"
+            initial={reduceMotion ? false : { opacity: 0, scale: 0.85, y: -12 }}
+            animate={reduceMotion ? {} : { opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.9, ease: easings.smoothOut }}
+          >
+            <Image
+              src="/images/summit-mark.png"
+              alt=""
+              width={400}
+              height={392}
+              className="hero-mark-image"
+              priority
+            />
+          </motion.div>
 
-        <div className="hero-copy">
-          <Reveal className="hero-copy-block" amount={0.45}>
-            <p className="eyebrow">{siteCopy.routes.home.sections.hero.eyebrow}</p>
-            <motion.h1
-              className="text-gradient"
-              initial={reduceMotion ? false : { x: 72, opacity: 0 }}
-              animate={reduceMotion ? {} : { x: 0, opacity: 1 }}
-              transition={{ duration: 0.88, ease: easings.expoOut }}
-            >
-              {homeData.hero.headline}
-            </motion.h1>
-          </Reveal>
-          <Reveal className="hero-subhead" amount={0.5} delay={0.12}>
-            <p>{homeData.hero.subhead}</p>
-          </Reveal>
-          <Reveal className="hero-actions" amount={0.5} delay={0.2}>
-            <JoinTeamButton />
-          </Reveal>
+          <div className="hero-copy">
+            <Reveal className="hero-copy-block" amount={0.45}>
+              <p className="eyebrow">{siteCopy.routes.home.sections.hero.eyebrow}</p>
+              <motion.h1
+                className="text-gradient"
+                initial={reduceMotion ? false : { x: 72, opacity: 0 }}
+                animate={reduceMotion ? {} : { x: 0, opacity: 1 }}
+                transition={{ duration: 0.88, ease: easings.expoOut }}
+              >
+                {homeData.hero.headline}
+              </motion.h1>
+            </Reveal>
+            <Reveal className="hero-subhead" amount={0.5} delay={0.12}>
+              <p>{homeData.hero.subhead}</p>
+            </Reveal>
+            <Reveal className="hero-actions" amount={0.5} delay={0.2}>
+              <JoinTeamButton />
+            </Reveal>
+          </div>
         </div>
-      </div>
+      ) : null}
     </section>
   );
 }
