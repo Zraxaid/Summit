@@ -3,7 +3,7 @@
 import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { Volume2, VolumeX } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 import { Reveal, easings } from "@/components/motion";
 import { JoinTeamButton } from "@/components/site-shell";
@@ -21,8 +21,6 @@ const arrowTiles = [
   { top: "66%", left: "38%", width: 180, delay: 1.15, rotate: -12 },
 ];
 
-const INTRO_WATCH_DELAY_MS = 6000;
-
 export function HeroSection() {
   const heroRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -35,17 +33,19 @@ export function HeroSection() {
   });
   const backdropY = useTransform(scrollYProgress, [0, 1], [0, 120]);
 
-  useEffect(() => {
-    if (reduceMotion) return;
-    const timer = window.setTimeout(() => setShowContent(true), INTRO_WATCH_DELAY_MS);
-    return () => window.clearTimeout(timer);
-  }, [reduceMotion]);
+  const revealContent = () => {
+    setShowContent(true);
+    const video = videoRef.current;
+    if (video) {
+      video.muted = true;
+      setIsMuted(true);
+      video.loop = true;
+      video.play().catch(() => {});
+    }
+  };
 
-  useEffect(() => {
-    if (!showContent || !videoRef.current) return;
-    videoRef.current.muted = true;
-    setIsMuted(true);
-  }, [showContent]);
+  const handleVideoEnded = () => revealContent();
+  const handleSkipIntro = () => revealContent();
 
   const handleToggleSound = () => {
     if (!videoRef.current) return;
@@ -62,12 +62,23 @@ export function HeroSection() {
           className="hero-video"
           src="/videos/hero-loop.mp4"
           autoPlay
-          loop
           muted
           playsInline
+          onEnded={handleVideoEnded}
           aria-hidden="true"
         />
       )}
+
+      {!showContent && !reduceMotion ? (
+        <motion.div
+          className="hero-video-caption"
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.3, ease: easings.smoothOut }}
+        >
+          <p className="eyebrow">Meet the founder of Summit</p>
+        </motion.div>
+      ) : null}
 
       {!showContent && !reduceMotion ? (
         <button
@@ -77,6 +88,12 @@ export function HeroSection() {
           aria-label={isMuted ? "Turn on video sound" : "Mute video"}
         >
           {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+        </button>
+      ) : null}
+
+      {!showContent && !reduceMotion ? (
+        <button type="button" className="hero-video-skip" onClick={handleSkipIntro}>
+          Skip intro
         </button>
       ) : null}
 

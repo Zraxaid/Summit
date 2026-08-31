@@ -374,6 +374,40 @@ textarea:focus-visible {
   border-color: var(--accent);
 }
 
+.hero-video-caption {
+  position: absolute;
+  top: 6.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  text-align: center;
+}
+
+.hero-video-caption .eyebrow {
+  color: var(--foreground);
+  font-size: 0.95rem;
+}
+
+.hero-video-skip {
+  position: absolute;
+  left: 1.5rem;
+  bottom: 1.5rem;
+  z-index: 1;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.55rem 1.1rem;
+  background: rgba(9, 10, 15, 0.78);
+  color: var(--foreground);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+}
+
+.hero-video-skip:hover {
+  border-color: var(--accent);
+}
+
 .hero-backdrop {
   position: absolute;
   inset: 0;
